@@ -1,6 +1,7 @@
 import "./App.css";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./components/Cart";
+import MiniCart from "./components/MiniCart";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import MarqueeStrip from "./components/MarqueeStrip";
@@ -19,6 +20,7 @@ function App() {
       <div className="App bg-[#0D0D0D] min-h-screen font-body">
         <Navbar />
         <Cart />
+        <MiniCart />
         <Hero />
         <MarqueeStrip />
         <Menu />

@@ -4,6 +4,7 @@ memory/
 test_reports/
 design_guidelines.json
 test_result.md
+frontend/.env
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 

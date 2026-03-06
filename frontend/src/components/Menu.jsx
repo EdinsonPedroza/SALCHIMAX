@@ -28,21 +28,21 @@ const categories = [
 
 const menuData = {
   salchipapas: [
-    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha ranchera, queso, tocineta", price: "Consultar", img: IMAGES.salchipapa },
-    { name: "Rancherita", desc: "Papa amarilla, papa francesa, salchicha ranchera, queso, tocineta", price: "Consultar", img: IMAGES.salchipapa3 },
-    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "Consultar", img: IMAGES.salchipapa2 },
-    { name: "Carnívora", desc: "Base papa, salchicha, salchicha ranchera, chorizo, tocineta, queso", price: "Consultar", img: IMAGES.salchipapa },
-    { name: "La Colombiana", desc: "Base papa, salchicha, maíz, maduro, costilla bbq, queso", price: "Consultar", img: IMAGES.salchipapa3 },
-    { name: "Callejera", desc: "Base papa, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "Consultar", img: IMAGES.salchipapa2 },
-    { name: "Tex-Mex Salchi", desc: "Base papa, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "Consultar", img: IMAGES.salchipapa },
-    { name: "La Picadita", desc: "Papa amarilla, salchicha, chorizo, carne de hamburguesa, salchicha ranchera, pollo desmechado, costilla bbq", price: "Consultar", img: IMAGES.salchipapa3 },
+    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha ranchera, queso, tocineta", price: "$15,000", img: IMAGES.salchipapa },
+    { name: "Rancherita", desc: "Papa amarilla, papa francesa, salchicha ranchera, queso, tocineta", price: "$15,000", img: IMAGES.salchipapa3 },
+    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$17,000", img: IMAGES.salchipapa2 },
+    { name: "Carnívora", desc: "Base papa, salchicha, salchicha ranchera, chorizo, tocineta, queso", price: "$20,000", img: IMAGES.salchipapa },
+    { name: "La Colombiana", desc: "Base papa, salchicha, maíz, maduro, costilla bbq, queso", price: "$19,000", img: IMAGES.salchipapa3 },
+    { name: "Callejera", desc: "Base papa, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$20,000", img: IMAGES.salchipapa2 },
+    { name: "Tex-Mex Salchi", desc: "Base papa, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$21,000", img: IMAGES.salchipapa },
+    { name: "La Picadita", desc: "Papa amarilla, salchicha, chorizo, carne de hamburguesa, salchicha ranchera, pollo desmechado, costilla bbq", price: "$25,000", img: IMAGES.salchipapa3 },
   ],
   burgers: [
-    { name: "Burger Clásica", desc: "Pan brioche, queso cheddar, carne de res, lechuga crespa, tomate, cebolla, salsa especial. Con papa amarilla", price: "Consultar", img: IMAGES.burger },
-    { name: "Burger Especial", desc: "Pan brioche, doble queso, carne de res, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial. Con papa", price: "Consultar", img: IMAGES.burger2 },
+    { name: "Burger Clásica", desc: "Pan brioche, queso cheddar, carne de res, lechuga crespa, tomate, cebolla, salsa especial. Con papa amarilla", price: "$18,000", img: IMAGES.burger },
+    { name: "Burger Especial", desc: "Pan brioche, doble queso, carne de res, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial. Con papa", price: "$22,000", img: IMAGES.burger2 },
     { name: "Doble Burger", desc: "Pan brioche, doble queso, 2 carnes de res, tocineta, lechuga crespa, tomate, salsa especial. Con papa amarilla", price: "$23,000", img: IMAGES.burger },
-    { name: "La Argentina", desc: "Pan brioche, queso mozarella, carne y chorizo, lechuga, tomate, cebolla al vino, chimichurri, salsa especial. Con papa", price: "Consultar", img: IMAGES.burger2 },
-    { name: "Tex-Mex Burger", desc: "Pan brioche, queso cheddar, carne de res, carne desmechada, lechuga crespa, pico de gallo, guacamole, salsa especial. Con papa", price: "Consultar", img: IMAGES.burger },
+    { name: "La Argentina", desc: "Pan brioche, queso mozarella, carne y chorizo, lechuga, tomate, cebolla al vino, chimichurri, salsa especial. Con papa", price: "$24,000", img: IMAGES.burger2 },
+    { name: "Tex-Mex Burger", desc: "Pan brioche, queso cheddar, carne de res, carne desmechada, lechuga crespa, pico de gallo, guacamole, salsa especial. Con papa", price: "$24,000", img: IMAGES.burger },
   ],
   alitas: [
     { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream, palitos de apio y zanahoria", price: "$25,000", img: IMAGES.wings },

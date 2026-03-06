@@ -3,7 +3,7 @@ import { MessageCircle, ChevronDown } from "lucide-react";
 
 const WA_LINK = "https://wa.me/573177371695";
 const HERO_BG = "https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=1920&q=85";
-const LOGO_URL = "https://via.placeholder.com/48x48/FF6600/FFFFFF?text=SM";
+const LOGO_URL = "/logo.svg";
 
 export default function Hero() {
   return (

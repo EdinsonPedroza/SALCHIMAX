@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Instagram, Facebook, MessageCircle } from "lucide-react";
 
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_salchimax-palmira/artifacts/t6dogmn4_image.png";
+const LOGO_URL = "https://via.placeholder.com/48x48/FF6600/FFFFFF?text=SM";
 const WA_LINK = "https://wa.me/573177371695";
 
 const navLinks = [

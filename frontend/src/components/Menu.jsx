@@ -14,6 +14,14 @@ const IMAGES = {
   wings: "https://images.unsplash.com/photo-1734987942068-a1a459d65d3d?w=500&q=80",
   fries: "https://images.unsplash.com/photo-1662452883375-9226ea22c765?w=500&q=80",
   combo: "https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=500&q=80",
+  salchipapa_clasica: "https://images.unsplash.com/photo-1762284513031-3d7ad15562bc?w=500&q=80",
+  salchipapa_mixta: "https://images.unsplash.com/photo-1771818708792-d671ae9b4b46?w=500&q=80",
+  salchipapa_casa: "https://images.unsplash.com/photo-1770117160166-cece70b1f0b0?w=500&q=80",
+  salchipapa_maxima: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=500&q=80",
+  salchipapa_colombiana: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500&q=80",
+  salchipapa_callejera: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&q=80",
+  salchipapa_texmex: "https://images.unsplash.com/photo-1562059390-a761a084768e?w=500&q=80",
+  salchipapa_max: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=500&q=80",
 };
 
 const categories = [
@@ -28,13 +36,13 @@ const categories = [
 
 const menuData = {
   salchipapas: [
-    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: IMAGES.salchipapa },
-    { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: IMAGES.salchipapa },
-    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: IMAGES.salchipapa },
-    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa },
-    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa },
-    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa },
-    { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa },
+    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: IMAGES.salchipapa_clasica },
+    { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: IMAGES.salchipapa_mixta },
+    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: IMAGES.salchipapa_casa },
+    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa_maxima },
+    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa_colombiana },
+    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa_callejera },
+    { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa_texmex },
     {
       name: "Salchimax!",
       desc: "Salchicha, tocineta, papa amarilla, papa francesa, chorizo, pollo desmechado, carne desmechada, maduro, maicitos, doble queso, salsas, salsa de la casa y costilla en salsa BBQ casera",
@@ -44,7 +52,7 @@ const menuData = {
         { persons: "6 personas", price: "$110.000" },
         { persons: "8 personas", price: "$150.000" },
       ],
-      img: IMAGES.salchipapa,
+      img: IMAGES.salchipapa_max,
     },
   ],
   burgers: [
@@ -86,11 +94,23 @@ const menuData = {
 function ProductCard({ item }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const [showPortionPicker, setShowPortionPicker] = useState(false);
 
   const handleAdd = () => {
-    addItem(item);
+    if ((item.price2 && item.price2 !== "") || (Array.isArray(item.prices) && item.prices.length > 0)) {
+      setShowPortionPicker(true);
+    } else {
+      addItem({ name: item.name, price: item.price, img: item.img });
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    }
+  };
+
+  const handlePortionSelect = (label, price) => {
+    addItem({ name: `${item.name} (${label})`, price, img: item.img });
+    setShowPortionPicker(false);
     setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
+    setTimeout(() => setAdded(false), 2000);
   };
 
   return (
@@ -139,28 +159,80 @@ function ProductCard({ item }) {
           </div>
         )}
 
-        {/* Add to cart button */}
-        <button
-          data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-          onClick={handleAdd}
-          className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
-            added
-              ? "bg-green-600 text-white"
-              : "bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] hover:bg-[#FF6600] hover:text-white"
-          }`}
-        >
-          {added ? (
-            <>
-              <Check size={15} />
-              AGREGADO
-            </>
-          ) : (
-            <>
-              <Plus size={15} />
-              AGREGAR AL PEDIDO
-            </>
-          )}
-        </button>
+        {/* Add to cart button / Portion picker */}
+        {showPortionPicker && item.price2 && item.price2 !== "" && !item.prices && (
+          <div className="mt-3 flex flex-col gap-2">
+            <p className="font-body text-xs text-gray-400 text-center">¿Para cuántas personas?</p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handlePortionSelect("1 persona", item.price)}
+                className="flex-1 py-2 font-heading text-xs border border-[#FF6600]/50 text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all"
+              >
+                1 persona<br /><span className="text-[10px]">{item.price}</span>
+              </button>
+              <button
+                onClick={() => handlePortionSelect("2 personas", item.price2)}
+                className="flex-1 py-2 font-heading text-xs border border-[#FF6600]/50 text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all"
+              >
+                2 personas<br /><span className="text-[10px]">{item.price2}</span>
+              </button>
+            </div>
+            <button
+              onClick={() => setShowPortionPicker(false)}
+              className="font-body text-xs text-gray-500 hover:text-gray-300 text-center"
+            >
+              Cancelar
+            </button>
+          </div>
+        )}
+
+        {showPortionPicker && Array.isArray(item.prices) && item.prices.length > 0 && (
+          <div className="mt-3 flex flex-col gap-2">
+            <p className="font-body text-xs text-gray-400 text-center">¿Para cuántas personas?</p>
+            <div className="flex flex-col gap-1">
+              {item.prices.map((tier) => (
+                <button
+                  key={tier.persons}
+                  onClick={() => handlePortionSelect(tier.persons, tier.price)}
+                  className="w-full py-2 font-heading text-xs border border-[#FF6600]/50 text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all flex justify-between px-3"
+                >
+                  <span>{tier.persons}</span>
+                  <span>{tier.price}</span>
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowPortionPicker(false)}
+              className="font-body text-xs text-gray-500 hover:text-gray-300 text-center"
+            >
+              Cancelar
+            </button>
+          </div>
+        )}
+
+        {!showPortionPicker && (
+          <button
+            data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
+            onClick={handleAdd}
+            className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
+              added
+                ? "bg-green-600 text-white"
+                : "bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] hover:bg-[#FF6600] hover:text-white"
+            }`}
+          >
+            {added ? (
+              <>
+                <Check size={15} />
+                AGREGADO
+              </>
+            ) : (
+              <>
+                <Plus size={15} />
+                AGREGAR AL PEDIDO
+              </>
+            )}
+          </button>
+        )}
       </div>
     </motion.div>
   );

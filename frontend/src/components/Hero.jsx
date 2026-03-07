@@ -40,7 +40,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Badge */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -48,7 +48,7 @@ export default function Hero() {
         >
           <span className="w-2 h-2 bg-[#FF6600] rounded-full animate-pulse" />
           Palmira, Valle del Cauca - Abre desde las 5 PM
-        </motion.div>
+        </motion.div> */}
 
         {/* Main headline */}
         <motion.h1
@@ -65,7 +65,7 @@ export default function Hero() {
         </motion.h1>
 
         {/* Subtitle */}
-        <motion.p
+        {/* <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
@@ -73,7 +73,7 @@ export default function Hero() {
         >
           Comida rápida deliciosa para compartir con amigos y familia.
           Ingredientes frescos, porciones épicas.
-        </motion.p>
+        </motion.p> */}
 
         {/* CTA buttons */}
         <motion.div

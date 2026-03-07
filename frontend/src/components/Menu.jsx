@@ -9,19 +9,23 @@ const IMAGES = {
   salchipapa: "https://images.unsplash.com/photo-1762284513031-3d7ad15562bc?w=500&q=80",
   salchipapa2: "https://images.unsplash.com/photo-1771818708792-d671ae9b4b46?w=500&q=80",
   salchipapa3: "https://images.unsplash.com/photo-1770117160166-cece70b1f0b0?w=500&q=80",
-  burger: "https://images.unsplash.com/photo-1678110707289-ab14382a1625?w=500&q=80",
-  burger2: "https://images.unsplash.com/photo-1678110707493-8d05425137ac?w=500&q=80",
-  wings: "https://images.unsplash.com/photo-1734987942068-a1a459d65d3d?w=500&q=80",
-  fries: "https://images.unsplash.com/photo-1662452883375-9226ea22c765?w=500&q=80",
-  combo: "https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=500&q=80",
-  salchipapa_clasica: "https://images.unsplash.com/photo-1762284513031-3d7ad15562bc?w=500&q=80",
-  salchipapa_mixta: "https://images.unsplash.com/photo-1771818708792-d671ae9b4b46?w=500&q=80",
-  salchipapa_casa: "https://images.unsplash.com/photo-1770117160166-cece70b1f0b0?w=500&q=80",
-  salchipapa_maxima: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=500&q=80",
-  salchipapa_colombiana: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500&q=80",
-  salchipapa_callejera: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&q=80",
-  salchipapa_texmex: "https://images.unsplash.com/photo-1562059390-a761a084768e?w=500&q=80",
-  salchipapa_max: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=500&q=80",
+  burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
+  burger2: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=500&q=80",
+  burger3: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&q=80",
+  burger4: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500&q=80",
+  burger5: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500&q=80",
+  wings: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=500&q=80",
+  wings2: "https://images.unsplash.com/photo-1608039755401-742074f0548d?w=500&q=80",
+  wings3: "https://images.unsplash.com/photo-1587899897387-091ebd01a6b2?w=500&q=80",
+  fries: "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=500&q=80",
+  fries2: "https://images.unsplash.com/photo-1582169296194-e4d644c48063?w=500&q=80",
+  fries3: "https://images.unsplash.com/photo-1562059390-a761a084768e?w=500&q=80",
+  combo: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=500&q=80",
+  combo2: "https://images.unsplash.com/photo-1584208124888-6f36e9f3da7d?w=500&q=80",
+  combo3: "https://images.unsplash.com/photo-1553909489-cd47e0907980?w=500&q=80",
+  drink: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500&q=80",
+  drink2: "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&q=80",
+  drink3: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=500&q=80",
 };
 
 const categories = [
@@ -36,13 +40,13 @@ const categories = [
 
 const menuData = {
   salchipapas: [
-    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: IMAGES.salchipapa_clasica },
-    { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: IMAGES.salchipapa_mixta },
-    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: IMAGES.salchipapa_casa },
-    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa_maxima },
-    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa_colombiana },
-    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa_callejera },
-    { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa_texmex },
+    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: IMAGES.salchipapa },
+    { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: IMAGES.salchipapa2 },
+    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: IMAGES.salchipapa3 },
+    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa },
+    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa2 },
+    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa3 },
+    { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa2 },
     {
       name: "Salchimax!",
       desc: "Salchicha, tocineta, papa amarilla, papa francesa, chorizo, pollo desmechado, carne desmechada, maduro, maicitos, doble queso, salsas, salsa de la casa y costilla en salsa BBQ casera",
@@ -52,42 +56,42 @@ const menuData = {
         { persons: "6 personas", price: "$110.000" },
         { persons: "8 personas", price: "$150.000" },
       ],
-      img: IMAGES.salchipapa_max,
+      img: IMAGES.salchipapa,
     },
   ],
   burgers: [
     { name: "La Clásica", desc: "Pan brioche, queso, carne 100% Angus, lechuga crespa, tomate, cebolla, salsa especial", price: "$21.000", img: IMAGES.burger },
     { name: "Chicken Burger", desc: "Pan brioche, queso, filete de pollo apanado, mermelada de tocineta, lechuga crespa, cebolla, tomate y salsa especial", price: "$22.000", img: IMAGES.burger2 },
-    { name: "Especial", desc: "Pan brioche, queso, carne 100% Angus, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial", price: "$23.000", img: IMAGES.burger },
-    { name: "Cheesy Crunch", desc: "Pan brioche, queso apanado, carne 100% Angus, mermelada de tocineta, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger2 },
-    { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger },
+    { name: "Especial", desc: "Pan brioche, queso, carne 100% Angus, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial", price: "$23.000", img: IMAGES.burger3 },
+    { name: "Cheesy Crunch", desc: "Pan brioche, queso apanado, carne 100% Angus, mermelada de tocineta, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger4 },
+    { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger5 },
   ],
   alitas: [
     { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: IMAGES.wings },
-    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: IMAGES.wings },
-    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: IMAGES.wings },
+    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: IMAGES.wings2 },
+    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: IMAGES.wings3 },
   ],
   nachos: [
     { name: "Toppins Nachos", desc: "Nachos, queso, pico de gallo, sour cream, guacamole", price: "$25.000", img: IMAGES.fries },
-    { name: '"Colombianos"', desc: "Nachos, queso, pico de gallo, pollo desmechado, carne desmechada y maduro", price: "$33.500", img: IMAGES.fries },
-    { name: "Tex - Mex", desc: "Nachos, queso, pico de gallo, pollo BBQ, guacamole, tocineta y maíz", price: "$33.500", img: IMAGES.fries },
+    { name: '"Colombianos"', desc: "Nachos, queso, pico de gallo, pollo desmechado, carne desmechada y maduro", price: "$33.500", img: IMAGES.fries2 },
+    { name: "Tex - Mex", desc: "Nachos, queso, pico de gallo, pollo BBQ, guacamole, tocineta y maíz", price: "$33.500", img: IMAGES.fries3 },
   ],
   burros: [
     { name: "El Burro", desc: "Carne y pollo desmechado, guacamole, pico de gallo, lechuga, queso", price: "$20.000", img: IMAGES.combo },
-    { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: IMAGES.combo },
+    { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: IMAGES.combo2 },
     { name: "El Super Burro", desc: "Carne y pollo desmechado, tocineta, pico de gallo, aguacate, lechuga, queso y salchicha ranchera", price: "$23.000", img: IMAGES.combo },
   ],
   sandwiches: [
-    { name: "Cubano Sencillo", desc: "Jamón de cerdo, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$15,000", img: IMAGES.burger2 },
+    { name: "Cubano Sencillo", desc: "Jamón de cerdo, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$15,000", img: IMAGES.combo3 },
     { name: "Cubano Hawaiano", desc: "Jamón de cerdo, piña calada, lechuga, tomate, queso, salsa de ajo", price: "$18,000", img: IMAGES.burger },
     { name: "Cubano Especial", desc: "Jamón de cerdo, tocineta, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$18,000", img: IMAGES.burger2 },
   ],
   bebidas: [
-    { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.combo },
-    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.combo },
-    { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: IMAGES.combo },
-    { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.combo },
-    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.combo },
+    { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.drink },
+    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.drink2 },
+    { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: IMAGES.drink3 },
+    { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.drink },
+    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.drink2 },
   ],
 };
 
@@ -299,18 +303,88 @@ export default function Menu() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mb-8 flex flex-col gap-3"
+            className="mb-8 flex flex-col gap-4"
           >
+            {/* Promo base gratis */}
             <div className="p-4 border border-[#FF6600]/50 bg-[#FF6600]/10 text-center">
-              <p className="font-heading text-sm text-white tracking-wide">
+              <p className="font-heading text-base text-white tracking-wide">
                 🎉 <span className="text-[#FF6600]">Con más de 6 ingredientes, la base de papa es GRATIS</span>
               </p>
             </div>
-            <div className="p-4 border border-[#FF6600]/30 bg-[#FF6600]/5">
-              <p className="font-body text-sm text-gray-300">
-                <span className="text-[#FF6600] font-semibold">CREA LA TUYA:</span>{" "}
-                Base desde <span className="text-[#FF6600]">$3,500</span> — Toppings: Queso desde $2,000 · Tocineta $3,500 · Chorizo $3,500 · Costilla BBQ $5,000 · Pollo Desmechado $4,500 · Carne Desmechada $4,500 y más
-              </p>
+
+            {/* Crea la tuya - tabla completa */}
+            <div className="border border-[#FF6600]/30 bg-[#1A1A1A] p-5">
+              <h3 className="font-heading text-xl text-[#FF6600] tracking-widest mb-5 text-center">
+                🍟 ESCOGE O CREA TU SALCHIPAPA
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Columna izquierda: tabla de ingredientes */}
+                <div>
+                  <p className="font-heading text-sm text-[#FF6600] tracking-widest mb-3 border-b border-[#FF6600]/30 pb-2">
+                    INGREDIENTES Y PRECIOS
+                  </p>
+                  <div className="space-y-2">
+                    {[
+                      { name: "Papa amarilla", price: "$4.000" },
+                      { name: "Papa francesa", price: "$5.000" },
+                      { name: "Salchicha", price: "$4.000" },
+                      { name: "Salchicha ranchera", price: "$8.000" },
+                      { name: "Queso mozzarella", price: "$3.000" },
+                      { name: "Tocineta", price: "$3.500" },
+                      { name: "Chorizo", price: "$4.000" },
+                      { name: "Costilla BBQ", price: "$5.000" },
+                      { name: "Pollo desmechado", price: "$5.000" },
+                      { name: "Carne desmechada", price: "$5.000" },
+                      { name: "Pico de gallo", price: "$3.500" },
+                      { name: "Guacamole", price: "$3.500" },
+                      { name: "Maíz", price: "$3.000" },
+                      { name: "Maduro", price: "$3.500" },
+                      { name: "Ripio de papa", price: "$2.500" },
+                    ].map((ing) => (
+                      <div key={ing.name} className="flex justify-between items-center border-b border-white/5 pb-1">
+                        <span className="font-body text-sm text-gray-300">{ing.name}</span>
+                        <span className="font-body text-sm text-[#FF6600] font-semibold">{ing.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Columna derecha: instrucciones + CTA */}
+                <div className="flex flex-col gap-4">
+                  <div className="bg-[#FF6600]/10 border border-[#FF6600]/40 p-4">
+                    <p className="font-heading text-sm text-white tracking-wide mb-3">¿CÓMO FUNCIONA?</p>
+                    <ol className="space-y-2 list-none">
+                      <li className="font-body text-sm text-gray-300 flex gap-2">
+                        <span className="text-[#FF6600] font-bold">1.</span>
+                        Elige tu base: papa amarilla, papa francesa o ambas
+                      </li>
+                      <li className="font-body text-sm text-gray-300 flex gap-2">
+                        <span className="text-[#FF6600] font-bold">2.</span>
+                        Escoge los ingredientes que quieras
+                      </li>
+                      <li className="font-body text-sm text-gray-300 flex gap-2">
+                        <span className="text-[#FF6600] font-bold">3.</span>
+                        Con 6+ ingredientes la base es <span className="text-[#FF6600] font-semibold">GRATIS</span>
+                      </li>
+                      <li className="font-body text-sm text-gray-300 flex gap-2">
+                        <span className="text-[#FF6600] font-bold">4.</span>
+                        Pide por WhatsApp y nosotros la armamos
+                      </li>
+                    </ol>
+                  </div>
+                  <a
+                    href="https://wa.me/573177371695"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 bg-[#FF6600] hover:bg-[#e65c00] text-white font-heading text-sm tracking-widest py-4 px-4 transition-colors"
+                  >
+                    📱 CREAR MI SALCHIPAPA
+                  </a>
+                  <p className="font-body text-xs text-gray-500 text-center">
+                    Escríbenos por WhatsApp y armamos tu salchipapa personalizada al instante
+                  </p>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

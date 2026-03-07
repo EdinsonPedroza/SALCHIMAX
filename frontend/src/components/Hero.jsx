@@ -92,17 +92,6 @@ export default function Hero() {
           />
         </div>
 
-        {/* Badge Palmira */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="inline-flex items-center gap-2 bg-[#FF6600]/20 border border-[#FF6600]/40 text-[#FF6600] px-4 py-1.5 text-xs font-body uppercase tracking-widest mb-6"
-        >
-          <span className="w-2 h-2 bg-[#FF6600] rounded-full animate-pulse" />
-          Palmira, Valle del Cauca - Abre desde las 5 PM
-        </motion.div>
-
         {/* Main headline */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}

@@ -23,10 +23,69 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,102,0,0.15) 0%, transparent 70%)" }} />
 
+      {/* Logos laterales — posición absoluta respecto a la sección, fuera del max-w container */}
+      {/* Logo izquierdo */}
+      <motion.img
+        src={LOGO_URL}
+        alt="SALCHIMAX"
+        initial={{ opacity: 0, x: -80, rotate: -12 }}
+        animate={{
+          opacity: 1,
+          x: 0,
+          rotate: [0, -8, 6, -5, 8, -3, 0],
+          y: [0, -14, -6, -12, -4, -10, 0],
+          scale: [1, 1.06, 0.96, 1.04, 0.98, 1.05, 1],
+        }}
+        transition={{
+          opacity: { duration: 0.7, delay: 0.2 },
+          x: { duration: 0.7, delay: 0.2 },
+          rotate: { duration: 6, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+          y: { duration: 5, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+          scale: { duration: 4, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+        }}
+        className="absolute left-4 md:left-8 lg:left-12 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.6)] hidden md:block will-change-transform z-10"
+      />
+      {/* Logo derecho */}
+      <motion.img
+        src={LOGO_URL}
+        alt="SALCHIMAX"
+        initial={{ opacity: 0, x: 80, rotate: 12 }}
+        animate={{
+          opacity: 1,
+          x: 0,
+          rotate: [0, 8, -6, 5, -8, 3, 0],
+          y: [0, -10, -16, -5, -13, -7, 0],
+          scale: [1, 0.97, 1.05, 0.98, 1.06, 0.96, 1],
+        }}
+        transition={{
+          opacity: { duration: 0.7, delay: 0.2 },
+          x: { duration: 0.7, delay: 0.2 },
+          rotate: { duration: 6, delay: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+          y: { duration: 5, delay: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+          scale: { duration: 4, delay: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+        }}
+        className="absolute right-4 md:right-8 lg:right-12 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.6)] hidden md:block will-change-transform z-10"
+      />
+
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
-        {/* Badge */}
-        {/* <motion.div
+
+        {/* Logo mobile — solo visible en móvil, centrado arriba del título */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="flex justify-center mb-6 md:hidden"
+        >
+          <img
+            src={LOGO_URL}
+            alt="SALCHIMAX"
+            className="w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
+          />
+        </motion.div>
+
+        {/* Badge Palmira */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -34,75 +93,21 @@ export default function Hero() {
         >
           <span className="w-2 h-2 bg-[#FF6600] rounded-full animate-pulse" />
           Palmira, Valle del Cauca - Abre desde las 5 PM
-        </motion.div> */}
+        </motion.div>
 
-        {/* Headline con logos absolutos a los lados */}
-        <div className="relative mb-4 md:px-36 lg:px-40">
-          {/* Logo izquierdo — posición absoluta en el extremo izquierdo */}
-          <motion.img
-            src={LOGO_URL}
-            alt="SALCHIMAX"
-            initial={{ opacity: 0, x: -60, rotate: -8 }}
-            animate={{ 
-              opacity: 1, 
-              x: 0, 
-              rotate: [0, -3, 3, -2, 2, 0],
-              y: [0, -6, 0, -4, 0]
-            }}
-            transition={{ 
-              opacity: { duration: 0.7, delay: 0.2 },
-              x: { duration: 0.7, delay: 0.2 },
-              rotate: { duration: 4, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
-              y: { duration: 3, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
-            }}
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] hidden md:block will-change-transform"
-          />
-
-          {/* Texto headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center"
-          >
-            LAS SALCHIPAPAS
-            <br />
-            <span className="text-[#FF6600]">MAS BRUTALES</span>
-            <br />
-            DE PALMIRA
-          </motion.h1>
-
-          {/* Logo derecho — posición absoluta en el extremo derecho */}
-          <motion.img
-            src={LOGO_URL}
-            alt="SALCHIMAX"
-            initial={{ opacity: 0, x: 60, rotate: 8 }}
-            animate={{ 
-              opacity: 1, 
-              x: 0,
-              rotate: [0, 3, -3, 2, -2, 0],
-              y: [0, -4, 0, -6, 0]
-            }}
-            transition={{ 
-              opacity: { duration: 0.7, delay: 0.2 },
-              x: { duration: 0.7, delay: 0.2 },
-              rotate: { duration: 4, delay: 1.5, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
-              y: { duration: 3, delay: 1.5, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
-            }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] hidden md:block will-change-transform"
-          />
-        </div>
-
-        {/* Subtitle */}
-        {/* <motion.p
-          initial={{ opacity: 0, y: 20 }}
+        {/* Main headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="font-body text-base md:text-lg text-gray-300 max-w-xl mx-auto mb-10 leading-relaxed"
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-4"
         >
-          Comida rápida deliciosa para compartir con amigos y familia.
-          Ingredientes frescos, porciones épicas.
-        </motion.p> */}
+          LAS SALCHIPAPAS
+          <br />
+          <span className="text-[#FF6600]">MAS BRUTALES</span>
+          <br />
+          DE PALMIRA
+        </motion.h1>
 
         {/* CTA buttons */}
         <motion.div

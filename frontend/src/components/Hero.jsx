@@ -89,7 +89,6 @@ export default function Hero() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="block"
               >
                 LAS SALCHIPAPAS
               </motion.span>
@@ -98,7 +97,7 @@ export default function Hero() {
                 initial={{ opacity: 0, scale: 1.2 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.5, type: "spring", stiffness: 300 }}
-                className="text-[#FF6600] block"
+                className="text-[#FF6600]"
               >
                 MAS BRUTALES
               </motion.span>
@@ -107,7 +106,6 @@ export default function Hero() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="block"
               >
                 DE PALMIRA
               </motion.span>

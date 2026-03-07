@@ -124,6 +124,7 @@ function ProductCard({ item }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.03, y: -6, transition: { duration: 0.2 } }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}

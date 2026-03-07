@@ -22,6 +22,13 @@ export default function Hero() {
       {/* Orange glow from bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,102,0,0.15) 0%, transparent 70%)" }} />
+      {/* Animated center glow */}
+      <motion.div
+        animate={{ opacity: [0.1, 0.25, 0.1] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(255,102,0,0.2) 0%, transparent 70%)" }}
+      />
 
       {/* Logos laterales — posición absoluta respecto a la sección, fuera del max-w container */}
       {/* Logo izquierdo */}
@@ -93,18 +100,30 @@ export default function Hero() {
         </div>
 
         {/* Main headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-4"
-        >
-          LAS SALCHIPAPAS
-          <br />
-          <span className="text-[#FF6600]">MAS BRUTALES</span>
-          <br />
-          DE PALMIRA
-        </motion.h1>
+        <div className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-4">
+          <motion.div
+            initial={{ opacity: 0, x: -60, skewX: -5 }}
+            animate={{ opacity: 1, x: 0, skewX: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            LAS SALCHIPAPAS
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: [1, 1.03, 1] }}
+            transition={{ opacity: { duration: 0.8, delay: 0.45 }, scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" } }}
+            className="text-[#FF6600]"
+          >
+            MAS BRUTALES
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            DE PALMIRA
+          </motion.div>
+        </div>
 
         {/* CTA buttons */}
         <motion.div
@@ -113,23 +132,27 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.65 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <a
+          <motion.a
             href={WA_LINK}
             target="_blank"
             rel="noopener noreferrer"
             data-testid="hero-whatsapp-btn"
+            whileHover={{ scale: 1.05, y: -3 }}
+            whileTap={{ scale: 0.97 }}
             className="btn-orange flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
           >
             <MessageCircle size={22} />
             PEDIR POR WHATSAPP
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="#menu"
             data-testid="hero-menu-btn"
+            whileHover={{ scale: 1.05, y: -3 }}
+            whileTap={{ scale: 0.97 }}
             className="btn-outline-orange flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
           >
             VER MENU
-          </a>
+          </motion.a>
         </motion.div>
 
         {/* Stars */}

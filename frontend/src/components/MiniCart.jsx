@@ -50,7 +50,7 @@ export default function MiniCart() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-8 right-24 z-40 bg-[#FF6600] text-white px-4 py-3 rounded-2xl shadow-[0_0_25px_rgba(255,102,0,0.7)] flex items-center gap-3 hover:bg-[#e65c00] transition-all duration-200 border border-[#FF8533]"
+          className="fixed bottom-8 right-24 z-40 bg-[#16a34a] text-white px-4 py-3 rounded-2xl shadow-[0_0_30px_rgba(22,163,74,0.8)] flex items-center gap-3 hover:bg-[#15803d] transition-all duration-200 border border-[#22c55e]"
           aria-label="Ver carrito"
         >
           <ShoppingBag size={22} />

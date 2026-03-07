@@ -98,23 +98,26 @@ const menuData = {
 function ProductCard({ item }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
-  const [showPortionPicker, setShowPortionPicker] = useState(false);
+  const [selectedPortion, setSelectedPortion] = useState(null);
+
+  const requiresPortionSelection = (item.price2 && item.price2 !== "") || (Array.isArray(item.prices) && item.prices.length > 0);
+
+  const togglePortion = (label, price) => {
+    setSelectedPortion((prev) => (prev?.label === label ? null : { label, price }));
+  };
 
   const handleAdd = () => {
-    if ((item.price2 && item.price2 !== "") || (Array.isArray(item.prices) && item.prices.length > 0)) {
-      setShowPortionPicker(true);
+    if (requiresPortionSelection) {
+      if (!selectedPortion) return;
+      addItem({ name: `${item.name} (${selectedPortion.label})`, price: selectedPortion.price, img: item.img });
+      setSelectedPortion(null);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
     } else {
       addItem({ name: item.name, price: item.price, img: item.img });
       setAdded(true);
       setTimeout(() => setAdded(false), 2000);
     }
-  };
-
-  const handlePortionSelect = (label, price) => {
-    addItem({ name: `${item.name} (${label})`, price, img: item.img });
-    setShowPortionPicker(false);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
   };
 
   return (
@@ -141,109 +144,81 @@ function ProductCard({ item }) {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex justify-between items-start gap-2 mb-1.5">
           <h3 className="font-heading text-lg text-white tracking-wide leading-tight">{item.name}</h3>
-          {!item.prices && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
+          {!item.prices && !item.price2 && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
         </div>
         <p className="font-body text-xs text-gray-400 leading-relaxed flex-1">{item.desc}</p>
 
-        {/* Dual pricing for 1 / 2 persons */}
+        {/* Dual pricing for 1 / 2 persons — clickable selection buttons */}
         {item.price2 && (
           <div className="mt-2 flex gap-2">
-            <span className="flex-1 flex flex-col items-center text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
+            <button
+              onClick={() => togglePortion("1 persona", item.price)}
+              className={`flex-1 flex flex-col items-center text-center font-body text-xs py-1 px-2 rounded border-2 transition-all duration-200 ${
+                selectedPortion?.label === "1 persona"
+                  ? "bg-[#FF6600] border-[#FF6600] text-white"
+                  : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
+              }`}
+            >
               <span>1 persona</span><span className="font-semibold">{item.price}</span>
-            </span>
-            <span className="flex-1 flex flex-col items-center text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
+            </button>
+            <button
+              onClick={() => togglePortion("2 personas", item.price2)}
+              className={`flex-1 flex flex-col items-center text-center font-body text-xs py-1 px-2 rounded border-2 transition-all duration-200 ${
+                selectedPortion?.label === "2 personas"
+                  ? "bg-[#FF6600] border-[#FF6600] text-white"
+                  : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
+              }`}
+            >
               <span>2 personas</span><span className="font-semibold">{item.price2}</span>
-            </span>
+            </button>
           </div>
         )}
 
-        {/* Multi-tier pricing for Salchimax! */}
+        {/* Multi-tier pricing for Salchimax! — clickable selection buttons */}
         {item.prices && (
           <div className="mt-2 flex flex-col gap-1">
             {item.prices.map((tier) => (
-              <span key={tier.persons} className="font-body text-xs text-[#FF6600]">
-                {tier.persons}: <span className="font-semibold">{tier.price}</span>
-              </span>
+              <button
+                key={tier.persons}
+                onClick={() => togglePortion(tier.persons, tier.price)}
+                className={`w-full flex justify-between px-3 py-2 font-body text-xs rounded border transition-all duration-200 ${
+                  selectedPortion?.label === tier.persons
+                    ? "bg-[#FF6600] border-[#FF6600] text-white"
+                    : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
+                }`}
+              >
+                <span>{tier.persons}</span>
+                <span className="font-semibold">{tier.price}</span>
+              </button>
             ))}
           </div>
         )}
 
-        {/* Add to cart button / Portion picker */}
-        {showPortionPicker && item.price2 && item.price2 !== "" && !item.prices && (
-          <div className="mt-3 flex flex-col gap-2">
-            <p className="font-body text-xs text-gray-300 text-center font-semibold uppercase tracking-widest">¿Para cuántas personas?</p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handlePortionSelect("1 persona", item.price)}
-                className="flex-1 py-3 font-heading text-sm border-2 border-[#FF6600] text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all rounded flex flex-col items-center gap-1"
-              >
-                <span>1 persona</span>
-                <span className="text-[10px] font-body">{item.price}</span>
-              </button>
-              <button
-                onClick={() => handlePortionSelect("2 personas", item.price2)}
-                className="flex-1 py-3 font-heading text-sm border-2 border-[#FF6600] text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all rounded flex flex-col items-center gap-1"
-              >
-                <span>2 personas</span>
-                <span className="text-[10px] font-body">{item.price2}</span>
-              </button>
-            </div>
-            <button
-              onClick={() => setShowPortionPicker(false)}
-              className="font-body text-xs text-gray-500 hover:text-gray-300 text-center mt-1"
-            >
-              Cancelar
-            </button>
-          </div>
-        )}
-
-        {showPortionPicker && Array.isArray(item.prices) && item.prices.length > 0 && (
-          <div className="mt-3 flex flex-col gap-2">
-            <p className="font-body text-xs text-gray-400 text-center">¿Para cuántas personas?</p>
-            <div className="flex flex-col gap-1">
-              {item.prices.map((tier) => (
-                <button
-                  key={tier.persons}
-                  onClick={() => handlePortionSelect(tier.persons, tier.price)}
-                  className="w-full py-2 font-heading text-xs border border-[#FF6600]/50 text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all flex justify-between px-3"
-                >
-                  <span>{tier.persons}</span>
-                  <span>{tier.price}</span>
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowPortionPicker(false)}
-              className="font-body text-xs text-gray-500 hover:text-gray-300 text-center"
-            >
-              Cancelar
-            </button>
-          </div>
-        )}
-
-        {!showPortionPicker && (
-          <button
-            data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-            onClick={handleAdd}
-            className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
-              added
-                ? "bg-green-600 text-white"
-                : "bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] hover:bg-[#FF6600] hover:text-white"
-            }`}
-          >
-            {added ? (
-              <>
-                <Check size={15} />
-                AGREGADO
-              </>
-            ) : (
-              <>
-                <Plus size={15} />
-                AGREGAR AL PEDIDO
-              </>
-            )}
-          </button>
-        )}
+        {/* Add to cart button */}
+        <button
+          data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
+          onClick={handleAdd}
+          disabled={requiresPortionSelection && !selectedPortion}
+          className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
+            added
+              ? "bg-green-600 text-white"
+              : requiresPortionSelection && !selectedPortion
+              ? "bg-[#FF6600]/5 border border-[#FF6600]/15 text-[#FF6600]/40 cursor-not-allowed"
+              : "bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] hover:bg-[#FF6600] hover:text-white"
+          }`}
+        >
+          {added ? (
+            <>
+              <Check size={15} />
+              AGREGADO
+            </>
+          ) : (
+            <>
+              <Plus size={15} />
+              AGREGAR AL PEDIDO
+            </>
+          )}
+        </button>
       </div>
     </motion.div>
   );

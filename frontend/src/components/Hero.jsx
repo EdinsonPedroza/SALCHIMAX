@@ -43,7 +43,7 @@ export default function Hero() {
           y: { duration: 5, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
           scale: { duration: 4, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
         }}
-        className="absolute left-4 md:left-8 lg:left-12 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.6)] hidden md:block will-change-transform z-10"
+        className="absolute left-8 md:left-14 lg:left-20 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.6)] hidden md:block will-change-transform z-10"
       />
       {/* Logo derecho */}
       <motion.img
@@ -64,25 +64,33 @@ export default function Hero() {
           y: { duration: 5, delay: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
           scale: { duration: 4, delay: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
         }}
-        className="absolute right-4 md:right-8 lg:right-12 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.6)] hidden md:block will-change-transform z-10"
+        className="absolute right-8 md:right-14 lg:right-20 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.6)] hidden md:block will-change-transform z-10"
       />
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
 
         {/* Logo mobile — solo visible en móvil, centrado arriba del título */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mb-6 md:hidden"
-        >
-          <img
+        <div className="flex justify-center mb-6 md:hidden">
+          <motion.img
             src={LOGO_URL}
             alt="SALCHIMAX"
-            className="w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{
+              opacity: 1,
+              scale: [1, 1.04, 0.97, 1.05, 0.98, 1],
+              y: [0, -8, -3, -10, -5, 0],
+              rotate: [0, -4, 3, -3, 4, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.6 },
+              scale: { duration: 5, delay: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+              y: { duration: 4, delay: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+              rotate: { duration: 6, delay: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+            }}
+            className="w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)] will-change-transform"
           />
-        </motion.div>
+        </div>
 
         {/* Badge Palmira */}
         <motion.div

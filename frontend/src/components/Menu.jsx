@@ -148,11 +148,11 @@ function ProductCard({ item }) {
         {/* Dual pricing for 1 / 2 persons */}
         {item.price2 && (
           <div className="mt-2 flex gap-2">
-            <span className="flex-1 text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
-              👤 {item.price}
+            <span className="flex-1 flex flex-col items-center text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
+              <span>1 persona</span><span className="font-semibold">{item.price}</span>
             </span>
-            <span className="flex-1 text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
-              👥 {item.price2}
+            <span className="flex-1 flex flex-col items-center text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
+              <span>2 personas</span><span className="font-semibold">{item.price2}</span>
             </span>
           </div>
         )}

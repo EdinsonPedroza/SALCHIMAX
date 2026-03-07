@@ -36,16 +36,26 @@ export default function Hero() {
           Palmira, Valle del Cauca - Abre desde las 5 PM
         </motion.div> */}
 
-        {/* Headline con logos a los lados */}
-        <div className="relative flex items-center justify-center gap-4 md:gap-8 mb-4">
-          {/* Logo izquierdo */}
+        {/* Headline con logos absolutos a los lados */}
+        <div className="relative mb-4 md:px-36 lg:px-40">
+          {/* Logo izquierdo — posición absoluta en el extremo izquierdo */}
           <motion.img
             src={LOGO_URL}
             alt="SALCHIMAX"
-            initial={{ opacity: 0, x: -30, rotate: -5 }}
-            animate={{ opacity: 1, x: 0, rotate: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] flex-shrink-0 hidden md:block"
+            initial={{ opacity: 0, x: -60, rotate: -8 }}
+            animate={{ 
+              opacity: 1, 
+              x: 0, 
+              rotate: [0, -3, 3, -2, 2, 0],
+              y: [0, -6, 0, -4, 0]
+            }}
+            transition={{ 
+              opacity: { duration: 0.7, delay: 0.2 },
+              x: { duration: 0.7, delay: 0.2 },
+              rotate: { duration: 4, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+              y: { duration: 3, delay: 1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
+            }}
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] hidden md:block will-change-transform"
           />
 
           {/* Texto headline */}
@@ -62,14 +72,24 @@ export default function Hero() {
             DE PALMIRA
           </motion.h1>
 
-          {/* Logo derecho */}
+          {/* Logo derecho — posición absoluta en el extremo derecho */}
           <motion.img
             src={LOGO_URL}
             alt="SALCHIMAX"
-            initial={{ opacity: 0, x: 30, rotate: 5 }}
-            animate={{ opacity: 1, x: 0, rotate: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] flex-shrink-0 hidden md:block"
+            initial={{ opacity: 0, x: 60, rotate: 8 }}
+            animate={{ 
+              opacity: 1, 
+              x: 0,
+              rotate: [0, 3, -3, 2, -2, 0],
+              y: [0, -4, 0, -6, 0]
+            }}
+            transition={{ 
+              opacity: { duration: 0.7, delay: 0.2 },
+              x: { duration: 0.7, delay: 0.2 },
+              rotate: { duration: 4, delay: 1.5, repeat: Infinity, repeatType: "loop", ease: "easeInOut" },
+              y: { duration: 3, delay: 1.5, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
+            }}
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] hidden md:block will-change-transform"
           />
         </div>
 

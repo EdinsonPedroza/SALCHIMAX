@@ -6,9 +6,9 @@ import { useCart } from "../context/CartContext";
 const WA_LINK = "https://wa.me/573177371695";
 
 const IMAGES = {
-  salchipapa: "https://images.unsplash.com/photo-1630431341973-02e1b662ec35?w=500&q=80",
-  salchipapa2: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&q=80",
-  salchipapa3: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=500&q=80",
+  salchipapa: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500&q=80",
+  salchipapa2: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=500&q=80",
+  salchipapa3: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&q=80",
   burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
   burger2: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=500&q=80",
   burger3: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&q=80",

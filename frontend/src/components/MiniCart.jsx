@@ -49,7 +49,7 @@ export default function MiniCart() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
             data-testid="mini-cart-float-btn"
-            className="fixed bottom-8 right-6 z-40 bg-[#FF6600] text-white px-5 py-4 rounded-2xl shadow-[0_0_40px_rgba(255,102,0,0.7)] flex items-center gap-3 hover:bg-[#FF8533] transition-all duration-200 border-2 border-[#FF8533] animate-pulse-orange"
+            className="fixed bottom-28 right-6 z-40 bg-[#FF6600] text-white px-5 py-4 rounded-2xl shadow-[0_0_35px_rgba(255,102,0,0.9)] flex items-center gap-3 hover:bg-[#FF8533] transition-all duration-200 border-2 border-[#FF8533]"
             aria-label="Ver carrito"
           >
             {/* Badge de items */}

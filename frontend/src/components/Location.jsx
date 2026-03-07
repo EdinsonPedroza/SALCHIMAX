@@ -56,7 +56,7 @@ export default function Location() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <div className="bg-[#171717] border border-white/5 p-6">
+            <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
                   <MapPin size={20} className="text-[#FF6600]" />
@@ -70,9 +70,9 @@ export default function Location() {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-[#171717] border border-white/5 p-6">
+            <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
                   <Clock size={20} className="text-[#FF6600]" />
@@ -87,9 +87,9 @@ export default function Location() {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-[#171717] border border-white/5 p-6">
+            <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
                   <Phone size={20} className="text-[#FF6600]" />
@@ -114,18 +114,20 @@ export default function Location() {
                   </a>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <a
+            <motion.a
               href="https://maps.google.com/?q=Cra.+28+%2319-20,+Palmira,+Valle+del+Cauca"
               target="_blank"
               rel="noopener noreferrer"
               data-testid="get-directions-btn"
               className="btn-outline-orange flex items-center justify-center gap-3 w-full py-4 font-heading text-lg tracking-widest"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               <MapPin size={20} />
               VER EN GOOGLE MAPS
-            </a>
+            </motion.a>
           </motion.div>
         </div>
       </div>

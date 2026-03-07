@@ -99,6 +99,7 @@ function ProductCard({ item }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
+      whileHover={{ y: -4 }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
       className="food-card overflow-hidden group flex flex-col"
     >
@@ -140,9 +141,11 @@ function ProductCard({ item }) {
         )}
 
         {/* Add to cart button */}
-        <button
+        <motion.button
           data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
           onClick={handleAdd}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
             added
               ? "bg-green-600 text-white"
@@ -160,7 +163,7 @@ function ProductCard({ item }) {
               AGREGAR AL PEDIDO
             </>
           )}
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );

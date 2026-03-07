@@ -48,9 +48,11 @@ const reviews = [
 
 function ReviewCard({ review }) {
   return (
-    <div
+    <motion.div
       data-testid="testimonial-card"
       className="bg-[#171717] border border-white/5 p-6 mx-3 w-72 flex-shrink-0"
+      whileHover={{ scale: 1.02, borderColor: "rgba(255,102,0,0.3)" }}
+      transition={{ duration: 0.2 }}
     >
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-full bg-[#FF6600] flex items-center justify-center font-heading text-white text-lg">
@@ -66,7 +68,7 @@ function ReviewCard({ review }) {
         </div>
       </div>
       <p className="font-body text-sm text-gray-300 leading-relaxed">"{review.text}"</p>
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
 
 const items = [
@@ -15,8 +16,11 @@ const items = [
 
 export default function MarqueeStrip() {
   return (
-    <div
+    <motion.div
       data-testid="marquee-strip"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       className="bg-[#FF6600] py-3 overflow-hidden border-y border-[#FF8533]"
     >
       <Marquee speed={50} gradient={false}>
@@ -27,6 +31,6 @@ export default function MarqueeStrip() {
           </span>
         ))}
       </Marquee>
-    </div>
+    </motion.div>
   );
 }

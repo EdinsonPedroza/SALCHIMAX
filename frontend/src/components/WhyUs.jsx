@@ -75,8 +75,9 @@ export default function WhyUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ scale: 1.02, y: -4 }}
                 data-testid={`feature-card-${i}`}
-                className="bg-[#171717] border border-white/5 p-6 text-center hover:border-[#FF6600]/40 transition-all duration-300 hover:-translate-y-1 group"
+                className="bg-[#171717] border border-white/5 p-6 text-center hover:border-[#FF6600]/40 transition-all duration-300 group"
               >
                 <div className="flex justify-center mb-4">
                   <div className="w-14 h-14 rounded-full bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center group-hover:bg-[#FF6600]/20 transition-colors duration-300">

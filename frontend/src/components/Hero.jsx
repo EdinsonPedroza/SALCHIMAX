@@ -12,10 +12,12 @@ export default function Hero() {
       data-testid="hero-section"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background image */}
-      <div
+      {/* Background image con movimiento sutil */}
+      <motion.div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${HERO_BG})` }}
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
       {/* Dark overlay */}
       <div className="hero-overlay absolute inset-0" />
@@ -23,12 +25,17 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,102,0,0.15) 0%, transparent 70%)" }} />
 
-      {/* Logos en los costados - arriba y a los lados */}
+      {/* Logos en los costados - misma altura que BRUTALES */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-        className="hidden md:block absolute left-4 lg:left-12 top-24 z-20"
+        initial={{ opacity: 0, x: -40, scale: 0.8 }}
+        animate={{ opacity: 1, x: 0, scale: 1, y: [0, -8, 0] }}
+        transition={{
+          opacity: { duration: 0.6 },
+          x: { duration: 0.6 },
+          scale: { duration: 0.6 },
+          y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+        }}
+        className="hidden md:block absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 z-20"
       >
         <img
           src={LOGO_URL}
@@ -37,10 +44,15 @@ export default function Hero() {
         />
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-        className="hidden md:block absolute right-4 lg:right-12 top-24 z-20"
+        initial={{ opacity: 0, x: 40, scale: 0.8 }}
+        animate={{ opacity: 1, x: 0, scale: 1, y: [0, -8, 0] }}
+        transition={{
+          opacity: { duration: 0.6 },
+          x: { duration: 0.6 },
+          scale: { duration: 0.6 },
+          y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+        }}
+        className="hidden md:block absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 z-20"
       >
         <img
           src={LOGO_URL}
@@ -52,28 +64,53 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-24 pb-16 text-center">
         {/* Badge */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 200 }}
           className="inline-flex items-center gap-2 bg-[#FF6600]/20 border border-[#FF6600]/40 text-[#FF6600] px-4 py-1.5 text-xs font-body uppercase tracking-widest mb-6"
         >
-          <span className="w-2 h-2 bg-[#FF6600] rounded-full animate-pulse" />
+          <motion.span
+            animate={{ scale: [1, 1.2, 1], opacity: [1, 0.8, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-2 h-2 bg-[#FF6600] rounded-full"
+          />
           Palmira, Valle del Cauca - Abre desde las 5 PM
-        </motion.div> */}
+        </motion.div>
 
         {/* Main headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
               className="font-heading text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white leading-none tracking-tight mb-4"
             >
-              LAS SALCHIPAPAS
+              <motion.span
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="block"
+              >
+                LAS SALCHIPAPAS
+              </motion.span>
               <br />
-              <span className="text-[#FF6600]">MAS BRUTALES</span>
+              <motion.span
+                initial={{ opacity: 0, scale: 1.2 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.5, type: "spring", stiffness: 300 }}
+                className="text-[#FF6600] block"
+              >
+                MAS BRUTALES
+              </motion.span>
               <br />
-              DE PALMIRA
+              <motion.span
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="block"
+              >
+                DE PALMIRA
+              </motion.span>
             </motion.h1>
 
             {/* Subtitle */}
@@ -89,40 +126,55 @@ export default function Hero() {
 
             {/* CTA buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.65 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <a
+              <motion.a
                 href={WA_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="hero-whatsapp-btn"
                 className="btn-orange flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(255,102,0,0.5)" }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400 }}
               >
-                <MessageCircle size={22} />
+                <motion.span animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
+                  <MessageCircle size={22} />
+                </motion.span>
                 PEDIR POR WHATSAPP
-              </a>
-              <a
+              </motion.a>
+              <motion.a
                 href="#menu"
                 data-testid="hero-menu-btn"
                 className="btn-outline-orange flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400 }}
               >
                 VER MENU
-              </a>
+              </motion.a>
             </motion.div>
 
             {/* Stars */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
+              transition={{ duration: 0.6, delay: 0.9 }}
               className="flex items-center justify-center gap-2 mt-10"
             >
               <div className="flex gap-1">
                 {[1,2,3,4,5].map(i => (
-                  <span key={i} className="text-[#FF6600] text-lg">★</span>
+                  <motion.span
+                    key={i}
+                    className="text-[#FF6600] text-lg"
+                    animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
+                    transition={{ duration: 1.5, delay: i * 0.1, repeat: Infinity, repeatDelay: 2 }}
+                  >
+                    ★
+                  </motion.span>
                 ))}
               </div>
               <span className="font-body text-sm text-gray-400">5.0 en Google Maps</span>

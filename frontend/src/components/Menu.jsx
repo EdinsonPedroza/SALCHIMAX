@@ -48,27 +48,26 @@ const menuData = {
     },
   ],
   burgers: [
-    { name: "Burger Clásica", desc: "Pan brioche, queso cheddar, carne de res, lechuga crespa, tomate, cebolla, salsa especial. Con papa amarilla", price: "$18,000", img: IMAGES.burger },
-    { name: "Burger Especial", desc: "Pan brioche, doble queso, carne de res, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial. Con papa", price: "$22,000", img: IMAGES.burger2 },
-    { name: "Doble Burger", desc: "Pan brioche, doble queso, 2 carnes de res, tocineta, lechuga crespa, tomate, salsa especial. Con papa amarilla", price: "$23,000", img: IMAGES.burger },
-    { name: "La Argentina", desc: "Pan brioche, queso mozarella, carne y chorizo, lechuga, tomate, cebolla al vino, chimichurri, salsa especial. Con papa", price: "$24,000", img: IMAGES.burger2 },
-    { name: "Tex-Mex Burger", desc: "Pan brioche, queso cheddar, carne de res, carne desmechada, lechuga crespa, pico de gallo, guacamole, salsa especial. Con papa", price: "$24,000", img: IMAGES.burger },
+    { name: "La Clásica", desc: "Pan brioche, queso, carne 100% Angus, lechuga crespa, tomate, cebolla, salsa especial", price: "$21.000", img: IMAGES.burger },
+    { name: "Chicken Burger", desc: "Pan brioche, queso, filete de pollo apanado, mermelada de tocineta, lechuga crespa, cebolla, tomate y salsa especial", price: "$22.000", img: IMAGES.burger2 },
+    { name: "Especial", desc: "Pan brioche, queso, carne 100% Angus, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial", price: "$23.000", img: IMAGES.burger },
+    { name: "Cheesy Crunch", desc: "Pan brioche, queso apanado, carne 100% Angus, mermelada de tocineta, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger2 },
+    { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger },
   ],
   alitas: [
-    { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream, palitos de apio y zanahoria", price: "$25,000", img: IMAGES.wings },
-    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream, palitos de apio y zanahoria", price: "$48,000", img: IMAGES.wings },
-    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream, palitos de apio y zanahoria", price: "$90,000", img: IMAGES.wings },
-    { name: "x50 Alitas", desc: "La fiesta perfecta. Acompañadas de papa amarilla, sour cream, palitos de apio y zanahoria", price: "$150,000", img: IMAGES.wings },
+    { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: IMAGES.wings },
+    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: IMAGES.wings },
+    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: IMAGES.wings },
   ],
   nachos: [
-    { name: "Toppings Nachos", desc: "Nachos, queso, pico de gallo, sour cream, guacamole", price: "$20,000", img: IMAGES.fries },
-    { name: "Nachos Colombianos", desc: "Nachos, queso, pico de gallo, pollo, maduro y carne desmechada", price: "$32,000", img: IMAGES.fries },
-    { name: "Nachos Tex-Mex", desc: "Nachos, queso, pico de gallo, pollo bbq, guacamole, tocineta y maíz", price: "$30,000", img: IMAGES.fries },
+    { name: "Toppins Nachos", desc: "Nachos, queso, pico de gallo, sour cream, guacamole", price: "$25.000", img: IMAGES.fries },
+    { name: '"Colombianos"', desc: "Nachos, queso, pico de gallo, pollo desmechado, carne desmechada y maduro", price: "$33.500", img: IMAGES.fries },
+    { name: "Tex - Mex", desc: "Nachos, queso, pico de gallo, pollo BBQ, guacamole, tocineta y maíz", price: "$33.500", img: IMAGES.fries },
   ],
   burros: [
-    { name: "El Burro", desc: "Carne y pollo desmechado, aguacate, pico de gallo, lechuga, queso", price: "$18,000", img: IMAGES.combo },
-    { name: "El Gringo", desc: "Pollo bbq, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$18,000", img: IMAGES.combo },
-    { name: "El Super Burro", desc: "Carne y pollo desmechado, tocineta, pico de gallo, aguacate, lechuga, queso y salchicha ranchera", price: "$20,000", img: IMAGES.combo },
+    { name: "El Burro", desc: "Carne y pollo desmechado, guacamole, pico de gallo, lechuga, queso", price: "$20.000", img: IMAGES.combo },
+    { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: IMAGES.combo },
+    { name: "El Super Burro", desc: "Carne y pollo desmechado, tocineta, pico de gallo, aguacate, lechuga, queso y salchicha ranchera", price: "$23.000", img: IMAGES.combo },
   ],
   sandwiches: [
     { name: "Cubano Sencillo", desc: "Jamón de cerdo, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$15,000", img: IMAGES.burger2 },
@@ -76,13 +75,11 @@ const menuData = {
     { name: "Cubano Especial", desc: "Jamón de cerdo, tocineta, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$18,000", img: IMAGES.burger2 },
   ],
   bebidas: [
-    { name: "Gaseosa", desc: "Bebida refrescante", price: "$4,000", img: IMAGES.combo },
-    { name: "Jugo Hit", desc: "Jugo natural", price: "$4,000", img: IMAGES.combo },
-    { name: "Agua", desc: "Agua mineral", price: "$2,500", img: IMAGES.combo },
-    { name: "Club Colombia", desc: "Cerveza premium colombiana", price: "$4,500", img: IMAGES.combo },
-    { name: "Poker", desc: "La cerveza de Colombia", price: "$4,500", img: IMAGES.combo },
-    { name: "Águila Light", desc: "Cerveza ligera", price: "$4,500", img: IMAGES.combo },
-    { name: "Corona", desc: "Cerveza importada", price: "$7,000", img: IMAGES.combo },
+    { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.combo },
+    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.combo },
+    { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: IMAGES.combo },
+    { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.combo },
+    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.combo },
   ],
 };
 
@@ -127,7 +124,7 @@ function ProductCard({ item }) {
         {/* Dual pricing for 1 / 2 persons */}
         {item.price2 && (
           <p className="font-body text-xs text-[#FF6600] mt-2">
-            🧑 {item.price} &nbsp;|&nbsp; 👥 {item.price2}
+            1 persona: {item.price} &nbsp;|&nbsp; 2 personas: {item.price2}
           </p>
         )}
 
@@ -241,6 +238,60 @@ export default function Menu() {
               <p className="font-body text-sm text-gray-300">
                 <span className="text-[#FF6600] font-semibold">CREA LA TUYA:</span>{" "}
                 Base desde <span className="text-[#FF6600]">$3,500</span> — Toppings: Queso desde $2,000 · Tocineta $3,500 · Chorizo $3,500 · Costilla BBQ $5,000 · Pollo Desmechado $4,500 · Carne Desmechada $4,500 y más
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Note for burgers */}
+        {activeTab === "burgers" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-8"
+          >
+            <div className="p-4 border border-[#FF6600]/30 bg-[#FF6600]/5">
+              <p className="font-body text-sm text-gray-300">
+                <span className="text-[#FF6600] font-semibold">💡 TIP:</span>{" "}
+                Transforma tu hamburguesa a doble carne por solo: <span className="text-[#FF6600] font-semibold">$8.000 adicionales</span>
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Note for alitas */}
+        {activeTab === "alitas" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-8 flex flex-col gap-3"
+          >
+            <div className="p-4 border border-[#FF6600]/50 bg-[#FF6600]/10 text-center">
+              <p className="font-heading text-sm text-white tracking-wide">
+                🎉 <span className="text-[#FF6600]">Todos los jueves: 2x1 en todas las alitas</span>
+              </p>
+            </div>
+            <div className="p-4 border border-[#FF6600]/30 bg-[#FF6600]/5">
+              <p className="font-body text-sm text-gray-300">
+                <span className="text-[#FF6600] font-semibold">SALSAS DISPONIBLES —</span>{" "}
+                <span className="font-semibold text-white">Mild:</span> Miel Mostaza, BBQ, Teriyaki &nbsp;|&nbsp;
+                <span className="font-semibold text-white">Hot:</span> BBQ Hot, Buffalo &nbsp;|&nbsp;
+                <span className="font-semibold text-white">Extra:</span> BBQ Diablo, Buffalo Diablo
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Note for nachos */}
+        {activeTab === "nachos" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-8"
+          >
+            <div className="p-4 border border-[#FF6600]/50 bg-[#FF6600]/10 text-center">
+              <p className="font-heading text-sm text-white tracking-wide">
+                🎉 <span className="text-[#FF6600]">Domingos 2x1 en nachos</span>
               </p>
             </div>
           </motion.div>

@@ -23,37 +23,46 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,102,0,0.15) 0%, transparent 70%)" }} />
 
+      {/* Logos en los costados - arriba y a los lados */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="hidden md:block absolute left-4 lg:left-12 top-24 z-20"
+      >
+        <img
+          src={LOGO_URL}
+          alt="SALCHIMAX"
+          className="w-20 h-20 lg:w-28 lg:h-28 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
+        />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="hidden md:block absolute right-4 lg:right-12 top-24 z-20"
+      >
+        <img
+          src={LOGO_URL}
+          alt="SALCHIMAX"
+          className="w-20 h-20 lg:w-28 lg:h-28 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
+        />
+      </motion.div>
+
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-24 pb-16">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8">
-          {/* Logo izquierdo - visible en md+ */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="hidden md:flex shrink-0"
-          >
-            <img
-              src={LOGO_URL}
-              alt="SALCHIMAX"
-              className="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
-            />
-          </motion.div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-24 pb-16 text-center">
+        {/* Badge */}
+        {/* <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="inline-flex items-center gap-2 bg-[#FF6600]/20 border border-[#FF6600]/40 text-[#FF6600] px-4 py-1.5 text-xs font-body uppercase tracking-widest mb-6"
+        >
+          <span className="w-2 h-2 bg-[#FF6600] rounded-full animate-pulse" />
+          Palmira, Valle del Cauca - Abre desde las 5 PM
+        </motion.div> */}
 
-          {/* Contenido central */}
-          <div className="text-center flex-1">
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-[#FF6600]/20 border border-[#FF6600]/40 text-[#FF6600] px-4 py-1.5 text-xs font-body uppercase tracking-widest mb-6"
-            >
-              <span className="w-2 h-2 bg-[#FF6600] rounded-full animate-pulse" />
-              Palmira, Valle del Cauca - Abre desde las 5 PM
-            </motion.div>
-
-            {/* Main headline */}
+        {/* Main headline */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -68,7 +77,7 @@ export default function Hero() {
             </motion.h1>
 
             {/* Subtitle */}
-            <motion.p
+            {/* <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
@@ -76,7 +85,7 @@ export default function Hero() {
             >
               Comida rápida deliciosa para compartir con amigos y familia.
               Ingredientes frescos, porciones épicas.
-            </motion.p>
+            </motion.p> */}
 
             {/* CTA buttons */}
             <motion.div
@@ -118,22 +127,6 @@ export default function Hero() {
               </div>
               <span className="font-body text-sm text-gray-400">5.0 en Google Maps</span>
             </motion.div>
-          </div>
-
-          {/* Logo derecho - visible en md+ */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="hidden md:flex shrink-0 order-first md:order-last"
-          >
-            <img
-              src={LOGO_URL}
-              alt="SALCHIMAX"
-              className="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
-            />
-          </motion.div>
-        </div>
       </div>
 
       {/* Scroll indicator */}

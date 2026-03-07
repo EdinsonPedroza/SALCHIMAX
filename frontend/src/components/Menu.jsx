@@ -28,14 +28,24 @@ const categories = [
 
 const menuData = {
   salchipapas: [
-    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha ranchera, queso, tocineta", price: "$15,000", img: IMAGES.salchipapa },
-    { name: "Rancherita", desc: "Papa amarilla, papa francesa, salchicha ranchera, queso, tocineta", price: "$15,000", img: IMAGES.salchipapa3 },
-    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$17,000", img: IMAGES.salchipapa2 },
-    { name: "Carnívora", desc: "Base papa, salchicha, salchicha ranchera, chorizo, tocineta, queso", price: "$20,000", img: IMAGES.salchipapa },
-    { name: "La Colombiana", desc: "Base papa, salchicha, maíz, maduro, costilla bbq, queso", price: "$19,000", img: IMAGES.salchipapa3 },
-    { name: "Callejera", desc: "Base papa, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$20,000", img: IMAGES.salchipapa2 },
-    { name: "Tex-Mex Salchi", desc: "Base papa, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$21,000", img: IMAGES.salchipapa },
-    { name: "La Picadita", desc: "Papa amarilla, salchicha, chorizo, carne de hamburguesa, salchicha ranchera, pollo desmechado, costilla bbq", price: "$25,000", img: IMAGES.salchipapa3 },
+    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: IMAGES.salchipapa },
+    { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: IMAGES.salchipapa },
+    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: IMAGES.salchipapa },
+    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa },
+    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa },
+    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa },
+    { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa },
+    {
+      name: "Salchimax!",
+      desc: "Salchicha, tocineta, papa amarilla, papa francesa, chorizo, pollo desmechado, carne desmechada, maduro, maicitos, doble queso, salsas, salsa de la casa y costilla en salsa BBQ casera",
+      price: "$78.000",
+      prices: [
+        { persons: "4 personas", price: "$78.000" },
+        { persons: "6 personas", price: "$110.000" },
+        { persons: "8 personas", price: "$150.000" },
+      ],
+      img: IMAGES.salchipapa,
+    },
   ],
   burgers: [
     { name: "Burger Clásica", desc: "Pan brioche, queso cheddar, carne de res, lechuga crespa, tomate, cebolla, salsa especial. Con papa amarilla", price: "$18,000", img: IMAGES.burger },
@@ -110,9 +120,27 @@ function ProductCard({ item }) {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex justify-between items-start gap-2 mb-1.5">
           <h3 className="font-heading text-lg text-white tracking-wide leading-tight">{item.name}</h3>
-          <span className="price-tag flex-shrink-0 text-base">{item.price}</span>
+          {!item.prices && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
         </div>
         <p className="font-body text-xs text-gray-400 leading-relaxed flex-1">{item.desc}</p>
+
+        {/* Dual pricing for 1 / 2 persons */}
+        {item.price2 && (
+          <p className="font-body text-xs text-[#FF6600] mt-2">
+            🧑 {item.price} &nbsp;|&nbsp; 👥 {item.price2}
+          </p>
+        )}
+
+        {/* Multi-tier pricing for Salchimax! */}
+        {item.prices && (
+          <div className="mt-2 flex flex-col gap-1">
+            {item.prices.map((tier) => (
+              <span key={tier.persons} className="font-body text-xs text-[#FF6600]">
+                {tier.persons}: <span className="font-semibold">{tier.price}</span>
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Add to cart button */}
         <button
@@ -202,12 +230,19 @@ export default function Menu() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mb-8 p-4 border border-[#FF6600]/30 bg-[#FF6600]/5"
+            className="mb-8 flex flex-col gap-3"
           >
-            <p className="font-body text-sm text-gray-300">
-              <span className="text-[#FF6600] font-semibold">CREA LA TUYA:</span>{" "}
-              Base desde <span className="text-[#FF6600]">$3,500</span> — Toppings: Queso desde $2,000 · Tocineta $3,500 · Chorizo $3,500 · Costilla BBQ $5,000 · Pollo Desmechado $4,500 · Carne Desmechada $4,500 y más
-            </p>
+            <div className="p-4 border border-[#FF6600]/50 bg-[#FF6600]/10 text-center">
+              <p className="font-heading text-sm text-white tracking-wide">
+                🎉 <span className="text-[#FF6600]">Con más de 6 ingredientes, la base de papa es GRATIS</span>
+              </p>
+            </div>
+            <div className="p-4 border border-[#FF6600]/30 bg-[#FF6600]/5">
+              <p className="font-body text-sm text-gray-300">
+                <span className="text-[#FF6600] font-semibold">CREA LA TUYA:</span>{" "}
+                Base desde <span className="text-[#FF6600]">$3,500</span> — Toppings: Queso desde $2,000 · Tocineta $3,500 · Chorizo $3,500 · Costilla BBQ $5,000 · Pollo Desmechado $4,500 · Carne Desmechada $4,500 y más
+              </p>
+            </div>
           </motion.div>
         )}
 

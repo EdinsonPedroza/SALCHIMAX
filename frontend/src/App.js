@@ -12,7 +12,6 @@ import Testimonials from "./components/Testimonials";
 import OrderCTA from "./components/OrderCTA";
 import Location from "./components/Location";
 import Footer from "./components/Footer";
-import WhatsAppFloat from "./components/WhatsAppFloat";
 
 function App() {
   return (
@@ -30,7 +29,6 @@ function App() {
         <OrderCTA />
         <Location />
         <Footer />
-        <WhatsAppFloat />
       </div>
     </CartProvider>
   );

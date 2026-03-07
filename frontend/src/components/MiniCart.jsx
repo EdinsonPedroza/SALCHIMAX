@@ -45,7 +45,7 @@ export default function MiniCart() {
             initial={{ scale: 0, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0, opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-[5.5rem] z-40"
+            className="fixed bottom-6 right-6 z-40"
           >
             {/* Pulsing ring */}
             <span className="absolute inset-0 rounded-2xl bg-[#FF6600] opacity-30 animate-ping" />

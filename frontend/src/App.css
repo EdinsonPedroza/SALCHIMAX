@@ -156,3 +156,13 @@ html {
 .star-filled {
   color: #FF6600;
 }
+
+/* Pulsing orange glow animation for floating cart button */
+@keyframes pulse-orange {
+  0%, 100% { box-shadow: 0 0 40px rgba(255, 102, 0, 0.7); }
+  50% { box-shadow: 0 0 60px rgba(255, 102, 0, 1); }
+}
+
+.animate-pulse-orange {
+  animation: pulse-orange 2s infinite;
+}

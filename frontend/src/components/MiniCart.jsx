@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 import { useState, useEffect } from "react";
 
 export default function MiniCart() {
-  const { totalItems, setIsOpen } = useCart();
+  const { totalItems, totalPrice, setIsOpen } = useCart();
   const [showAdded, setShowAdded] = useState(false);
 
   // Show "Added to cart" notification when items are added
@@ -15,9 +15,6 @@ export default function MiniCart() {
       return () => clearTimeout(timer);
     }
   }, [totalItems]);
-
-  // Don't show if cart is empty
-  if (totalItems === 0) return null;
 
   return (
     <>
@@ -43,22 +40,31 @@ export default function MiniCart() {
 
       {/* Floating cart button */}
       <AnimatePresence>
-        <motion.button
-          initial={{ scale: 0, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0, opacity: 0, y: 20 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-8 right-24 z-40 bg-[#16a34a] text-white px-4 py-3 rounded-2xl shadow-[0_0_30px_rgba(22,163,74,0.8)] flex items-center gap-3 hover:bg-[#15803d] transition-all duration-200 border border-[#22c55e]"
-          aria-label="Ver carrito"
-        >
-          <ShoppingBag size={22} />
-          <div className="flex flex-col items-start leading-none">
-            <span className="font-heading text-xs tracking-widest opacity-80">MI PEDIDO</span>
-            <span className="font-heading text-base font-bold">{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
-          </div>
-        </motion.button>
+        {totalItems > 0 && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0, opacity: 0, y: 20 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsOpen(true)}
+            data-testid="mini-cart-float-btn"
+            className="fixed bottom-8 right-6 z-40 bg-[#FF6600] text-white px-5 py-4 rounded-2xl shadow-[0_0_40px_rgba(255,102,0,0.7)] flex items-center gap-3 hover:bg-[#FF8533] transition-all duration-200 border-2 border-[#FF8533] animate-pulse-orange"
+            aria-label="Ver carrito"
+          >
+            {/* Badge de items */}
+            <div className="relative">
+              <ShoppingBag size={26} />
+              <span className="absolute -top-2 -right-2 bg-white text-[#FF6600] text-xs font-heading w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                {totalItems}
+              </span>
+            </div>
+            <div className="flex flex-col items-start leading-none">
+              <span className="font-heading text-xs tracking-widest opacity-90">MI PEDIDO</span>
+              <span className="font-heading text-lg font-bold">${totalPrice.toLocaleString("es-CO")}</span>
+            </div>
+          </motion.button>
+        )}
       </AnimatePresence>
     </>
   );

@@ -6,9 +6,9 @@ import { useCart } from "../context/CartContext";
 const WA_LINK = "https://wa.me/573177371695";
 
 const IMAGES = {
-  salchipapa: "https://images.unsplash.com/photo-1762284513031-3d7ad15562bc?w=500&q=80",
-  salchipapa2: "https://images.unsplash.com/photo-1771818708792-d671ae9b4b46?w=500&q=80",
-  salchipapa3: "https://images.unsplash.com/photo-1770117160166-cece70b1f0b0?w=500&q=80",
+  salchipapa: "https://images.unsplash.com/photo-1630431341973-02e1b662ec35?w=500&q=80",
+  salchipapa2: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&q=80",
+  salchipapa3: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=500&q=80",
   burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
   burger2: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=500&q=80",
   burger3: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&q=80",
@@ -147,9 +147,14 @@ function ProductCard({ item }) {
 
         {/* Dual pricing for 1 / 2 persons */}
         {item.price2 && (
-          <p className="font-body text-xs text-[#FF6600] mt-2">
-            1 persona: {item.price} &nbsp;|&nbsp; 2 personas: {item.price2}
-          </p>
+          <div className="mt-2 flex gap-2">
+            <span className="flex-1 text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
+              👤 {item.price}
+            </span>
+            <span className="flex-1 text-center font-body text-xs bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] py-1 px-2 rounded">
+              👥 {item.price2}
+            </span>
+          </div>
         )}
 
         {/* Multi-tier pricing for Salchimax! */}
@@ -166,24 +171,28 @@ function ProductCard({ item }) {
         {/* Add to cart button / Portion picker */}
         {showPortionPicker && item.price2 && item.price2 !== "" && !item.prices && (
           <div className="mt-3 flex flex-col gap-2">
-            <p className="font-body text-xs text-gray-400 text-center">¿Para cuántas personas?</p>
+            <p className="font-body text-xs text-gray-300 text-center font-semibold uppercase tracking-widest">¿Para cuántas personas?</p>
             <div className="flex gap-2">
               <button
                 onClick={() => handlePortionSelect("1 persona", item.price)}
-                className="flex-1 py-2 font-heading text-xs border border-[#FF6600]/50 text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all"
+                className="flex-1 py-3 font-heading text-sm border-2 border-[#FF6600] text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all rounded flex flex-col items-center gap-1"
               >
-                1 persona<br /><span className="text-[10px]">{item.price}</span>
+                <span className="text-lg">👤</span>
+                <span>1 PERSONA</span>
+                <span className="text-xs font-body">{item.price}</span>
               </button>
               <button
                 onClick={() => handlePortionSelect("2 personas", item.price2)}
-                className="flex-1 py-2 font-heading text-xs border border-[#FF6600]/50 text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all"
+                className="flex-1 py-3 font-heading text-sm border-2 border-[#FF6600] text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all rounded flex flex-col items-center gap-1"
               >
-                2 personas<br /><span className="text-[10px]">{item.price2}</span>
+                <span className="text-lg">👥</span>
+                <span>2 PERSONAS</span>
+                <span className="text-xs font-body">{item.price2}</span>
               </button>
             </div>
             <button
               onClick={() => setShowPortionPicker(false)}
-              className="font-body text-xs text-gray-500 hover:text-gray-300 text-center"
+              className="font-body text-xs text-gray-500 hover:text-gray-300 text-center mt-1"
             >
               Cancelar
             </button>

@@ -177,17 +177,15 @@ function ProductCard({ item }) {
                 onClick={() => handlePortionSelect("1 persona", item.price)}
                 className="flex-1 py-3 font-heading text-sm border-2 border-[#FF6600] text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all rounded flex flex-col items-center gap-1"
               >
-                <span className="text-lg">👤</span>
-                <span>1 PERSONA</span>
-                <span className="text-xs font-body">{item.price}</span>
+                <span>1 persona</span>
+                <span className="text-[10px] font-body">{item.price}</span>
               </button>
               <button
                 onClick={() => handlePortionSelect("2 personas", item.price2)}
                 className="flex-1 py-3 font-heading text-sm border-2 border-[#FF6600] text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all rounded flex flex-col items-center gap-1"
               >
-                <span className="text-lg">👥</span>
-                <span>2 PERSONAS</span>
-                <span className="text-xs font-body">{item.price2}</span>
+                <span>2 personas</span>
+                <span className="text-[10px] font-body">{item.price2}</span>
               </button>
             </div>
             <button

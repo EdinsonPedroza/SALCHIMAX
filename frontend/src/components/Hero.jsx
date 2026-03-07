@@ -25,20 +25,6 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
-        {/* Logo badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mb-6"
-        >
-          <img
-            src={LOGO_URL}
-            alt="SALCHIMAX"
-            className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
-          />
-        </motion.div>
-
         {/* Badge */}
         {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -50,19 +36,42 @@ export default function Hero() {
           Palmira, Valle del Cauca - Abre desde las 5 PM
         </motion.div> */}
 
-        {/* Main headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight mb-4"
-        >
-          LAS SALCHIPAPAS
-          <br />
-          <span className="text-[#FF6600]">MAS BRUTALES</span>
-          <br />
-          DE PALMIRA
-        </motion.h1>
+        {/* Headline con logos a los lados */}
+        <div className="relative flex items-center justify-center gap-4 md:gap-8 mb-4">
+          {/* Logo izquierdo */}
+          <motion.img
+            src={LOGO_URL}
+            alt="SALCHIMAX"
+            initial={{ opacity: 0, x: -30, rotate: -5 }}
+            animate={{ opacity: 1, x: 0, rotate: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] flex-shrink-0 hidden md:block"
+          />
+
+          {/* Texto headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center"
+          >
+            LAS SALCHIPAPAS
+            <br />
+            <span className="text-[#FF6600]">MAS BRUTALES</span>
+            <br />
+            DE PALMIRA
+          </motion.h1>
+
+          {/* Logo derecho */}
+          <motion.img
+            src={LOGO_URL}
+            alt="SALCHIMAX"
+            initial={{ opacity: 0, x: 30, rotate: 5 }}
+            animate={{ opacity: 1, x: 0, rotate: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] flex-shrink-0 hidden md:block"
+          />
+        </div>
 
         {/* Subtitle */}
         {/* <motion.p

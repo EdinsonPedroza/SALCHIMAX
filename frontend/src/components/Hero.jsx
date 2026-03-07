@@ -24,7 +24,7 @@ export default function Hero() {
         style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,102,0,0.15) 0%, transparent 70%)" }} />
 
       {/* Content */}
-      <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
         {/* Logo badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -55,7 +55,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="font-heading text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] text-white leading-none tracking-tight mb-6"
+          className="font-heading text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] text-white leading-none tracking-tight mb-4"
         >
           LAS SALCHIPAPAS
           <br />

@@ -21,21 +21,32 @@ export default function Hero() {
       />
       {/* Dark overlay */}
       <div className="hero-overlay absolute inset-0" />
-      {/* Orange glow from bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,102,0,0.15) 0%, transparent 70%)" }} />
+      {/* Orange glow from bottom - animado */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,102,0,0.18) 0%, transparent 70%)" }}
+        animate={{ opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-      {/* Logos en los costados - misma altura que BRUTALES */}
+      {/* Logos en los costados - un poco más arriba y hacia adentro */}
       <motion.div
         initial={{ opacity: 0, x: -40, scale: 0.8 }}
-        animate={{ opacity: 1, x: 0, scale: 1, y: [0, -8, 0] }}
+        animate={{
+          opacity: 1,
+          x: 0,
+          scale: [1, 1.03, 1],
+          y: [0, -10, 0],
+          boxShadow: ["0 0 30px rgba(255,102,0,0.3)", "0 0 45px rgba(255,102,0,0.5)", "0 0 30px rgba(255,102,0,0.3)"]
+        }}
         transition={{
           opacity: { duration: 0.6 },
           x: { duration: 0.6 },
-          scale: { duration: 0.6 },
-          y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+          scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+          y: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+          boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
         }}
-        className="hidden md:block absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 z-20"
+        className="hidden md:block absolute left-12 lg:left-20 top-[42%] -translate-y-1/2 z-20 rounded-full"
       >
         <img
           src={LOGO_URL}
@@ -45,14 +56,21 @@ export default function Hero() {
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: 40, scale: 0.8 }}
-        animate={{ opacity: 1, x: 0, scale: 1, y: [0, -8, 0] }}
+        animate={{
+          opacity: 1,
+          x: 0,
+          scale: [1, 1.03, 1],
+          y: [0, -10, 0],
+          boxShadow: ["0 0 30px rgba(255,102,0,0.3)", "0 0 45px rgba(255,102,0,0.5)", "0 0 30px rgba(255,102,0,0.3)"]
+        }}
         transition={{
           opacity: { duration: 0.6 },
           x: { duration: 0.6 },
-          scale: { duration: 0.6 },
-          y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+          scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+          y: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+          boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
         }}
-        className="hidden md:block absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 z-20"
+        className="hidden md:block absolute right-12 lg:right-20 top-[42%] -translate-y-1/2 z-20 rounded-full"
       >
         <img
           src={LOGO_URL}
@@ -66,8 +84,12 @@ export default function Hero() {
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 200 }}
+          animate={{ opacity: 1, y: [0, -4, 0], scale: 1 }}
+          transition={{
+            opacity: { duration: 0.5, delay: 0.2 },
+            scale: { type: "spring", stiffness: 200 },
+            y: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
+          }}
           className="inline-flex items-center gap-2 bg-[#FF6600]/20 border border-[#FF6600]/40 text-[#FF6600] px-4 py-1.5 text-xs font-body uppercase tracking-widest mb-6"
         >
           <motion.span
@@ -183,8 +205,8 @@ export default function Hero() {
       <motion.a
         href="#menu"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 8, 0] }}
-        transition={{ duration: 0.8, delay: 1.2, repeat: Infinity, repeatDelay: 0.5 }}
+        animate={{ opacity: [0.7, 1, 0.7], y: [0, 10, 0], scale: [1, 1.1, 1] }}
+        transition={{ duration: 1.5, delay: 1.2, repeat: Infinity, repeatDelay: 0.3 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[#FF6600] z-10"
         data-testid="hero-scroll-indicator"
       >

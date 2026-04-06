@@ -17,13 +17,13 @@ const items = [
 export default function MarqueeStrip() {
   return (
     <motion.div
-      data-testid="marquee-strip"
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      data-testid="marquee-strip"
       className="bg-[#FF6600] py-3 overflow-hidden border-y border-[#FF8533]"
     >
-      <Marquee speed={50} gradient={false}>
+      <Marquee speed={70} gradient={false}>
         {items.map((item, i) => (
           <span key={i} className="font-heading text-xl tracking-widest text-white mx-6 flex items-center gap-6">
             {item}

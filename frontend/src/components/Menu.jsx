@@ -6,14 +6,26 @@ import { useCart } from "../context/CartContext";
 const WA_LINK = "https://wa.me/573177371695";
 
 const IMAGES = {
-  salchipapa: "https://images.unsplash.com/photo-1762284513031-3d7ad15562bc?w=500&q=80",
-  salchipapa2: "https://images.unsplash.com/photo-1771818708792-d671ae9b4b46?w=500&q=80",
-  salchipapa3: "https://images.unsplash.com/photo-1770117160166-cece70b1f0b0?w=500&q=80",
-  burger: "https://images.unsplash.com/photo-1678110707289-ab14382a1625?w=500&q=80",
-  burger2: "https://images.unsplash.com/photo-1678110707493-8d05425137ac?w=500&q=80",
-  wings: "https://images.unsplash.com/photo-1734987942068-a1a459d65d3d?w=500&q=80",
-  fries: "https://images.unsplash.com/photo-1662452883375-9226ea22c765?w=500&q=80",
-  combo: "https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=500&q=80",
+  salchipapa: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500&q=80",
+  salchipapa2: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=500&q=80",
+  salchipapa3: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&q=80",
+  burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
+  burger2: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=500&q=80",
+  burger3: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&q=80",
+  burger4: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500&q=80",
+  burger5: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500&q=80",
+  wings: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=500&q=80",
+  wings2: "https://images.unsplash.com/photo-1608039755401-742074f0548d?w=500&q=80",
+  wings3: "https://images.unsplash.com/photo-1587899897387-091ebd01a6b2?w=500&q=80",
+  fries: "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=500&q=80",
+  fries2: "https://images.unsplash.com/photo-1582169296194-e4d644c48063?w=500&q=80",
+  fries3: "https://images.unsplash.com/photo-1562059390-a761a084768e?w=500&q=80",
+  combo: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=500&q=80",
+  combo2: "https://images.unsplash.com/photo-1584208124888-6f36e9f3da7d?w=500&q=80",
+  combo3: "https://images.unsplash.com/photo-1553909489-cd47e0907980?w=500&q=80",
+  drink: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500&q=80",
+  drink2: "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&q=80",
+  drink3: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=500&q=80",
 };
 
 const categories = [
@@ -29,12 +41,12 @@ const categories = [
 const menuData = {
   salchipapas: [
     { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: IMAGES.salchipapa },
-    { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: IMAGES.salchipapa },
-    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: IMAGES.salchipapa },
+    { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: IMAGES.salchipapa2 },
+    { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: IMAGES.salchipapa3 },
     { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa },
-    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa },
-    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa },
-    { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa },
+    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa2 },
+    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: IMAGES.salchipapa3 },
+    { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: IMAGES.salchipapa2 },
     {
       name: "Salchimax!",
       desc: "Salchicha, tocineta, papa amarilla, papa francesa, chorizo, pollo desmechado, carne desmechada, maduro, maicitos, doble queso, salsas, salsa de la casa y costilla en salsa BBQ casera",
@@ -50,56 +62,71 @@ const menuData = {
   burgers: [
     { name: "La Clásica", desc: "Pan brioche, queso, carne 100% Angus, lechuga crespa, tomate, cebolla, salsa especial", price: "$21.000", img: IMAGES.burger },
     { name: "Chicken Burger", desc: "Pan brioche, queso, filete de pollo apanado, mermelada de tocineta, lechuga crespa, cebolla, tomate y salsa especial", price: "$22.000", img: IMAGES.burger2 },
-    { name: "Especial", desc: "Pan brioche, queso, carne 100% Angus, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial", price: "$23.000", img: IMAGES.burger },
-    { name: "Cheesy Crunch", desc: "Pan brioche, queso apanado, carne 100% Angus, mermelada de tocineta, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger2 },
-    { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger },
+    { name: "Especial", desc: "Pan brioche, queso, carne 100% Angus, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial", price: "$23.000", img: IMAGES.burger3 },
+    { name: "Cheesy Crunch", desc: "Pan brioche, queso apanado, carne 100% Angus, mermelada de tocineta, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger4 },
+    { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: IMAGES.burger5 },
   ],
   alitas: [
     { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: IMAGES.wings },
-    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: IMAGES.wings },
-    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: IMAGES.wings },
+    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: IMAGES.wings2 },
+    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: IMAGES.wings3 },
   ],
   nachos: [
     { name: "Toppins Nachos", desc: "Nachos, queso, pico de gallo, sour cream, guacamole", price: "$25.000", img: IMAGES.fries },
-    { name: '"Colombianos"', desc: "Nachos, queso, pico de gallo, pollo desmechado, carne desmechada y maduro", price: "$33.500", img: IMAGES.fries },
-    { name: "Tex - Mex", desc: "Nachos, queso, pico de gallo, pollo BBQ, guacamole, tocineta y maíz", price: "$33.500", img: IMAGES.fries },
+    { name: '"Colombianos"', desc: "Nachos, queso, pico de gallo, pollo desmechado, carne desmechada y maduro", price: "$33.500", img: IMAGES.fries2 },
+    { name: "Tex - Mex", desc: "Nachos, queso, pico de gallo, pollo BBQ, guacamole, tocineta y maíz", price: "$33.500", img: IMAGES.fries3 },
   ],
   burros: [
     { name: "El Burro", desc: "Carne y pollo desmechado, guacamole, pico de gallo, lechuga, queso", price: "$20.000", img: IMAGES.combo },
-    { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: IMAGES.combo },
+    { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: IMAGES.combo2 },
     { name: "El Super Burro", desc: "Carne y pollo desmechado, tocineta, pico de gallo, aguacate, lechuga, queso y salchicha ranchera", price: "$23.000", img: IMAGES.combo },
   ],
   sandwiches: [
-    { name: "Cubano Sencillo", desc: "Jamón de cerdo, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$15,000", img: IMAGES.burger2 },
+    { name: "Cubano Sencillo", desc: "Jamón de cerdo, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$15,000", img: IMAGES.combo3 },
     { name: "Cubano Hawaiano", desc: "Jamón de cerdo, piña calada, lechuga, tomate, queso, salsa de ajo", price: "$18,000", img: IMAGES.burger },
     { name: "Cubano Especial", desc: "Jamón de cerdo, tocineta, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$18,000", img: IMAGES.burger2 },
   ],
   bebidas: [
-    { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.combo },
-    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.combo },
-    { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: IMAGES.combo },
-    { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.combo },
-    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.combo },
+    { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.drink },
+    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.drink2 },
+    { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: IMAGES.drink3 },
+    { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.drink },
+    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: IMAGES.drink2 },
   ],
 };
 
 function ProductCard({ item }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const [selectedPortion, setSelectedPortion] = useState(null);
+
+  const requiresPortionSelection = (item.price2 && item.price2 !== "") || (Array.isArray(item.prices) && item.prices.length > 0);
+
+  const togglePortion = (label, price) => {
+    setSelectedPortion((prev) => (prev?.label === label ? null : { label, price }));
+  };
 
   const handleAdd = () => {
-    addItem(item);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
+    if (requiresPortionSelection) {
+      if (!selectedPortion) return;
+      addItem({ name: `${item.name} (${selectedPortion.label})`, price: selectedPortion.price, img: item.img });
+      setSelectedPortion(null);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    } else {
+      addItem({ name: item.name, price: item.price, img: item.img });
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    }
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.03, y: -6, transition: { duration: 0.2 } }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      whileHover={{ y: -4 }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
       className="food-card overflow-hidden group flex flex-col"
     >
@@ -118,37 +145,66 @@ function ProductCard({ item }) {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex justify-between items-start gap-2 mb-1.5">
           <h3 className="font-heading text-lg text-white tracking-wide leading-tight">{item.name}</h3>
-          {!item.prices && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
+          {!item.prices && !item.price2 && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
         </div>
         <p className="font-body text-xs text-gray-400 leading-relaxed flex-1">{item.desc}</p>
 
-        {/* Dual pricing for 1 / 2 persons */}
+        {/* Dual pricing for 1 / 2 persons — clickable selection buttons */}
         {item.price2 && (
-          <p className="font-body text-xs text-[#FF6600] mt-2">
-            1 persona: {item.price} &nbsp;|&nbsp; 2 personas: {item.price2}
-          </p>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => togglePortion("1 persona", item.price)}
+              className={`flex-1 flex flex-col items-center text-center font-body text-xs py-1 px-2 rounded border-2 transition-all duration-200 ${
+                selectedPortion?.label === "1 persona"
+                  ? "bg-[#FF6600] border-[#FF6600] text-white"
+                  : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
+              }`}
+            >
+              <span>1 persona</span><span className="font-semibold">{item.price}</span>
+            </button>
+            <button
+              onClick={() => togglePortion("2 personas", item.price2)}
+              className={`flex-1 flex flex-col items-center text-center font-body text-xs py-1 px-2 rounded border-2 transition-all duration-200 ${
+                selectedPortion?.label === "2 personas"
+                  ? "bg-[#FF6600] border-[#FF6600] text-white"
+                  : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
+              }`}
+            >
+              <span>2 personas</span><span className="font-semibold">{item.price2}</span>
+            </button>
+          </div>
         )}
 
-        {/* Multi-tier pricing for Salchimax! */}
+        {/* Multi-tier pricing for Salchimax! — clickable selection buttons */}
         {item.prices && (
           <div className="mt-2 flex flex-col gap-1">
             {item.prices.map((tier) => (
-              <span key={tier.persons} className="font-body text-xs text-[#FF6600]">
-                {tier.persons}: <span className="font-semibold">{tier.price}</span>
-              </span>
+              <button
+                key={tier.persons}
+                onClick={() => togglePortion(tier.persons, tier.price)}
+                className={`w-full flex justify-between px-3 py-2 font-body text-xs rounded border transition-all duration-200 ${
+                  selectedPortion?.label === tier.persons
+                    ? "bg-[#FF6600] border-[#FF6600] text-white"
+                    : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
+                }`}
+              >
+                <span>{tier.persons}</span>
+                <span className="font-semibold">{tier.price}</span>
+              </button>
             ))}
           </div>
         )}
 
         {/* Add to cart button */}
-        <motion.button
+        <button
           data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
           onClick={handleAdd}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          disabled={requiresPortionSelection && !selectedPortion}
           className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
             added
               ? "bg-green-600 text-white"
+              : requiresPortionSelection && !selectedPortion
+              ? "bg-[#FF6600]/5 border border-[#FF6600]/15 text-[#FF6600]/40 cursor-not-allowed"
               : "bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] hover:bg-[#FF6600] hover:text-white"
           }`}
         >
@@ -163,7 +219,7 @@ function ProductCard({ item }) {
               AGREGAR AL PEDIDO
             </>
           )}
-        </motion.button>
+        </button>
       </div>
     </motion.div>
   );
@@ -224,27 +280,6 @@ export default function Menu() {
             </button>
           ))}
         </div>
-
-        {/* Build-your-own note for salchipapas */}
-        {activeTab === "salchipapas" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-8 flex flex-col gap-3"
-          >
-            <div className="p-4 border border-[#FF6600]/50 bg-[#FF6600]/10 text-center">
-              <p className="font-heading text-sm text-white tracking-wide">
-                🎉 <span className="text-[#FF6600]">Con más de 6 ingredientes, la base de papa es GRATIS</span>
-              </p>
-            </div>
-            <div className="p-4 border border-[#FF6600]/30 bg-[#FF6600]/5">
-              <p className="font-body text-sm text-gray-300">
-                <span className="text-[#FF6600] font-semibold">CREA LA TUYA:</span>{" "}
-                Base desde <span className="text-[#FF6600]">$3,500</span> — Toppings: Queso desde $2,000 · Tocineta $3,500 · Chorizo $3,500 · Costilla BBQ $5,000 · Pollo Desmechado $4,500 · Carne Desmechada $4,500 y más
-              </p>
-            </div>
-          </motion.div>
-        )}
 
         {/* Note for burgers */}
         {activeTab === "burgers" && (

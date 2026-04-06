@@ -5,7 +5,9 @@
       "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn install 2>&1', {encoding:'utf8', timeout:120000}\\); console.log\\(r\\); } catch\\(e\\) { console.log\\(e.stdout\\); console.log\\(e.stderr\\); }\")",
       "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn add @vercel/analytics 2>&1', {encoding:'utf8', timeout:60000}\\); console.log\\(r.slice\\(-1000\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-2000\\)\\); }\")",
       "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('CI=false GENERATE_SOURCEMAP=false yarn build 2>&1', {encoding:'utf8', timeout:120000}\\); console.log\\(r.slice\\(-1500\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-3000\\)\\); }\")",
-      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn build 2>&1', {encoding:'utf8', timeout:120000, env: {...process.env, CI:'false', GENERATE_SOURCEMAP:'false'}}\\); console.log\\(r.slice\\(-1500\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-3000\\)\\); }\")"
+      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn build 2>&1', {encoding:'utf8', timeout:120000, env: {...process.env, CI:'false', GENERATE_SOURCEMAP:'false'}}\\); console.log\\(r.slice\\(-1500\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-3000\\)\\); }\")",
+      "Bash(node -e \"const d=require\\('./frontend/package.json'\\); console.log\\(JSON.stringify\\(Object.fromEntries\\(Object.entries\\(d.dependencies\\).filter\\(\\([k]\\)=>k.includes\\('vercel'\\)\\)\\), null, 2\\)\\)\")",
+      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn --cwd frontend add @vercel/speed-insights 2>&1', {encoding:'utf8', timeout:60000}\\); console.log\\(r.slice\\(-500\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-1000\\)\\); }\")"
     ]
   }
 }

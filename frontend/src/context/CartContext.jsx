@@ -16,7 +16,7 @@ export function CartProvider({ children }) {
       }
       return [...prev, { ...product, qty: 1 }];
     });
-    setIsOpen(true);
+    // No longer auto-open cart when adding items
   }, []);
 
   const removeItem = useCallback((name) => {

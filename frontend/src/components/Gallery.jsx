@@ -67,6 +67,7 @@ export default function Gallery() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
+              whileHover={{ scale: 1.03 }}
               data-testid={`gallery-item-${i}`}
               className={`gallery-item overflow-hidden relative group ${img.span}`}
             >

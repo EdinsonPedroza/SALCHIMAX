@@ -3,7 +3,7 @@ import { Menu, X, Phone, ShoppingBag } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 
-const LOGO_URL = "/logo.svg";
+const LOGO_URL = "/logo.jpeg";
 const WA_LINK = "https://wa.me/573177371695";
 
 const navLinks = [
@@ -71,11 +71,13 @@ export default function Navbar() {
           </a>
 
           {/* Cart icon */}
-          <button
+          <motion.button
             data-testid="navbar-cart-btn"
             onClick={() => openCart(true)}
             className="relative text-white hover:text-[#FF6600] transition-colors p-2"
             aria-label="Abrir carrito"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
             <ShoppingBag size={24} />
             <AnimatePresence>
@@ -92,7 +94,7 @@ export default function Navbar() {
                 </motion.span>
               )}
             </AnimatePresence>
-          </button>
+          </motion.button>
 
           {/* WhatsApp CTA (desktop) */}
           <a

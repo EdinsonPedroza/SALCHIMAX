@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Instagram, Facebook, MessageCircle } from "lucide-react";
 
-const LOGO_URL = "/logo.svg";
+const LOGO_URL = "/logo.jpeg";
 const WA_LINK = "https://wa.me/573177371695";
 
 const navLinks = [

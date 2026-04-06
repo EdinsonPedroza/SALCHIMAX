@@ -1,6 +1,8 @@
+import { useState } from "react";
 import "./App.css";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./components/Cart";
+import MiniCart from "./components/MiniCart";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import MarqueeStrip from "./components/MarqueeStrip";
@@ -12,13 +14,20 @@ import OrderCTA from "./components/OrderCTA";
 import Location from "./components/Location";
 import Footer from "./components/Footer";
 import WhatsAppFloat from "./components/WhatsAppFloat";
+import IntroScreen from "./components/IntroScreen";
 
 function App() {
+  const [introVisible, setIntroVisible] = useState(true);
+
   return (
     <CartProvider>
+      {introVisible && (
+        <IntroScreen onComplete={() => setIntroVisible(false)} />
+      )}
       <div className="App bg-[#0D0D0D] min-h-screen font-body">
         <Navbar />
         <Cart />
+        <MiniCart />
         <Hero />
         <MarqueeStrip />
         <Menu />

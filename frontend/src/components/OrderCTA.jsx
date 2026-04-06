@@ -43,24 +43,30 @@ export default function OrderCTA() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a
+            <motion.a
               href={WA_LINK}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="cta-whatsapp-btn"
               className="btn-orange flex items-center gap-3 px-10 py-5 text-2xl font-heading tracking-widest w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,102,0,0.3)]"
+              whileHover={{ scale: 1.05, boxShadow: "0 0 50px rgba(255,102,0,0.5)" }}
+              whileTap={{ scale: 0.98 }}
             >
-              <MessageCircle size={28} />
+              <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}>
+                <MessageCircle size={28} />
+              </motion.span>
               PEDIR POR WHATSAPP
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="tel:3177371695"
               data-testid="cta-phone-btn"
               className="btn-outline-orange flex items-center gap-3 px-10 py-5 text-2xl font-heading tracking-widest w-full sm:w-auto justify-center"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
               <Phone size={28} />
               LLAMAR AHORA
-            </a>
+            </motion.a>
           </div>
 
           <p className="font-body text-sm text-gray-500 mt-8">

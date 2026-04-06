@@ -12,10 +12,10 @@ export default function Hero() {
       data-testid="hero-section"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background image con movimiento sutil */}
+      {/* Background image — will-change hints compositor to promote to own layer */}
       <motion.div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${HERO_BG})` }}
+        style={{ backgroundImage: `url(${HERO_BG})`, willChange: "transform" }}
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -30,22 +30,18 @@ export default function Hero() {
       />
 
       {/* Logos en los costados - un poco más arriba y hacia adentro */}
+      {/* Logo left — boxShadow removed from animation (not GPU-composited).
+          Floating effect uses only scale+y (transform = GPU only). */}
       <motion.div
         initial={{ opacity: 0, x: -40, scale: 0.8 }}
-        animate={{
-          opacity: 1,
-          x: 0,
-          scale: [1, 1.03, 1],
-          y: [0, -10, 0],
-          boxShadow: ["0 0 30px rgba(255,102,0,0.3)", "0 0 45px rgba(255,102,0,0.5)", "0 0 30px rgba(255,102,0,0.3)"]
-        }}
+        animate={{ opacity: 1, x: 0, scale: [1, 1.03, 1], y: [0, -10, 0] }}
         transition={{
           opacity: { duration: 0.6 },
           x: { duration: 0.6 },
           scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
           y: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-          boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
         }}
+        style={{ willChange: "transform" }}
         className="hidden md:block absolute left-12 lg:left-20 top-[42%] -translate-y-1/2 z-20 rounded-full"
       >
         <img
@@ -54,22 +50,17 @@ export default function Hero() {
           className="w-20 h-20 lg:w-28 lg:h-28 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.4)]"
         />
       </motion.div>
+      {/* Logo right */}
       <motion.div
         initial={{ opacity: 0, x: 40, scale: 0.8 }}
-        animate={{
-          opacity: 1,
-          x: 0,
-          scale: [1, 1.03, 1],
-          y: [0, -10, 0],
-          boxShadow: ["0 0 30px rgba(255,102,0,0.3)", "0 0 45px rgba(255,102,0,0.5)", "0 0 30px rgba(255,102,0,0.3)"]
-        }}
+        animate={{ opacity: 1, x: 0, scale: [1, 1.03, 1], y: [0, -10, 0] }}
         transition={{
           opacity: { duration: 0.6 },
           x: { duration: 0.6 },
           scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
           y: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-          boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
         }}
+        style={{ willChange: "transform" }}
         className="hidden md:block absolute right-12 lg:right-20 top-[42%] -translate-y-1/2 z-20 rounded-full"
       >
         <img
@@ -185,18 +176,8 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.9 }}
               className="flex items-center justify-center gap-2 mt-10"
             >
-              <div className="flex gap-1">
-                {[1,2,3,4,5].map(i => (
-                  <motion.span
-                    key={i}
-                    className="text-[#FF6600] text-lg"
-                    animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-                    transition={{ duration: 1.5, delay: i * 0.1, repeat: Infinity, repeatDelay: 2 }}
-                  >
-                    ★
-                  </motion.span>
-                ))}
-              </div>
+              {/* Single element — CSS handles the pulse, no 5 JS animation loops */}
+              <span className="text-[#FF6600] text-lg tracking-wide hero-stars">★★★★★</span>
               <span className="font-body text-sm text-gray-400">5.0 en Google Maps</span>
             </motion.div>
       </div>

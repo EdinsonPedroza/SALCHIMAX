@@ -4,13 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 const LETTERS = "SALCHIMAX".split("");
 
 // Shock-ring that expands and fades
-function Ring({ delay, size }) {
+// Uses scale (GPU-composited) instead of width/height (layout-triggering)
+function Ring({ delay, scaleTo }) {
   return (
     <motion.div
       className="absolute rounded-full border border-[#FF6600]/50 pointer-events-none"
-      style={{ width: 160, height: 160 }}
-      initial={{ width: 160, height: 160, opacity: 1 }}
-      animate={{ width: size, height: size, opacity: 0 }}
+      style={{ width: 160, height: 160, willChange: "transform, opacity" }}
+      initial={{ scale: 1, opacity: 1 }}
+      animate={{ scale: scaleTo, opacity: 0 }}
       transition={{ duration: 1.2, delay, ease: "easeOut" }}
     />
   );
@@ -120,10 +121,10 @@ export default function IntroScreen({ onComplete }) {
 
             {/* Logo area (rings + sparks + logo) */}
             <div className="relative flex items-center justify-center">
-              {/* Shock rings */}
-              <Ring delay={0.2} size={380} />
-              <Ring delay={0.35} size={520} />
-              <Ring delay={0.5} size={700} />
+              {/* Shock rings — scale factor = target / 160 */}
+              <Ring delay={0.2} scaleTo={2.375} />
+              <Ring delay={0.35} scaleTo={3.25} />
+              <Ring delay={0.5} scaleTo={4.375} />
 
               {/* Sparks */}
               {sparks.map((s, i) => (
@@ -206,13 +207,13 @@ export default function IntroScreen({ onComplete }) {
               Urban Food · Palmira
             </motion.p>
 
-            {/* Progress bar */}
+            {/* Progress bar — scaleX is GPU-composited, width is not */}
             <motion.div
-              className="absolute bottom-0 left-0 h-[3px] bg-[#FF6600]"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
+              className="absolute bottom-0 left-0 h-[3px] bg-[#FF6600] w-full origin-left"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
               transition={{ duration: 2.4, delay: 0.15, ease: "linear" }}
-              style={{ willChange: "width" }}
+              style={{ willChange: "transform" }}
             />
 
             {/* Corner decorations */}

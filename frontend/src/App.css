@@ -55,16 +55,16 @@
   transform: translateY(-2px);
 }
 
-/* Card hover effect */
+/* Card hover effect — transform removed: Framer Motion whileHover handles y:-4.
+   Keeping only non-transform properties to avoid conflict. */
 .food-card {
   background-color: #171717;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .food-card:hover {
   border-color: rgba(255, 102, 0, 0.5);
-  transform: translateY(-4px);
   box-shadow: 0 10px 40px rgba(255, 102, 0, 0.15);
 }
 
@@ -152,7 +152,17 @@ html {
   letter-spacing: 0.05em;
 }
 
-/* Star rating */
+/* Star rating — single CSS animation replaces 5 Framer Motion infinite loops */
 .star-filled {
   color: #FF6600;
+}
+
+@keyframes star-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.hero-stars {
+  animation: star-pulse 2s ease-in-out infinite;
+  will-change: opacity;
 }

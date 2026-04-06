@@ -3,45 +3,42 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const LETTERS = "SALCHIMAX".split("");
 
-// Shock-ring that expands and fades
-// Uses scale (GPU-composited) instead of width/height (layout-triggering)
 function Ring({ delay, scaleTo }) {
   return (
     <motion.div
-      className="absolute rounded-full border border-[#FF6600]/50 pointer-events-none"
+      className="absolute rounded-full border border-[#FF6600]/30 pointer-events-none"
       style={{ width: 160, height: 160, willChange: "transform, opacity" }}
-      initial={{ scale: 1, opacity: 1 }}
+      initial={{ scale: 1, opacity: 0.6 }}
       animate={{ scale: scaleTo, opacity: 0 }}
-      transition={{ duration: 1.2, delay, ease: "easeOut" }}
+      transition={{ duration: 1.4, delay, ease: "easeOut" }}
     />
   );
 }
 
-// Spark particle flying outward
 function Spark({ angle, delay }) {
   const rad = (angle * Math.PI) / 180;
-  const dist = 180 + Math.random() * 80;
+  const dist = 120 + Math.random() * 60;
   const x = Math.cos(rad) * dist;
   const y = Math.sin(rad) * dist;
 
   return (
     <motion.div
-      className="absolute w-1.5 h-1.5 rounded-full bg-[#FF6600] pointer-events-none"
-      style={{ top: "50%", left: "50%", marginTop: -3, marginLeft: -3 }}
-      initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+      className="absolute w-1 h-1 rounded-full bg-[#FF6600]/70 pointer-events-none"
+      style={{ top: "50%", left: "50%", marginTop: -2, marginLeft: -2 }}
+      initial={{ x: 0, y: 0, opacity: 0.8, scale: 1 }}
       animate={{ x, y, opacity: 0, scale: 0 }}
-      transition={{ duration: 0.9, delay, ease: "easeOut" }}
+      transition={{ duration: 0.7, delay, ease: "easeOut" }}
     />
   );
 }
 
 export default function IntroScreen({ onComplete }) {
-  const [phase, setPhase] = useState("show"); // "show" | "exit"
+  const [phase, setPhase] = useState("show");
 
   useEffect(() => {
-    // Prevent scroll while intro is active
     document.body.style.overflow = "hidden";
-    const t = setTimeout(() => setPhase("exit"), 2600);
+    // Más rápido: 2000ms antes de salir
+    const t = setTimeout(() => setPhase("exit"), 2000);
     return () => {
       clearTimeout(t);
       document.body.style.overflow = "";
@@ -53,25 +50,18 @@ export default function IntroScreen({ onComplete }) {
     onComplete?.();
   };
 
-  const sparks = Array.from({ length: 12 }, (_, i) => ({
-    angle: i * 30,
-    delay: 0.25 + i * 0.01,
+  const sparks = Array.from({ length: 8 }, (_, i) => ({
+    angle: i * 45,
+    delay: 0.2 + i * 0.01,
   }));
 
-  // Curtain split exit variants
   const curtainTop = {
     initial: { y: 0 },
-    exit: {
-      y: "-100%",
-      transition: { duration: 0.65, ease: [0.76, 0, 0.24, 1] },
-    },
+    exit: { y: "-100%", transition: { duration: 0.55, ease: [0.76, 0, 0.24, 1] } },
   };
   const curtainBottom = {
     initial: { y: 0 },
-    exit: {
-      y: "100%",
-      transition: { duration: 0.65, ease: [0.76, 0, 0.24, 1] },
-    },
+    exit: { y: "100%", transition: { duration: 0.55, ease: [0.76, 0, 0.24, 1] } },
   };
 
   const isExiting = phase === "exit";
@@ -80,7 +70,6 @@ export default function IntroScreen({ onComplete }) {
     <AnimatePresence onExitComplete={handleExitComplete}>
       {!isExiting && (
         <>
-          {/* Top curtain half */}
           <motion.div
             key="curtain-top"
             variants={curtainTop}
@@ -89,7 +78,6 @@ export default function IntroScreen({ onComplete }) {
             className="fixed inset-x-0 top-0 h-1/2 bg-[#0D0D0D] z-[9998] pointer-events-none"
             style={{ willChange: "transform" }}
           />
-          {/* Bottom curtain half */}
           <motion.div
             key="curtain-bottom"
             variants={curtainBottom}
@@ -99,88 +87,79 @@ export default function IntroScreen({ onComplete }) {
             style={{ willChange: "transform" }}
           />
 
-          {/* Main content overlay */}
           <motion.div
             key="intro-content"
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            exit={{ opacity: 0, transition: { duration: 0.1 } }}
             className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
             style={{ background: "#0D0D0D" }}
           >
-            {/* Ambient radial glow */}
+            {/* Ambient glow — más oscuro y misterioso */}
             <motion.div
               className="absolute inset-0 pointer-events-none"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.25, 0.12] }}
-              transition={{ duration: 2, times: [0, 0.3, 1] }}
+              animate={{ opacity: [0, 0.08, 0.05] }}
+              transition={{ duration: 1.8, times: [0, 0.4, 1] }}
               style={{
                 background:
-                  "radial-gradient(ellipse 60% 50% at 50% 50%, #FF6600 0%, transparent 70%)",
+                  "radial-gradient(ellipse 50% 40% at 50% 50%, #FF6600 0%, transparent 70%)",
               }}
             />
 
-            {/* Logo area (rings + sparks + logo) */}
+            {/* Logo area */}
             <div className="relative flex items-center justify-center">
-              {/* Shock rings — scale factor = target / 160 */}
-              <Ring delay={0.2} scaleTo={2.375} />
-              <Ring delay={0.35} scaleTo={3.25} />
-              <Ring delay={0.5} scaleTo={4.375} />
+              <Ring delay={0.15} scaleTo={2.375} />
+              <Ring delay={0.28} scaleTo={3.25} />
+              <Ring delay={0.42} scaleTo={4.375} />
 
-              {/* Sparks */}
               {sparks.map((s, i) => (
                 <Spark key={i} angle={s.angle} delay={s.delay} />
               ))}
 
-              {/* Logo */}
               <motion.div
-                initial={{ scale: 0, y: -120, rotate: -8, opacity: 0 }}
-                animate={{ scale: 1, y: 0, rotate: 0, opacity: 1 }}
-                transition={{
-                  duration: 0.55,
-                  ease: [0.34, 1.56, 0.64, 1],
-                  delay: 0.1,
-                }}
+                initial={{ scale: 0, y: -80, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                transition={{ duration: 0.45, ease: [0.34, 1.4, 0.64, 1], delay: 0.08 }}
                 style={{ willChange: "transform" }}
               >
-                {/* Glow behind logo */}
+                {/* Glow detrás del logo */}
                 <motion.div
                   className="absolute inset-0 rounded-full pointer-events-none"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1, 0.5] }}
-                  transition={{ duration: 1.2, times: [0, 0.3, 1] }}
+                  animate={{ opacity: [0, 0.6, 0.3] }}
+                  transition={{ duration: 1, times: [0, 0.3, 1] }}
                   style={{
-                    background:
-                      "radial-gradient(circle, #FF6600 0%, transparent 70%)",
-                    filter: "blur(20px)",
-                    transform: "scale(1.6)",
+                    background: "radial-gradient(circle, #FF6600 0%, transparent 70%)",
+                    filter: "blur(18px)",
+                    transform: "scale(1.5)",
                   }}
                 />
+                {/* Logo sin círculo negro — solo ring naranja y glow */}
                 <img
                   src="/logo.jpeg"
                   alt="SALCHIMAX"
                   loading="eager"
                   className="relative w-36 h-36 md:w-48 md:h-48 rounded-full object-cover"
                   style={{
-                    boxShadow:
-                      "0 0 0 4px #FF6600, 0 0 0 8px #0D0D0D, 0 0 40px #FF660088",
+                    boxShadow: "0 0 0 3px #FF6600, 0 0 35px #FF660066",
                   }}
                 />
               </motion.div>
             </div>
 
-            {/* Brand letters */}
-            <div className="flex mt-10 overflow-hidden gap-0.5 md:gap-1">
+            {/* Letras — más rápidas, entrada más sutil */}
+            <div className="flex mt-8 overflow-hidden gap-0.5 md:gap-1">
               {LETTERS.map((letter, i) => (
                 <motion.span
                   key={i}
                   className="font-heading text-6xl sm:text-7xl md:text-9xl text-white leading-none select-none"
                   style={{ willChange: "transform" }}
-                  initial={{ y: 100, opacity: 0 }}
+                  initial={{ y: 80, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{
-                    duration: 0.45,
-                    delay: 0.55 + i * 0.055,
-                    ease: [0.34, 1.4, 0.64, 1],
+                    duration: 0.35,
+                    delay: 0.42 + i * 0.045,
+                    ease: [0.22, 1, 0.36, 1],
                   }}
                 >
                   {letter}
@@ -188,59 +167,43 @@ export default function IntroScreen({ onComplete }) {
               ))}
             </div>
 
-            {/* Orange accent line under letters */}
+            {/* Línea naranja */}
             <motion.div
-              className="h-[3px] bg-[#FF6600] mt-2"
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "100%", opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.15, ease: "easeOut" }}
-              style={{ maxWidth: "min(600px, 90vw)" }}
+              className="h-px bg-[#FF6600]/60 mt-3 origin-left"
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
+              style={{ width: "min(480px, 85vw)", willChange: "transform" }}
             />
 
-            {/* Tagline */}
+            {/* Tagline — blanco apagado, más misterioso */}
             <motion.p
-              className="font-body uppercase tracking-[0.45em] text-[#FF6600] text-sm md:text-base mt-5"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.3, ease: "easeOut" }}
+              className="font-body uppercase tracking-[0.5em] text-white/30 text-xs md:text-sm mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 1.05, ease: "easeOut" }}
             >
               Urban Food · Palmira
             </motion.p>
 
-            {/* Progress bar — scaleX is GPU-composited, width is not */}
+            {/* Barra de progreso */}
             <motion.div
-              className="absolute bottom-0 left-0 h-[3px] bg-[#FF6600] w-full origin-left"
+              className="absolute bottom-0 left-0 h-[2px] bg-[#FF6600]/50 w-full origin-left"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 2.4, delay: 0.15, ease: "linear" }}
+              transition={{ duration: 1.85, delay: 0.1, ease: "linear" }}
               style={{ willChange: "transform" }}
             />
 
-            {/* Corner decorations */}
-            <motion.div
-              className="absolute top-6 left-6 w-8 h-8 border-t-2 border-l-2 border-[#FF6600]/60"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.8 }}
-            />
-            <motion.div
-              className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-[#FF6600]/60"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.9 }}
-            />
-            <motion.div
-              className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-[#FF6600]/60"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 1.0 }}
-            />
-            <motion.div
-              className="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-[#FF6600]/60"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 1.1 }}
-            />
+            {/* Esquinas decorativas — más sutiles */}
+            <motion.div className="absolute top-5 left-5 w-6 h-6 border-t border-l border-[#FF6600]/30"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.6 }} />
+            <motion.div className="absolute top-5 right-5 w-6 h-6 border-t border-r border-[#FF6600]/30"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.65 }} />
+            <motion.div className="absolute bottom-5 left-5 w-6 h-6 border-b border-l border-[#FF6600]/30"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.7 }} />
+            <motion.div className="absolute bottom-5 right-5 w-6 h-6 border-b border-r border-[#FF6600]/30"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.75 }} />
           </motion.div>
         </>
       )}

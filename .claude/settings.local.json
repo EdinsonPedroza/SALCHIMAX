@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(yarn install:*)",
-      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn install 2>&1', {encoding:'utf8', timeout:120000}\\); console.log\\(r\\); } catch\\(e\\) { console.log\\(e.stdout\\); console.log\\(e.stderr\\); }\")"
+      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn install 2>&1', {encoding:'utf8', timeout:120000}\\); console.log\\(r\\); } catch\\(e\\) { console.log\\(e.stdout\\); console.log\\(e.stderr\\); }\")",
+      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn add @vercel/analytics 2>&1', {encoding:'utf8', timeout:60000}\\); console.log\\(r.slice\\(-1000\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-2000\\)\\); }\")",
+      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('CI=false GENERATE_SOURCEMAP=false yarn build 2>&1', {encoding:'utf8', timeout:120000}\\); console.log\\(r.slice\\(-1500\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-3000\\)\\); }\")",
+      "Bash(node -e \"const {execSync} = require\\('child_process'\\); try { const r = execSync\\('yarn build 2>&1', {encoding:'utf8', timeout:120000, env: {...process.env, CI:'false', GENERATE_SOURCEMAP:'false'}}\\); console.log\\(r.slice\\(-1500\\)\\); } catch\\(e\\) { console.log\\(\\(e.stdout||''\\).slice\\(-3000\\)\\); }\")"
     ]
   }
 }

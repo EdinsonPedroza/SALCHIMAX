@@ -17,10 +17,7 @@ export default function Cart() {
     buildWhatsAppMessage,
   } = useCart();
 
-  const handleWhatsApp = () => {
-    const msg = buildWhatsAppMessage();
-    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, "_blank");
-  };
+  const waHref = `https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${buildWhatsAppMessage()}`;
 
   return (
     <>
@@ -203,15 +200,17 @@ export default function Cart() {
                   Los precios marcados como "Consultar" se confirman por WhatsApp
                 </p>
 
-                {/* WhatsApp order button */}
-                <button
+                {/* WhatsApp order link — must be an <a> for reliable deep-linking on mobile */}
+                <a
                   data-testid="cart-whatsapp-order-btn"
-                  onClick={handleWhatsApp}
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-orange w-full py-4 font-heading text-xl tracking-widest flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(255,102,0,0.3)]"
                 >
                   <MessageCircle size={22} />
                   ENVIAR PEDIDO
-                </button>
+                </a>
               </div>
             )}
           </motion.aside>

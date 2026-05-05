@@ -17,7 +17,9 @@ export default function Cart() {
     buildWhatsAppMessage,
   } = useCart();
 
-  const waHref = `https://wa.me/${WA_NUMBER}?text=${buildWhatsAppMessage()}`;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const waBase = isMobile ? `whatsapp://send?phone=${WA_NUMBER}&text=` : `https://wa.me/${WA_NUMBER}?text=`;
+  const waHref = `${waBase}${buildWhatsAppMessage()}`;
 
   return (
     <>

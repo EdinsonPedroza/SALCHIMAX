@@ -17,7 +17,7 @@ export default function Cart() {
     buildWhatsAppMessage,
   } = useCart();
 
-  const waHref = `https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${buildWhatsAppMessage()}`;
+  const waHref = `https://wa.me/${WA_NUMBER}?text=${buildWhatsAppMessage()}`;
 
   return (
     <>

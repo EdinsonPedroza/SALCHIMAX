@@ -18,8 +18,19 @@ export default function Cart() {
   } = useCart();
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const waBase = isMobile ? `whatsapp://send?phone=${WA_NUMBER}&text=` : `https://wa.me/${WA_NUMBER}?text=`;
-  const waHref = `${waBase}${buildWhatsAppMessage()}`;
+
+  function handleOrder(e) {
+    e.preventDefault();
+    const text = buildWhatsAppMessage();
+    const url = isMobile
+      ? `whatsapp://send?phone=${WA_NUMBER}&text=${text}`
+      : `https://wa.me/${WA_NUMBER}?text=${text}`;
+    if (isMobile) {
+      window.location.href = url;
+    } else {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
 
   return (
     <>
@@ -202,17 +213,14 @@ export default function Cart() {
                   Los precios marcados como "Consultar" se confirman por WhatsApp
                 </p>
 
-                {/* WhatsApp order link — must be an <a> for reliable deep-linking on mobile */}
-                <a
+                <button
                   data-testid="cart-whatsapp-order-btn"
-                  href={waHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  onClick={handleOrder}
                   className="btn-orange w-full py-4 font-heading text-xl tracking-widest flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(255,102,0,0.3)]"
                 >
                   <MessageCircle size={22} />
                   ENVIAR PEDIDO
-                </a>
+                </button>
               </div>
             )}
           </motion.aside>

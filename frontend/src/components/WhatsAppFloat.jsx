@@ -2,19 +2,21 @@ import { motion } from "framer-motion";
 
 const WA_NUMBER = "573177371695";
 
-function getWaLink() {
+function handleWaClick(e) {
+  e.preventDefault();
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  return isMobile
-    ? `whatsapp://send?phone=${WA_NUMBER}`
-    : `https://wa.me/${WA_NUMBER}`;
+  if (isMobile) {
+    window.location.href = `whatsapp://send?phone=${WA_NUMBER}`;
+  } else {
+    window.open(`https://wa.me/${WA_NUMBER}`, "_blank", "noopener,noreferrer");
+  }
 }
 
 export default function WhatsAppFloat() {
   return (
     <motion.a
-      href={getWaLink()}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={`https://wa.me/${WA_NUMBER}`}
+      onClick={handleWaClick}
       data-testid="whatsapp-float-btn"
       aria-label="Pedir por WhatsApp"
       className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.5)]"

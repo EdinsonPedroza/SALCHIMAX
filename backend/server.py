@@ -75,12 +75,15 @@ async def get_status_checks():
 # Include the router in the main app
 app.include_router(api_router)
 
+_raw_origins = os.environ.get('CORS_ORIGINS', '')
+_allowed_origins = [o.strip() for o in _raw_origins.split(',') if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=_allowed_origins,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Configure logging

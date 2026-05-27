@@ -1,18 +1,5 @@
 import { motion } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-
-// Fix default marker icons broken by webpack
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
-
-const SALCHIMAX_POS = [3.5394, -76.2789];
 
 export default function Location() {
   return (
@@ -49,24 +36,16 @@ export default function Location() {
             data-testid="map-container"
             className="w-full h-80 md:h-96 overflow-hidden border border-white/10"
           >
-            <MapContainer
-              center={SALCHIMAX_POS}
-              zoom={17}
-              style={{ width: "100%", height: "100%", filter: "grayscale(70%) contrast(1.1)" }}
-              scrollWheelZoom={false}
-              zoomControl={true}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
-              />
-              <Marker position={SALCHIMAX_POS}>
-                <Popup>
-                  <strong>SALCHIMAX</strong><br />
-                  Cra. 28 #19-20, Palmira
-                </Popup>
-              </Marker>
-            </MapContainer>
+            <iframe
+              title="SALCHIMAX Ubicación"
+              src="https://maps.google.com/maps?q=Carrera+28+%2319-20+Palmira+Valle+del+Cauca+Colombia&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: "grayscale(80%) invert(10%) contrast(1.1)" }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </motion.div>
 
           {/* Info */}

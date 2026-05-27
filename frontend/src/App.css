@@ -176,3 +176,185 @@ html {
 .animate-pulse-orange {
   animation: pulse-orange 2s infinite;
 }
+
+/* ─── BRUTAL ANIMATIONS ───────────────────────────────────────── */
+
+/* Glitch effect — CRT color channel split */
+@keyframes glitch-clip-1 {
+  0%, 90%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+  5%  { clip-path: inset(8% 0 55% 0);  transform: translate(-4px, 2px); }
+  10% { clip-path: inset(45% 0 20% 0); transform: translate(4px, -2px); }
+  15% { clip-path: inset(75% 0 8% 0);  transform: translate(-3px, 1px); }
+  20% { clip-path: inset(25% 0 38% 0); transform: translate(3px, 0); }
+  25% { clip-path: inset(60% 0 15% 0); transform: translate(-2px, 2px); }
+}
+@keyframes glitch-clip-2 {
+  0%, 90%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+  5%  { clip-path: inset(55% 0 8% 0);  transform: translate(4px, -2px); }
+  10% { clip-path: inset(20% 0 45% 0); transform: translate(-4px, 2px); }
+  15% { clip-path: inset(8% 0 75% 0);  transform: translate(3px, -1px); }
+  20% { clip-path: inset(38% 0 25% 0); transform: translate(-3px, 0); }
+  25% { clip-path: inset(15% 0 60% 0); transform: translate(2px, -2px); }
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.glitch-text::before {
+  color: #00e5ff;
+  animation: glitch-clip-1 6s infinite;
+  opacity: 0.75;
+}
+.glitch-text::after {
+  color: #ff003c;
+  animation: glitch-clip-2 6s infinite;
+  opacity: 0.75;
+}
+
+/* Neon flicker */
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 0 0 7px #FF6600, 0 0 20px #FF6600, 0 0 40px #FF6600;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+}
+.neon-flicker {
+  animation: neon-flicker 4s infinite alternate;
+}
+
+/* Ember float — individual particles */
+@keyframes ember-rise {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 0.6; }
+  100% { transform: translateY(-100vh) translateX(var(--ember-drift, 40px)) scale(0); opacity: 0; }
+}
+.ember {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FF9900 0%, #FF6600 60%, transparent 100%);
+  animation: ember-rise var(--ember-dur, 5s) var(--ember-delay, 0s) infinite ease-out;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Clip-path text reveal (slide up from mask) */
+@keyframes text-reveal-up {
+  from { clip-path: inset(100% 0 0 0); transform: translateY(8px); }
+  to   { clip-path: inset(0% 0 0 0);   transform: translateY(0); }
+}
+.text-reveal {
+  animation: text-reveal-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Scan lines overlay */
+.scan-lines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Liquid orange border on hover */
+@keyframes border-rotate {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+.btn-orange-liquid {
+  position: relative;
+  overflow: hidden;
+  background: #FF6600;
+  color: white;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  z-index: 0;
+}
+.btn-orange-liquid::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(90deg, #FF6600, #ffcc00, #FF003C, #FF6600, #ff9900);
+  background-size: 300% 100%;
+  animation: border-rotate 2.5s linear infinite;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: inherit;
+}
+.btn-orange-liquid:hover::before {
+  opacity: 1;
+}
+.btn-orange-liquid:hover {
+  box-shadow: 0 0 30px rgba(255, 102, 0, 0.7), 0 0 60px rgba(255, 102, 0, 0.3);
+  transform: translateY(-3px);
+}
+
+/* Shockwave click ripple */
+@keyframes shockwave {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+.shockwave {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #FF6600;
+  pointer-events: none;
+  animation: shockwave 0.6s ease-out forwards;
+}
+
+/* Section divider — animated gradient line */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #FF6600, #ffcc00, #FF6600, transparent);
+  background-size: 200% 100%;
+  animation: border-rotate 3s linear infinite;
+}
+
+/* Scroll progress bar */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #FF6600, #ffcc00, #FF003C);
+  z-index: 9999;
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* Letter stagger reveal */
+.letter-stagger span {
+  display: inline-block;
+  animation: text-reveal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 3D card perspective container */
+.perspective-card {
+  transform-style: preserve-3d;
+  transition: box-shadow 0.3s ease;
+}
+.perspective-card:hover {
+  box-shadow: 0 25px 60px rgba(255, 102, 0, 0.25);
+}

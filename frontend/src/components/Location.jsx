@@ -1,5 +1,17 @@
 import { motion } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
+
+const SALCHIMAX_POS = [3.518157, -76.300247];
 
 export default function Location() {
   return (
@@ -36,16 +48,23 @@ export default function Location() {
             data-testid="map-container"
             className="w-full h-80 md:h-96 overflow-hidden border border-white/10"
           >
-            <iframe
-              title="SALCHIMAX Ubicación"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500!2d-76.300247!3d3.518157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3a051de3c9fc2f%3A0xf2fbddec87d00118!2sCra.+28+%23+19-20%2C+Palmira%2C+Valle+del+Cauca!5e0!3m2!1ses!2sco!4v1716000000000!5m2!1ses!2sco"
-              width="100%"
-              height="100%"
-              style={{ border: 0, filter: "grayscale(80%) invert(10%) contrast(1.1)" }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+            <MapContainer
+              center={SALCHIMAX_POS}
+              zoom={17}
+              style={{ width: "100%", height: "100%", filter: "grayscale(70%) contrast(1.1)" }}
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+              />
+              <Marker position={SALCHIMAX_POS}>
+                <Popup>
+                  <strong>SALCHIMAX</strong><br />
+                  Cra. 28 #19-20, Palmira
+                </Popup>
+              </Marker>
+            </MapContainer>
           </motion.div>
 
           {/* Info */}

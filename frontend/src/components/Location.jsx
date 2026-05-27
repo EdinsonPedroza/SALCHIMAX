@@ -38,7 +38,7 @@ export default function Location() {
           >
             <iframe
               title="SALCHIMAX Ubicación"
-              src="https://maps.google.com/maps?q=Carrera+28+%2319-20+Palmira+Valle+del+Cauca+Colombia&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500!2d-76.300247!3d3.518157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3a051de3c9fc2f%3A0xf2fbddec87d00118!2sCra.+28+%23+19-20%2C+Palmira%2C+Valle+del+Cauca!5e0!3m2!1ses!2sco!4v1716000000000!5m2!1ses!2sco"
               width="100%"
               height="100%"
               style={{ border: 0, filter: "grayscale(80%) invert(10%) contrast(1.1)" }}

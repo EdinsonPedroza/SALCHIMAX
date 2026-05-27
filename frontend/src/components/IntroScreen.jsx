@@ -217,11 +217,7 @@ export default function IntroScreen({ onComplete }) {
                   className="font-heading text-6xl sm:text-7xl md:text-9xl leading-none select-none"
                   style={{
                     willChange: "transform",
-                    color: i === 3 || i === 6 ? "#FF6600" : "white",
-                    textShadow:
-                      i === 3 || i === 6
-                        ? "0 0 30px rgba(255,102,0,0.8)"
-                        : "none",
+                    color: "white",
                   }}
                   initial={{ y: 100, opacity: 0, skewX: -8 }}
                   animate={{ y: 0, opacity: 1, skewX: 0 }}

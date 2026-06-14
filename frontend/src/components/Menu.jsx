@@ -34,7 +34,6 @@ const categories = [
   { id: "alitas", label: "Alitas" },
   { id: "nachos", label: "Nachos" },
   { id: "burros", label: "Burros" },
-  { id: "sandwiches", label: "Sándwich Cubano" },
   { id: "bebidas", label: "Bebidas" },
 ];
 
@@ -80,11 +79,6 @@ const menuData = {
     { name: "El Burro", desc: "Carne y pollo desmechado, guacamole, pico de gallo, lechuga, queso", price: "$20.000", img: IMAGES.combo },
     { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: IMAGES.combo2 },
     { name: "El Super Burro", desc: "Carne y pollo desmechado, tocineta, pico de gallo, aguacate, lechuga, queso y salchicha ranchera", price: "$23.000", img: IMAGES.combo },
-  ],
-  sandwiches: [
-    { name: "Cubano Sencillo", desc: "Jamón de cerdo, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$15,000", img: IMAGES.combo3 },
-    { name: "Cubano Hawaiano", desc: "Jamón de cerdo, piña calada, lechuga, tomate, queso, salsa de ajo", price: "$18,000", img: IMAGES.burger },
-    { name: "Cubano Especial", desc: "Jamón de cerdo, tocineta, cervéroni, lechuga, tomate, queso, salsa de ajo", price: "$18,000", img: IMAGES.burger2 },
   ],
   bebidas: [
     { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.drink },

@@ -101,7 +101,10 @@ function ParallaxBg() {
 
 export default function Hero() {
   const { scrollY } = useScroll();
-  const bgY = useTransform(scrollY, [0, 700], [0, 140]);
+  // Spring-smoothed parallax: mouse-wheel scroll arrives in discrete chunks,
+  // so binding the bg directly to scrollY makes it "step". The spring eases it.
+  const rawBgY = useTransform(scrollY, [0, 700], [0, 140]);
+  const bgY = useSpring(rawBgY, { stiffness: 80, damping: 20, mass: 0.3 });
 
   return (
     <section

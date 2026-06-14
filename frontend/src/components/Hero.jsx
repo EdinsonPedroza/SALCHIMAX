@@ -319,16 +319,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.72 }}
-          className="font-body text-gray-400 text-base md:text-lg mb-8 tracking-wide"
-        >
-          Sabor urbano · Palmira, Valle del Cauca
-        </motion.p>
-
+     
         {/* Magnetic CTA buttons */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

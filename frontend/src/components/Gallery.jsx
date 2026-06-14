@@ -8,33 +8,33 @@ import {
 
 const galleryImages = [
   {
-    src: "https://images.unsplash.com/photo-1678110707289-ab14382a1625?w=600&q=80",
-    alt: "Smash burger",
+    src: "/images/maxima.png",
+    alt: "Salchipapa La Máxima",
     span: "col-span-1 row-span-2",
   },
   {
-    src: "https://images.unsplash.com/photo-1762284513031-3d7ad15562bc?w=600&q=80",
-    alt: "Salchipapas con queso y salchicha",
+    src: "/images/hamburguesa-especial.png",
+    alt: "Hamburguesa Especial",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1771818708792-d671ae9b4b46?w=600&q=80",
-    alt: "Papas con toppings",
+    src: "/images/colombiana.png",
+    alt: "Salchipapa La Colombiana",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1734987942068-a1a459d65d3d?w=600&q=80",
+    src: "/images/nachos-texmex.png",
+    alt: "Nachos Tex-Mex",
+    span: "col-span-1 row-span-2",
+  },
+  {
+    src: "/images/alitas-24.png",
     alt: "Alitas BBQ",
-    span: "col-span-1 row-span-2",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=600&q=80",
-    alt: "Combo hamburguesa y papas",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1678110707493-8d05425137ac?w=600&q=80",
-    alt: "Doble burger",
+    src: "/images/superburro.png",
+    alt: "El Super Burro",
     span: "col-span-1 row-span-1",
   },
 ];

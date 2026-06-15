@@ -7,6 +7,7 @@ const LOGO_URL = "/logo.jpeg";
 const WA_LINK = "https://wa.me/573177371695";
 
 const navLinks = [
+  { label: "Promos", href: "#promos" },
   { label: "Menú", href: "#menu" },
   { label: "Nosotros", href: "#why-us" },
   { label: "Galería", href: "#gallery" },

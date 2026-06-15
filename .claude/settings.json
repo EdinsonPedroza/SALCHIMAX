@@ -9,7 +9,13 @@
       "Bash(cd /tmp)",
       "Bash(curl -s -L -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0 Safari/537.36\" \"https://guillefotografia.pixieset.com/salchimax/\" -o pixie.html -w \"HTTP %{http_code}\\\\n\")",
       "Bash(grep -oE \"[a-zA-Z_]+'?:[ ]*'?[^,}]{1,60}\" pixie.html)",
-      "Bash(grep -oE \"thumbUrl[^,}]{0,120}\" pixie.html)"
+      "Bash(grep -oE \"thumbUrl[^,}]{0,120}\" pixie.html)",
+      "Bash(xargs ls -lt)",
+      "Bash(cp 'c:/Users/57318/Desktop/LANDING PALMIRA/NUEVAS FOTOS/clasica.jpeg' 'c:/Users/57318/Desktop/LANDING PALMIRA/SALCHIMAX/frontend/public/images/clasica.jpg')",
+      "Bash(cp 'c:/Users/57318/Desktop/LANDING PALMIRA/NUEVAS FOTOS/mixta.jpeg' 'c:/Users/57318/Desktop/LANDING PALMIRA/SALCHIMAX/frontend/public/images/mixta.jpg')",
+      "Bash(cp 'c:/Users/57318/Desktop/LANDING PALMIRA/NUEVAS FOTOS/colombiana.jpeg' 'c:/Users/57318/Desktop/LANDING PALMIRA/SALCHIMAX/frontend/public/images/colombiana.jpg')",
+      "Bash(cp 'c:/Users/57318/Desktop/LANDING PALMIRA/NUEVAS FOTOS/de la casa.jpeg' 'c:/Users/57318/Desktop/LANDING PALMIRA/SALCHIMAX/frontend/public/images/de-la-casa.jpg')",
+      "Bash(cp 'c:/Users/57318/Desktop/LANDING PALMIRA/NUEVAS FOTOS/maxima.jpeg' 'c:/Users/57318/Desktop/LANDING PALMIRA/SALCHIMAX/frontend/public/images/maxima.jpg')"
     ]
   }
 }

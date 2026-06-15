@@ -8,7 +8,7 @@ import {
 
 const galleryImages = [
   {
-    src: "/images/maxima.png",
+    src: "/images/maxima.jpg",
     alt: "Salchipapa La Máxima",
     span: "col-span-1 row-span-2",
   },
@@ -18,7 +18,7 @@ const galleryImages = [
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/colombiana.png",
+    src: "/images/colombiana.jpg",
     alt: "Salchipapa La Colombiana",
     span: "col-span-1 row-span-1",
   },

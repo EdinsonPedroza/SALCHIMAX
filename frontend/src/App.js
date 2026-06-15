@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import MarqueeStrip from "./components/MarqueeStrip";
 import Menu from "./components/Menu";
+import Promos from "./components/Promos";
 import WhyUs from "./components/WhyUs";
 import Gallery from "./components/Gallery";
 import Testimonials from "./components/Testimonials";
@@ -32,6 +33,7 @@ function App() {
         <MiniCart />
         <Hero />
         <MarqueeStrip />
+        <Promos />
         <Menu />
         <WhyUs />
         <Gallery />

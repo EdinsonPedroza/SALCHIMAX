@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Instagram, Facebook, MessageCircle } from "lucide-react";
 
 const LOGO_URL = "/logo.jpeg";
@@ -130,10 +131,19 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="text-center mt-4">
+        <div className="text-center mt-4 space-y-2">
           <p className="font-body text-xs text-gray-600">
             © 2025 SALCHIMAX Urban Food · Palmira, Valle del Cauca, Colombia ·{" "}
             <span className="text-[#FF6600]">Todos los derechos reservados</span>
+          </p>
+          <p className="font-body text-xs text-gray-600">
+            <Link to="/terminos" data-testid="footer-terms-link" className="hover:text-[#FF6600] transition-colors">
+              Términos y Condiciones
+            </Link>
+            {" · "}
+            <Link to="/privacidad" data-testid="footer-privacy-link" className="hover:text-[#FF6600] transition-colors">
+              Política de Privacidad
+            </Link>
           </p>
         </div>
       </div>

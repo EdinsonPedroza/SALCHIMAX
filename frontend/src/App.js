@@ -6,9 +6,16 @@ import Home from "./pages/Home";
 import IntroScreen from "./components/IntroScreen";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { useSeoRoute } from "./hooks/useSeoRoute";
 
 const Terminos = lazy(() => import("./pages/Terminos"));
 const Privacidad = lazy(() => import("./pages/Privacidad"));
+
+// Must render inside BrowserRouter to access the current location
+function SeoRoute() {
+  useSeoRoute();
+  return null;
+}
 
 function App() {
   const [introVisible, setIntroVisible] = useState(true);
@@ -20,6 +27,7 @@ function App() {
       )}
       <div className="App bg-[#0D0D0D] min-h-screen font-body grain-overlay">
         <BrowserRouter>
+          <SeoRoute />
           <Suspense fallback={null}>
             <Routes>
               <Route path="/" element={<Home />} />

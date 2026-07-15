@@ -4,17 +4,95 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#FF6600" />
+
+        <!-- Icons / PWA -->
+        <link rel="icon" href="/favicon.ico" sizes="48x48" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+
         <meta name="description" content="Las mejores salchipapas de Palmira. Hamburguesas, perros calientes y comida rápida deliciosa. Pide ahora por WhatsApp. Abrimos desde las 5 PM." />
         <meta name="keywords" content="salchipapas en Palmira, comida rápida Palmira, salchipapas domicilio Palmira, hamburguesas Palmira, comida rápida cerca de mí, SALCHIMAX" />
         <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://salchimax.co/" />
+
+        <!-- Google Search Console: pega aquí tu meta de verificación (o verifica el dominio por DNS, recomendado)
+        <meta name="google-site-verification" content="TU_CODIGO_AQUI" />
+        -->
+
         <meta property="og:title" content="Salchipapas en Palmira | SALCHIMAX Urban Food" />
         <meta property="og:description" content="Las mejores salchipapas de Palmira. Hamburguesas, perros calientes, alitas y más. Pide ahora por WhatsApp." />
         <meta property="og:type" content="restaurant" />
-        <meta property="og:image" content="https://salchimax.vercel.app/logo.jpeg" />
+        <meta property="og:url" content="https://salchimax.co/" />
+        <meta property="og:image" content="https://salchimax.co/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="SALCHIMAX Urban Food — Las salchipapas más brutales de Palmira" />
+        <meta property="og:locale" content="es_CO" />
+        <meta property="og:site_name" content="SALCHIMAX Urban Food" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://salchimax.vercel.app/logo.jpeg" />
+        <meta name="twitter:title" content="Salchipapas en Palmira | SALCHIMAX Urban Food" />
+        <meta name="twitter:description" content="Las mejores salchipapas de Palmira. Pide ahora por WhatsApp. Abrimos desde las 5 PM." />
+        <meta name="twitter:image" content="https://salchimax.co/og-image.jpg" />
         <meta name="geo.region" content="CO-VAC" />
         <meta name="geo.placename" content="Palmira, Valle del Cauca" />
+
+        <!-- Schema.org — Restaurant (Google local results) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Restaurant",
+            "name": "SALCHIMAX Urban Food",
+            "description": "Restaurante de comida rápida en Palmira: salchipapas, hamburguesas, alitas, nachos y más. Abierto todos los días desde las 5:00 PM.",
+            "url": "https://salchimax.co",
+            "image": "https://salchimax.co/og-image.jpg",
+            "logo": "https://salchimax.co/logo.jpeg",
+            "telephone": "+573177371695",
+            "servesCuisine": ["Comida rápida", "Salchipapas", "Hamburguesas"],
+            "priceRange": "$",
+            "currenciesAccepted": "COP",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Cra. 28 #19-20",
+                "addressLocality": "Palmira",
+                "addressRegion": "Valle del Cauca",
+                "addressCountry": "CO"
+            },
+            "areaServed": { "@type": "City", "name": "Palmira" },
+            "sameAs": [
+                "https://www.instagram.com/salchi.maxx",
+                "https://www.facebook.com/profile.php?id=61571175376351"
+            ],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "5.0",
+                "reviewCount": "7",
+                "bestRating": "5"
+            },
+            "potentialAction": {
+                "@type": "OrderAction",
+                "target": "https://wa.me/573177371695"
+            }
+        }
+        </script>
+
+        <!-- Google Analytics 4 — reemplaza G-XXXXXXXXXX con el Measurement ID real.
+             El script no se activa mientras el ID sea placeholder. -->
+        <script>
+            (function () {
+                var GA_ID = "G-XXXXXXXXXX";
+                if (GA_ID.indexOf("XXXX") !== -1) return;
+                var s = document.createElement("script");
+                s.async = true;
+                s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+                document.head.appendChild(s);
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+                window.gtag = gtag;
+                gtag("js", new Date());
+                gtag("config", GA_ID, { anonymize_ip: true });
+            })();
+        </script>
         <!-- Preload LCP: hero background image fetched before render -->
         <link rel="preload" as="image" href="https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=1920&q=85" fetchpriority="high" />
         <!-- Preload local logo used in intro + navbar -->

@@ -131,7 +131,7 @@ export default function Footer() {
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="font-heading text-[18vw] md:text-[15vw] text-white/5 leading-none text-center select-none tracking-tighter hover:text-[#FF6600]/10 transition-colors duration-700"
+            className="font-heading text-[18vw] md:text-[15vw] text-white/5 leading-none text-center select-none tracking-tighter"
           >
             SALCHIMAX
           </motion.div>

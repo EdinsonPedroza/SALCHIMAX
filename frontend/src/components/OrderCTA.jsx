@@ -59,8 +59,7 @@ export default function OrderCTA() {
             </span>
             <span className="block overflow-hidden">
               <motion.span
-                className="block text-[#FF6600] glitch-text"
-                data-text="ALGO DELICIOSO?"
+                className="block text-[#FF6600]"
                 variants={{
                   hidden: { y: "100%", skewX: 6 },
                   visible: {
@@ -85,7 +84,7 @@ export default function OrderCTA() {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="cta-whatsapp-btn"
-              className="btn-orange card-shine flex items-center gap-3 px-10 py-5 text-2xl font-heading tracking-widest w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,102,0,0.3)]"
+              className="btn-orange flex items-center gap-3 px-10 py-5 text-2xl font-heading tracking-widest w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,102,0,0.3)]"
               whileHover={{ scale: 1.05, boxShadow: "0 0 50px rgba(255,102,0,0.5)" }}
               whileTap={{ scale: 0.98 }}
             >

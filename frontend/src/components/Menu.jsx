@@ -127,7 +127,7 @@ function ProductCard({ item, index }) {
         ease: [0.16, 1, 0.3, 1],
       }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-      className="food-card card-shine overflow-hidden group flex flex-col"
+      className="food-card overflow-hidden group flex flex-col"
     >
       {/* Image */}
       <div className="overflow-hidden h-44 relative flex-shrink-0">
@@ -263,27 +263,20 @@ export default function Menu() {
           )}
         </motion.div>
 
-        {/* Tabs — active pill slides between buttons via shared layoutId */}
+        {/* Tabs */}
         <div data-testid="menu-tabs" className="flex flex-wrap gap-2 mb-8">
           {categories.map((cat) => (
             <button
               key={cat.id}
               data-testid={`tab-${cat.id}`}
               onClick={() => setActiveTab(cat.id)}
-              className={`relative font-heading text-sm tracking-widest px-4 py-2 border transition-colors duration-200 ${
+              className={`font-heading text-sm tracking-widest px-4 py-2 border transition-all duration-200 ${
                 activeTab === cat.id
-                  ? "text-white border-[#FF6600]"
+                  ? "bg-[#FF6600] text-white border-[#FF6600]"
                   : "bg-transparent text-gray-400 border-white/10 hover:border-[#FF6600] hover:text-white"
               }`}
             >
-              {activeTab === cat.id && (
-                <motion.span
-                  layoutId="menu-tab-pill"
-                  className="absolute inset-0 bg-[#FF6600] shadow-[0_0_18px_rgba(255,102,0,0.45)]"
-                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                />
-              )}
-              <span className="relative z-10">{cat.label}</span>
+              {cat.label}
             </button>
           ))}
         </div>

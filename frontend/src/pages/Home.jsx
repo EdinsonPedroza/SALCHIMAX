@@ -7,7 +7,6 @@ import MarqueeStrip from "../components/MarqueeStrip";
 import Menu from "../components/Menu";
 import Promos from "../components/Promos";
 import WhatsAppFloat from "../components/WhatsAppFloat";
-import CursorGlow from "../components/CursorGlow";
 
 // Below-the-fold sections are code-split so the initial bundle stays lean.
 // Location is the big win: it pulls leaflet + react-leaflet into its own chunk.
@@ -21,7 +20,6 @@ const Footer = lazy(() => import("../components/Footer"));
 export default function Home() {
   return (
     <>
-      <CursorGlow />
       <Navbar />
       <Cart />
       <MiniCart />

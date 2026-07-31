@@ -280,8 +280,7 @@ export default function Hero() {
                   ease: "easeInOut",
                   delay: 1,
                 }}
-                className="text-[#FF6600] inline-block glitch-text"
-                data-text="MAS BRUTALES"
+                className="text-[#FF6600] inline-block"
               >
                 MAS BRUTALES
               </motion.span>

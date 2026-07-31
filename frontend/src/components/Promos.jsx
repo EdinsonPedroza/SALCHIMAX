@@ -23,7 +23,7 @@ function PromoCard({ promo, index }) {
       whileHover={{ y: -6 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="group card-shine relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-[#171717] hover:border-[#FF6600] transition-colors duration-300"
+      className="group relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-[#171717] hover:border-[#FF6600] transition-colors duration-300"
     >
       {/* Image */}
       <div className="relative h-40 overflow-hidden">

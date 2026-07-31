@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -14,6 +15,11 @@ L.Icon.Default.mergeOptions({
 const SALCHIMAX_POS = [3.518157, -76.300247];
 
 export default function Location() {
+  const mapRef = useRef(null);
+  // Mount the Leaflet map (and fetch its tiles) only when the user is close —
+  // it's expensive and lives at the bottom of the page.
+  const mapInView = useInView(mapRef, { once: true, margin: "400px 0px" });
+
   return (
     <section
       id="location"
@@ -41,30 +47,37 @@ export default function Location() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Map */}
           <motion.div
+            ref={mapRef}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             data-testid="map-container"
-            className="w-full h-80 md:h-96 overflow-hidden border border-white/10"
+            className="w-full h-80 md:h-96 overflow-hidden border border-white/10 bg-[#171717]"
           >
-            <MapContainer
-              center={SALCHIMAX_POS}
-              zoom={17}
-              style={{ width: "100%", height: "100%", filter: "grayscale(70%) contrast(1.1)" }}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
-              />
-              <Marker position={SALCHIMAX_POS}>
-                <Popup>
-                  <strong>SALCHIMAX</strong><br />
-                  Cra. 28 #19-20, Palmira
-                </Popup>
-              </Marker>
-            </MapContainer>
+            {mapInView ? (
+              <MapContainer
+                center={SALCHIMAX_POS}
+                zoom={17}
+                style={{ width: "100%", height: "100%", filter: "grayscale(70%) contrast(1.1)" }}
+                scrollWheelZoom={false}
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+                />
+                <Marker position={SALCHIMAX_POS}>
+                  <Popup>
+                    <strong>SALCHIMAX</strong><br />
+                    Cra. 28 #19-20, Palmira
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <MapPin size={32} className="text-[#FF6600]/40 animate-pulse" />
+              </div>
+            )}
           </motion.div>
 
           {/* Info */}

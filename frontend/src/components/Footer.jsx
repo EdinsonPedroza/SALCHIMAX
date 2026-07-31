@@ -124,11 +124,17 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Big brand name */}
+        {/* Big brand name — rises from the fold as you reach the bottom */}
         <div className="border-t border-white/5 pt-10 overflow-hidden">
-          <div className="font-heading text-[18vw] md:text-[15vw] text-white/5 leading-none text-center select-none tracking-tighter">
+          <motion.div
+            initial={{ y: "45%", opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="font-heading text-[18vw] md:text-[15vw] text-white/5 leading-none text-center select-none tracking-tighter hover:text-[#FF6600]/10 transition-colors duration-700"
+          >
             SALCHIMAX
-          </div>
+          </motion.div>
         </div>
 
         <div className="text-center mt-4 space-y-2">

@@ -89,7 +89,7 @@ const menuData = {
   ],
 };
 
-function ProductCard({ item }) {
+function ProductCard({ item, index }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
   const [selectedPortion, setSelectedPortion] = useState(null);
@@ -116,13 +116,18 @@ function ProductCard({ item }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 26, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       whileHover={{ scale: 1.03, y: -6, transition: { duration: 0.2 } }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{
+        duration: 0.45,
+        // Stagger per grid row (max 4 columns) so delays never pile up
+        delay: (index % 4) * 0.07,
+        ease: [0.16, 1, 0.3, 1],
+      }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-      className="food-card overflow-hidden group flex flex-col"
+      className="food-card card-shine overflow-hidden group flex flex-col"
     >
       {/* Image */}
       <div className="overflow-hidden h-44 relative flex-shrink-0">
@@ -131,6 +136,7 @@ function ProductCard({ item }) {
           alt={item.name}
           className="gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#171717] to-transparent" />
       </div>
@@ -257,20 +263,27 @@ export default function Menu() {
           )}
         </motion.div>
 
-        {/* Tabs */}
+        {/* Tabs — active pill slides between buttons via shared layoutId */}
         <div data-testid="menu-tabs" className="flex flex-wrap gap-2 mb-8">
           {categories.map((cat) => (
             <button
               key={cat.id}
               data-testid={`tab-${cat.id}`}
               onClick={() => setActiveTab(cat.id)}
-              className={`font-heading text-sm tracking-widest px-4 py-2 border transition-all duration-200 ${
+              className={`relative font-heading text-sm tracking-widest px-4 py-2 border transition-colors duration-200 ${
                 activeTab === cat.id
-                  ? "bg-[#FF6600] text-white border-[#FF6600]"
+                  ? "text-white border-[#FF6600]"
                   : "bg-transparent text-gray-400 border-white/10 hover:border-[#FF6600] hover:text-white"
               }`}
             >
-              {cat.label}
+              {activeTab === cat.id && (
+                <motion.span
+                  layoutId="menu-tab-pill"
+                  className="absolute inset-0 bg-[#FF6600] shadow-[0_0_18px_rgba(255,102,0,0.45)]"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                />
+              )}
+              <span className="relative z-10">{cat.label}</span>
             </button>
           ))}
         </div>
@@ -341,7 +354,7 @@ export default function Menu() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
           >
             {menuData[activeTab].map((item, i) => (
-              <ProductCard key={i} item={item} />
+              <ProductCard key={i} item={item} index={i} />
             ))}
           </motion.div>
         </AnimatePresence>

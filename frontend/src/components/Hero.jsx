@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -25,9 +25,14 @@ const EMBERS = Array.from({ length: 28 }, (_, i) => ({
 }));
 
 function FloatingEmbers() {
+  // Fewer composite layers on mobile: 28 particles is fine on desktop GPUs
+  // but costs frames on low-end phones.
+  const [count] = useState(() =>
+    window.matchMedia("(max-width: 767px)").matches ? 12 : 28
+  );
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-[2]">
-      {EMBERS.map((e) => (
+      {EMBERS.slice(0, count).map((e) => (
         <span
           key={e.id}
           className="ember"
@@ -80,25 +85,6 @@ function MagneticBtn({ href, children, className, target, rel, testid }) {
   );
 }
 
-/* ── Scroll-parallax background wrapper ── */
-function ParallaxBg() {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 600], [0, 120]);
-  return (
-    <motion.div
-      style={{ y }}
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
-      css={{ backgroundImage: `url(${HERO_BG})` }}
-    >
-      {/* inline style to avoid css prop issues */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${HERO_BG})` }}
-      />
-    </motion.div>
-  );
-}
-
 export default function Hero() {
   const { scrollY } = useScroll();
   // Spring-smoothed parallax: mouse-wheel scroll arrives in discrete chunks,
@@ -112,17 +98,11 @@ export default function Hero() {
       data-testid="hero-section"
       className="relative min-h-screen flex items-center justify-center overflow-hidden scan-lines"
     >
-      {/* Parallax background */}
+      {/* Parallax background — single layer, transform-only (compositor) */}
       <motion.div
-        style={{ y: bgY }}
+        style={{ y: bgY, backgroundImage: `url(${HERO_BG})` }}
         className="absolute inset-[-10%] bg-cover bg-center bg-no-repeat will-change-transform"
-        css={{ backgroundImage: `url(${HERO_BG})` }}
-      >
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${HERO_BG})` }}
-        />
-      </motion.div>
+      />
 
       {/* Dark overlay */}
       <div className="hero-overlay absolute inset-0 z-[1]" />
@@ -300,7 +280,8 @@ export default function Hero() {
                   ease: "easeInOut",
                   delay: 1,
                 }}
-                className="text-[#FF6600] inline-block"
+                className="text-[#FF6600] inline-block glitch-text"
+                data-text="MAS BRUTALES"
               >
                 MAS BRUTALES
               </motion.span>

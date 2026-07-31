@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import Cart from "../components/Cart";
 import MiniCart from "../components/MiniCart";
 import Navbar from "../components/Navbar";
@@ -5,17 +6,22 @@ import Hero from "../components/Hero";
 import MarqueeStrip from "../components/MarqueeStrip";
 import Menu from "../components/Menu";
 import Promos from "../components/Promos";
-import WhyUs from "../components/WhyUs";
-import Gallery from "../components/Gallery";
-import Testimonials from "../components/Testimonials";
-import OrderCTA from "../components/OrderCTA";
-import Location from "../components/Location";
-import Footer from "../components/Footer";
 import WhatsAppFloat from "../components/WhatsAppFloat";
+import CursorGlow from "../components/CursorGlow";
+
+// Below-the-fold sections are code-split so the initial bundle stays lean.
+// Location is the big win: it pulls leaflet + react-leaflet into its own chunk.
+const WhyUs = lazy(() => import("../components/WhyUs"));
+const Gallery = lazy(() => import("../components/Gallery"));
+const Testimonials = lazy(() => import("../components/Testimonials"));
+const OrderCTA = lazy(() => import("../components/OrderCTA"));
+const Location = lazy(() => import("../components/Location"));
+const Footer = lazy(() => import("../components/Footer"));
 
 export default function Home() {
   return (
     <>
+      <CursorGlow />
       <Navbar />
       <Cart />
       <MiniCart />
@@ -23,12 +29,24 @@ export default function Home() {
       <MarqueeStrip />
       <Promos />
       <Menu />
-      <WhyUs />
-      <Gallery />
-      <Testimonials />
-      <OrderCTA />
-      <Location />
-      <Footer />
+      <Suspense fallback={null}>
+        <WhyUs />
+      </Suspense>
+      <Suspense fallback={null}>
+        <Gallery />
+      </Suspense>
+      <Suspense fallback={null}>
+        <Testimonials />
+      </Suspense>
+      <Suspense fallback={null}>
+        <OrderCTA />
+      </Suspense>
+      <Suspense fallback={null}>
+        <Location />
+      </Suspense>
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
       <WhatsAppFloat />
     </>
   );

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MotionConfig } from "framer-motion";
 import { CartProvider } from "./context/CartContext";
 import Home from "./pages/Home";
 import IntroScreen from "./components/IntroScreen";
@@ -21,6 +22,7 @@ function App() {
   const [introVisible, setIntroVisible] = useState(true);
 
   return (
+    <MotionConfig reducedMotion="user">
     <CartProvider>
       {introVisible && (
         <IntroScreen onComplete={() => setIntroVisible(false)} />
@@ -40,6 +42,7 @@ function App() {
         <SpeedInsights />
       </div>
     </CartProvider>
+    </MotionConfig>
   );
 }
 

@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import Marquee from "react-fast-marquee";
 
 const reviews = [
@@ -73,8 +74,14 @@ function ReviewCard({ review }) {
 }
 
 export default function Testimonials() {
+  const sectionRef = useRef(null);
+  // Pause both marquees while the section is off-screen — the browser keeps
+  // compositing infinite CSS animations otherwise, wasting frames.
+  const inView = useInView(sectionRef, { margin: "150px 0px" });
+
   return (
     <section
+      ref={sectionRef}
       id="testimonials"
       data-testid="testimonials-section"
       className="py-20 md:py-28 bg-[#121212] overflow-hidden"
@@ -107,14 +114,14 @@ export default function Testimonials() {
       </div>
 
       {/* Marquee row 1 */}
-      <Marquee speed={40} gradient={false} className="mb-4">
+      <Marquee speed={40} gradient={false} play={inView} className="mb-4">
         {reviews.map((r, i) => (
           <ReviewCard key={i} review={r} />
         ))}
       </Marquee>
 
       {/* Marquee row 2 - reverse */}
-      <Marquee speed={35} gradient={false} direction="right">
+      <Marquee speed={35} gradient={false} play={inView} direction="right">
         {[...reviews].reverse().map((r, i) => (
           <ReviewCard key={i} review={r} />
         ))}

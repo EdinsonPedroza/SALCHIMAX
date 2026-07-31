@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import Marquee from "react-fast-marquee";
 
 const items = [
@@ -15,15 +16,20 @@ const items = [
 ];
 
 export default function MarqueeStrip() {
+  const ref = useRef(null);
+  // Pause the marquee while off-screen so it stops eating frames
+  const inView = useInView(ref, { margin: "100px 0px" });
+
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
       data-testid="marquee-strip"
       className="bg-[#FF6600] py-3 overflow-hidden border-y border-[#FF8533]"
     >
-      <Marquee speed={70} gradient={false}>
+      <Marquee speed={70} gradient={false} play={inView}>
         {items.map((item, i) => (
           <span key={i} className="font-heading text-xl tracking-widest text-white mx-6 flex items-center gap-6">
             {item}

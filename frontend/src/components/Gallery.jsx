@@ -8,32 +8,32 @@ import {
 
 const galleryImages = [
   {
-    src: "/images/maxima.jpg",
+    src: "/images/maxima.webp",
     alt: "Salchipapa La Máxima",
     span: "col-span-1 row-span-2",
   },
   {
-    src: "/images/hamburguesa-especial.png",
+    src: "/images/hamburguesa-especial.webp",
     alt: "Hamburguesa Especial",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/colombiana.jpg",
+    src: "/images/colombiana.webp",
     alt: "Salchipapa La Colombiana",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/nachos-texmex.png",
+    src: "/images/nachos-texmex.webp",
     alt: "Nachos Tex-Mex",
     span: "col-span-1 row-span-2",
   },
   {
-    src: "/images/alitas-24.png",
+    src: "/images/alitas-24.webp",
     alt: "Alitas BBQ",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/superburro.png",
+    src: "/images/superburro.webp",
     alt: "El Super Burro",
     span: "col-span-1 row-span-1",
   },

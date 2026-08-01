@@ -21,7 +21,7 @@ export const promos = [
     desc: "2 salchipapas personales (la que quieras) + 2 gaseosas personales",
     price: "$46.000",
     badge: "COMBO",
-    img: "/images/clasica.jpg",
+    img: "/images/clasica.webp",
     active: true,
   },
   {
@@ -30,7 +30,7 @@ export const promos = [
     desc: "2x1 en nachos · 2 burros (El Gringo o El Burro) por solo $36.000",
     price: "2x1",
     badge: "2x1",
-    img: "/images/nachos-texmex.png",
+    img: "/images/nachos-texmex.webp",
     active: true,
   },
   {
@@ -39,7 +39,7 @@ export const promos = [
     desc: "2x1 en TODAS las alitas. Elige tus salsas favoritas.",
     price: "2x1",
     badge: "2x1",
-    img: "/images/alitas-24.png",
+    img: "/images/alitas-24.webp",
     active: true,
   },
   {
@@ -48,7 +48,7 @@ export const promos = [
     desc: "Por la compra de cualquier hamburguesa, ¡la gaseosa personal va GRATIS!",
     price: "GRATIS",
     badge: "GRATIS",
-    img: "/images/hamburguesa-especial.png",
+    img: "/images/hamburguesa-especial.webp",
     active: true,
   },
 ];

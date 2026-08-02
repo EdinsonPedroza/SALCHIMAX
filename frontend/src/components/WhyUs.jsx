@@ -4,6 +4,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useInView,
   animate,
 } from "framer-motion";
 import { Leaf, Trophy, DollarSign, Users, Zap } from "lucide-react";
@@ -37,8 +38,9 @@ const features = [
 ];
 
 /* ── 3D tilt card ── */
-function TiltCard({ children, className, index }) {
+function TiltCard({ children, className, index, tilt }) {
   const ref = useRef(null);
+  const rect = useRef(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
 
@@ -55,14 +57,21 @@ function TiltCard({ children, className, index }) {
     damping: 25,
   });
 
+  // Measure once per hover: getBoundingClientRect() inside mousemove forces a
+  // synchronous layout on every pointer event.
+  const onMouseEnter = () => {
+    rect.current = ref.current.getBoundingClientRect();
+  };
   const onMouseMove = (e) => {
-    const r = ref.current.getBoundingClientRect();
+    const r = rect.current;
+    if (!r) return;
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
   const onMouseLeave = () => {
     mx.set(0);
     my.set(0);
+    rect.current = null;
   };
 
   return (
@@ -76,26 +85,33 @@ function TiltCard({ children, className, index }) {
         delay: index * 0.12,
         ease: [0.16, 1, 0.3, 1],
       }}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
-        perspective: 800,
-      }}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
+      style={
+        tilt
+          ? {
+              rotateX,
+              rotateY,
+              transformStyle: "preserve-3d",
+              perspective: 800,
+            }
+          : undefined
+      }
+      onMouseEnter={tilt ? onMouseEnter : undefined}
+      onMouseMove={tilt ? onMouseMove : undefined}
+      onMouseLeave={tilt ? onMouseLeave : undefined}
       data-testid={`feature-card-${index}`}
       className={className}
     >
       {/* Dynamic highlight on tilt */}
-      <motion.div
-        className="absolute inset-0 rounded-none pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 0%, rgba(255,102,0,0.12) 0%, transparent 60%)",
-          opacity: glowOpacity,
-        }}
-      />
+      {tilt && (
+        <motion.div
+          className="absolute inset-0 rounded-none pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 0%, rgba(255,102,0,0.12) 0%, transparent 60%)",
+            opacity: glowOpacity,
+          }}
+        />
+      )}
       {children}
     </motion.div>
   );
@@ -138,18 +154,29 @@ function Counter({ value, suffix = "" }) {
 }
 
 export default function WhyUs() {
+  const sectionRef = useRef(null);
+  // No hover on touch devices, so the 3D tilt only costs layer promotion there.
+  const [tilt] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  );
+  // Freeze the ambient glow while the section is off-screen.
+  const inView = useInView(sectionRef, { margin: "100px 0px" });
+
   return (
     <section
+      ref={sectionRef}
       id="why-us"
       data-testid="why-us-section"
-      className="py-20 md:py-28 bg-[#121212] relative overflow-hidden"
+      className={`py-20 md:py-28 bg-[#121212] relative overflow-hidden ${
+        inView ? "" : "anim-paused"
+      }`}
       style={{ perspective: "1200px" }}
     >
-      {/* Decorative ambient glow */}
-      <motion.div
-        animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full"
+      {/* Decorative ambient glow — CSS keeps it off the main thread */}
+      <div
+        className="ambient-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full"
         style={{
           width: "900px",
           height: "900px",
@@ -208,6 +235,7 @@ export default function WhyUs() {
               <TiltCard
                 key={i}
                 index={i}
+                tilt={tilt}
                 className="relative bg-[#171717] border border-white/5 p-6 text-center hover:border-[#FF6600]/50 transition-colors duration-300 group perspective-card cursor-none"
               >
                 <div className="flex justify-center mb-4" style={{ transform: "translateZ(20px)" }}>

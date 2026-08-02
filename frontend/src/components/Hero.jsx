@@ -5,16 +5,31 @@ import {
   useSpring,
   useScroll,
   useTransform,
+  useInView,
 } from "framer-motion";
 import { MessageCircle, ChevronDown } from "lucide-react";
 
 const WA_LINK = "https://wa.me/573177371695";
-const HERO_BG =
+const HERO_BG_DESKTOP =
   "https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=1920&q=85";
+const HERO_BG_MOBILE =
+  "https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=1080&q=80";
 const LOGO_URL = "/logo.jpeg";
 
+// Matches the media-conditional <link rel="preload"> in public/index.html,
+// so the hero image is never downloaded twice.
+const isMobile = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(max-width: 767px)").matches;
+
+// Parallax is a per-frame spring on a full-bleed layer. Worth it on a desktop
+// GPU, not on a phone, and pointless without a mouse wheel.
+const wantsParallax = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(min-width: 768px) and (pointer: fine)").matches;
+
 /* ── Floating embers ── */
-const EMBERS = Array.from({ length: 28 }, (_, i) => ({
+const EMBERS = Array.from({ length: 18 }, (_, i) => ({
   id: i,
   left: `${3 + Math.random() * 94}%`,
   size: Math.random() * 3.5 + 1,
@@ -25,11 +40,9 @@ const EMBERS = Array.from({ length: 28 }, (_, i) => ({
 }));
 
 function FloatingEmbers() {
-  // Fewer composite layers on mobile: 28 particles is fine on desktop GPUs
-  // but costs frames on low-end phones.
-  const [count] = useState(() =>
-    window.matchMedia("(max-width: 767px)").matches ? 12 : 28
-  );
+  // Fewer composite layers on mobile: each ember is its own layer while it
+  // animates, and phones pay for that in fill rate.
+  const [count] = useState(() => (isMobile() ? 8 : 18));
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-[2]">
       {EMBERS.slice(0, count).map((e) => (
@@ -55,17 +68,28 @@ function FloatingEmbers() {
 /* ── Magnetic button ── */
 function MagneticBtn({ href, children, className, target, rel, testid }) {
   const ref = useRef(null);
+  const rect = useRef(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 260, damping: 18 });
   const sy = useSpring(my, { stiffness: 260, damping: 18 });
 
+  // Measure once on enter — getBoundingClientRect() inside mousemove forces a
+  // synchronous layout on every pointer event.
+  const onMouseEnter = () => {
+    rect.current = ref.current.getBoundingClientRect();
+  };
   const onMouseMove = (e) => {
-    const r = ref.current.getBoundingClientRect();
+    const r = rect.current;
+    if (!r) return;
     mx.set((e.clientX - (r.left + r.width / 2)) * 0.32);
     my.set((e.clientY - (r.top + r.height / 2)) * 0.32);
   };
-  const onMouseLeave = () => { mx.set(0); my.set(0); };
+  const onMouseLeave = () => {
+    mx.set(0);
+    my.set(0);
+    rect.current = null;
+  };
 
   return (
     <motion.a
@@ -75,6 +99,7 @@ function MagneticBtn({ href, children, className, target, rel, testid }) {
       rel={rel}
       data-testid={testid}
       style={{ x: sx, y: sy }}
+      onMouseEnter={onMouseEnter}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       whileTap={{ scale: 0.95 }}
@@ -85,7 +110,8 @@ function MagneticBtn({ href, children, className, target, rel, testid }) {
   );
 }
 
-export default function Hero() {
+/* ── Parallax background ── */
+function ParallaxBg({ bgUrl }) {
   const { scrollY } = useScroll();
   // Spring-smoothed parallax: mouse-wheel scroll arrives in discrete chunks,
   // so binding the bg directly to scrollY makes it "step". The spring eases it.
@@ -93,16 +119,39 @@ export default function Hero() {
   const bgY = useSpring(rawBgY, { stiffness: 80, damping: 20, mass: 0.3 });
 
   return (
+    <motion.div
+      style={{ y: bgY, backgroundImage: `url(${bgUrl})` }}
+      className="absolute inset-[-10%] bg-cover bg-center bg-no-repeat will-change-transform"
+    />
+  );
+}
+
+export default function Hero() {
+  const sectionRef = useRef(null);
+  const [bgUrl] = useState(() => (isMobile() ? HERO_BG_MOBILE : HERO_BG_DESKTOP));
+  const [parallax] = useState(wantsParallax);
+  // Every looping decoration below is CSS-driven; freeze it once the hero
+  // leaves the viewport so the rest of the page scrolls on an idle compositor.
+  const inView = useInView(sectionRef, { margin: "100px 0px" });
+
+  return (
     <section
+      ref={sectionRef}
       id="hero"
       data-testid="hero-section"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden scan-lines"
+      className={`relative min-h-screen flex items-center justify-center overflow-hidden scan-lines ${
+        inView ? "" : "anim-paused"
+      }`}
     >
-      {/* Parallax background — single layer, transform-only (compositor) */}
-      <motion.div
-        style={{ y: bgY, backgroundImage: `url(${HERO_BG})` }}
-        className="absolute inset-[-10%] bg-cover bg-center bg-no-repeat will-change-transform"
-      />
+      {/* Background — parallax on desktop, static layer elsewhere */}
+      {parallax ? (
+        <ParallaxBg bgUrl={bgUrl} />
+      ) : (
+        <div
+          style={{ backgroundImage: `url(${bgUrl})` }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        />
+      )}
 
       {/* Dark overlay */}
       <div className="hero-overlay absolute inset-0 z-[1]" />
@@ -117,10 +166,8 @@ export default function Hero() {
       />
 
       {/* Animated center glow */}
-      <motion.div
-        animate={{ opacity: [0.08, 0.22, 0.08], scale: [1, 1.1, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none z-[2]"
+      <div
+        className="hero-glow absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none z-[2]"
         style={{
           background:
             "radial-gradient(circle, rgba(255,102,0,0.22) 0%, transparent 70%)",
@@ -130,84 +177,37 @@ export default function Hero() {
       {/* Floating embers */}
       <FloatingEmbers />
 
-      {/* Logo izquierdo */}
-      <motion.img
-        src={LOGO_URL}
-        alt="SALCHIMAX"
+      {/* Logo izquierdo — entrance in JS, idle float in CSS */}
+      <motion.div
         initial={{ opacity: 0, x: -80, rotate: -12 }}
-        animate={{
-          opacity: 1,
-          x: 0,
-          rotate: [0, -8, 6, -5, 8, -3, 0],
-          y: [0, -14, -6, -12, -4, -10, 0],
-          scale: [1, 1.06, 0.96, 1.04, 0.98, 1.05, 1],
-        }}
-        transition={{
-          opacity: { duration: 0.7, delay: 0.2 },
-          x: { duration: 0.7, delay: 0.2 },
-          rotate: {
-            duration: 6,
-            delay: 1,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          },
-          y: {
-            duration: 5,
-            delay: 1,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          },
-          scale: {
-            duration: 4,
-            delay: 1,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          },
-        }}
-        className="absolute left-8 md:left-14 lg:left-20 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)] hidden md:block will-change-transform z-10"
-      />
+        animate={{ opacity: 1, x: 0, rotate: 0 }}
+        transition={{ duration: 0.7, delay: 0.2 }}
+        className="absolute left-8 md:left-14 lg:left-20 top-1/2 -translate-y-1/2 hidden md:block z-10"
+      >
+        <img
+          src={LOGO_URL}
+          alt="SALCHIMAX"
+          width={144}
+          height={144}
+          className="hero-logo-left w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)]"
+        />
+      </motion.div>
+
       {/* Logo derecho */}
-      <motion.img
-        src={LOGO_URL}
-        alt="SALCHIMAX"
+      <motion.div
         initial={{ opacity: 0, x: 80, rotate: 12 }}
-        animate={{
-          opacity: 1,
-          x: 0,
-          rotate: [0, 8, -6, 5, -8, 3, 0],
-          y: [0, -10, -16, -5, -13, -7, 0],
-          scale: [1, 0.97, 1.05, 0.98, 1.06, 0.96, 1],
-        }}
-        transition={{
-          opacity: { duration: 0.7, delay: 0.2 },
-          x: { duration: 0.7, delay: 0.2 },
-          rotate: {
-            duration: 6,
-            delay: 1.8,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          },
-          y: {
-            duration: 5,
-            delay: 1.8,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          },
-          scale: {
-            duration: 4,
-            delay: 1.8,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          },
-        }}
-        className="absolute right-8 md:right-14 lg:right-20 top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)] hidden md:block will-change-transform z-10"
-      />
+        animate={{ opacity: 1, x: 0, rotate: 0 }}
+        transition={{ duration: 0.7, delay: 0.2 }}
+        className="absolute right-8 md:right-14 lg:right-20 top-1/2 -translate-y-1/2 hidden md:block z-10"
+      >
+        <img
+          src={LOGO_URL}
+          alt="SALCHIMAX"
+          width={144}
+          height={144}
+          className="hero-logo-right w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)]"
+        />
+      </motion.div>
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
@@ -216,38 +216,12 @@ export default function Hero() {
           <motion.img
             src={LOGO_URL}
             alt="SALCHIMAX"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{
-              opacity: 1,
-              scale: [1, 1.04, 0.97, 1.05, 0.98, 1],
-              y: [0, -8, -3, -10, -5, 0],
-              rotate: [0, -4, 3, -3, 4, 0],
-            }}
-            transition={{
-              opacity: { duration: 0.6 },
-              scale: {
-                duration: 5,
-                delay: 0.8,
-                repeat: Infinity,
-                repeatType: "loop",
-                ease: "easeInOut",
-              },
-              y: {
-                duration: 4,
-                delay: 0.8,
-                repeat: Infinity,
-                repeatType: "loop",
-                ease: "easeInOut",
-              },
-              rotate: {
-                duration: 6,
-                delay: 0.8,
-                repeat: Infinity,
-                repeatType: "loop",
-                ease: "easeInOut",
-              },
-            }}
-            className="w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)] will-change-transform"
+            width={96}
+            height={96}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="hero-logo-mobile w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)]"
           />
         </div>
 
@@ -272,18 +246,9 @@ export default function Hero() {
               transition={{ duration: 0.75, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
               className="relative"
             >
-              <motion.span
-                animate={{ scale: [1, 1.04, 1] }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
-                className="text-[#FF6600] inline-block"
-              >
+              <span className="text-pulse text-[#FF6600] inline-block">
                 MAS BRUTALES
-              </motion.span>
+              </span>
             </motion.div>
           </div>
 
@@ -299,7 +264,7 @@ export default function Hero() {
           </div>
         </div>
 
-     
+
         {/* Magnetic CTA buttons */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -351,12 +316,9 @@ export default function Hero() {
       <motion.a
         href="#menu"
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 1, 0.6, 1], y: [0, 8, 0] }}
-        transition={{
-          opacity: { duration: 1, delay: 1.4 },
-          y: { duration: 1.4, repeat: Infinity, ease: "easeInOut", delay: 1.4 },
-        }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[#FF6600] z-10 flex flex-col items-center gap-1"
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.4 }}
+        className="soft-bounce absolute bottom-8 left-1/2 -translate-x-1/2 text-[#FF6600] z-10 flex flex-col items-center gap-1"
         data-testid="hero-scroll-indicator"
       >
         <span className="font-body text-[10px] uppercase tracking-[0.3em] text-[#FF6600]/60">

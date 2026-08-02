@@ -47,13 +47,14 @@ const reviews = [
   },
 ];
 
+/* Plain div + CSS hover: react-fast-marquee duplicates its children, so a
+   motion component here means dozens of hover listeners and springs mounted
+   for a purely decorative effect. */
 function ReviewCard({ review }) {
   return (
-    <motion.div
+    <div
       data-testid="testimonial-card"
-      className="bg-[#171717] border border-white/5 p-6 mx-3 w-72 flex-shrink-0"
-      whileHover={{ scale: 1.02, borderColor: "rgba(255,102,0,0.3)" }}
-      transition={{ duration: 0.2 }}
+      className="bg-[#171717] border border-white/5 p-6 mx-3 w-72 flex-shrink-0 transition-[transform,border-color] duration-200 hover:scale-[1.02] hover:border-[#FF6600]/30"
     >
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-full bg-[#FF6600] flex items-center justify-center font-heading text-white text-lg">
@@ -69,7 +70,7 @@ function ReviewCard({ review }) {
         </div>
       </div>
       <p className="font-body text-sm text-gray-300 leading-relaxed">"{review.text}"</p>
-    </motion.div>
+    </div>
   );
 }
 

@@ -93,8 +93,12 @@
                 gtag("config", GA_ID, { anonymize_ip: true });
             })();
         </script>
-        <!-- Preload LCP: hero background image fetched before render -->
-        <link rel="preload" as="image" href="https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=1920&q=85" fetchpriority="high" />
+        <!-- Preload LCP: hero background image fetched before render.
+             Two variants, matched by media query — Hero.jsx picks the same URL
+             for the same breakpoint, so exactly one image is ever downloaded. -->
+        <link rel="preload" as="image" media="(max-width: 767px)" href="https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=1080&q=80" fetchpriority="high" />
+        <link rel="preload" as="image" media="(min-width: 768px)" href="https://images.unsplash.com/photo-1673166516558-3f1b88a22db8?w=1920&q=85" fetchpriority="high" />
+        <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
         <!-- Preload local logo used in intro + navbar -->
         <link rel="preload" as="image" href="/logo.jpeg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

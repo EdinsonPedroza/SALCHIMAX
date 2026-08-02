@@ -88,9 +88,9 @@ export default function OrderCTA() {
               whileHover={{ scale: 1.05, boxShadow: "0 0 50px rgba(255,102,0,0.5)" }}
               whileTap={{ scale: 0.98 }}
             >
-              <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}>
+              <span className="icon-pulse inline-flex">
                 <MessageCircle size={28} />
-              </motion.span>
+              </span>
               PEDIR POR WHATSAPP
             </motion.a>
             <motion.a

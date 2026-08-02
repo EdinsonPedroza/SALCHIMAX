@@ -10,18 +10,27 @@
   font-family: 'Manrope', sans-serif;
 }
 
-/* Grain texture overlay */
-.grain-overlay::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.03;
-  pointer-events: none;
-  z-index: 9999;
+/* Grain texture overlay.
+   The SVG is given an intrinsic size and tiled with background-size/repeat:
+   without it the noise is rasterized at full viewport size and regenerated on
+   every resize (mobile URL bar show/hide), which stalls scrolling.
+   Hidden below md — at 3% opacity it is invisible on a phone and only costs
+   a full-screen composited layer on every frame. */
+@media (min-width: 768px) {
+  .grain-overlay::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    background-repeat: repeat;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+  }
 }
 
 /* Orange glow button */
@@ -240,13 +249,180 @@ html {
   80%  { opacity: 0.6; }
   100% { transform: translateY(-100vh) translateX(var(--ember-drift, 40px)) scale(0); opacity: 0; }
 }
+/* No will-change here: the browser already promotes an element while a
+   transform/opacity animation runs, and a permanent hint would keep ~20
+   composited layers alive for the whole session. */
 .ember {
   position: absolute;
   border-radius: 50%;
   background: radial-gradient(circle, #FF9900 0%, #FF6600 60%, transparent 100%);
   animation: ember-rise var(--ember-dur, 5s) var(--ember-delay, 0s) infinite ease-out;
   pointer-events: none;
-  will-change: transform, opacity;
+}
+
+/* ── Off-screen animation pause ───────────────────────────────────
+   Applied to a section wrapper while it is outside the viewport. Infinite
+   animations keep the compositor (and, for JS-driven ones, the main thread)
+   busy even when nothing is visible — this is the main source of scroll jank
+   once you leave the hero. */
+.anim-paused,
+.anim-paused *,
+.anim-paused *::before,
+.anim-paused *::after {
+  animation-play-state: paused;
+}
+
+/* ── Hero decorations (CSS instead of JS-driven loops) ─────────────
+   These used ~10 concurrent Framer Motion infinite animations, each ticking
+   on the main thread every frame. As individual transform properties
+   (rotate/translate/scale) they compose with Tailwind's `transform` utilities
+   and run on the compositor. */
+@keyframes hero-logo-rot-l {
+  0%, 100% { rotate: 0deg; }
+  16.7% { rotate: -8deg; }
+  33.3% { rotate: 6deg; }
+  50% { rotate: -5deg; }
+  66.7% { rotate: 8deg; }
+  83.3% { rotate: -3deg; }
+}
+@keyframes hero-logo-y-l {
+  0%, 100% { translate: 0 0; }
+  16.7% { translate: 0 -14px; }
+  33.3% { translate: 0 -6px; }
+  50% { translate: 0 -12px; }
+  66.7% { translate: 0 -4px; }
+  83.3% { translate: 0 -10px; }
+}
+@keyframes hero-logo-scale-l {
+  0%, 100% { scale: 1; }
+  16.7% { scale: 1.06; }
+  33.3% { scale: 0.96; }
+  50% { scale: 1.04; }
+  66.7% { scale: 0.98; }
+  83.3% { scale: 1.05; }
+}
+@keyframes hero-logo-rot-r {
+  0%, 100% { rotate: 0deg; }
+  16.7% { rotate: 8deg; }
+  33.3% { rotate: -6deg; }
+  50% { rotate: 5deg; }
+  66.7% { rotate: -8deg; }
+  83.3% { rotate: 3deg; }
+}
+@keyframes hero-logo-y-r {
+  0%, 100% { translate: 0 0; }
+  16.7% { translate: 0 -10px; }
+  33.3% { translate: 0 -16px; }
+  50% { translate: 0 -5px; }
+  66.7% { translate: 0 -13px; }
+  83.3% { translate: 0 -7px; }
+}
+@keyframes hero-logo-scale-r {
+  0%, 100% { scale: 1; }
+  16.7% { scale: 0.97; }
+  33.3% { scale: 1.05; }
+  50% { scale: 0.98; }
+  66.7% { scale: 1.06; }
+  83.3% { scale: 0.96; }
+}
+@keyframes hero-logo-y-m {
+  0%, 100% { translate: 0 0; }
+  20% { translate: 0 -8px; }
+  40% { translate: 0 -3px; }
+  60% { translate: 0 -10px; }
+  80% { translate: 0 -5px; }
+}
+@keyframes hero-logo-scale-m {
+  0%, 100% { scale: 1; }
+  20% { scale: 1.04; }
+  40% { scale: 0.97; }
+  60% { scale: 1.05; }
+  80% { scale: 0.98; }
+}
+@keyframes hero-logo-rot-m {
+  0%, 100% { rotate: 0deg; }
+  20% { rotate: -4deg; }
+  40% { rotate: 3deg; }
+  60% { rotate: -3deg; }
+  80% { rotate: 4deg; }
+}
+
+.hero-logo-left {
+  animation:
+    hero-logo-rot-l 6s ease-in-out 1s infinite,
+    hero-logo-y-l 5s ease-in-out 1s infinite,
+    hero-logo-scale-l 4s ease-in-out 1s infinite;
+}
+.hero-logo-right {
+  animation:
+    hero-logo-rot-r 6s ease-in-out 1.8s infinite,
+    hero-logo-y-r 5s ease-in-out 1.8s infinite,
+    hero-logo-scale-r 4s ease-in-out 1.8s infinite;
+}
+.hero-logo-mobile {
+  animation:
+    hero-logo-rot-m 6s ease-in-out 0.8s infinite,
+    hero-logo-y-m 4s ease-in-out 0.8s infinite,
+    hero-logo-scale-m 5s ease-in-out 0.8s infinite;
+}
+
+@keyframes hero-glow-pulse {
+  0%, 100% { opacity: 0.08; scale: 1; }
+  50% { opacity: 0.22; scale: 1.1; }
+}
+.hero-glow {
+  animation: hero-glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes ambient-glow-pulse {
+  0%, 100% { opacity: 0.06; scale: 1; }
+  50% { opacity: 0.12; scale: 1.15; }
+}
+.ambient-glow {
+  opacity: 0.06;
+  animation: ambient-glow-pulse 6s ease-in-out infinite;
+}
+
+@keyframes text-pulse {
+  0%, 100% { scale: 1; }
+  50% { scale: 1.04; }
+}
+.text-pulse {
+  animation: text-pulse 2.5s ease-in-out 1s infinite;
+}
+
+@keyframes soft-bounce {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 8px; }
+}
+.soft-bounce {
+  animation: soft-bounce 1.4s ease-in-out 1.4s infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 60%, 100% { scale: 1; }
+  30% { scale: 1.1; }
+}
+.icon-pulse {
+  animation: icon-pulse 4s ease-in-out infinite;
+}
+
+/* Floating WhatsApp button — CSS keeps it off the main thread */
+@keyframes wa-float-pulse {
+  0%, 66%, 100% { scale: 1; }
+  33% { scale: 1.08; }
+}
+.wa-float {
+  animation: wa-float-pulse 3s ease-in-out infinite;
+  transition: scale 0.2s ease;
+}
+.wa-float:hover {
+  animation-play-state: paused;
+  scale: 1.15;
+}
+.wa-float:active {
+  animation-play-state: paused;
+  scale: 0.95;
 }
 
 /* Clip-path text reveal (slide up from mask) */
@@ -368,6 +544,15 @@ html {
   .ember,
   .marquee-inner,
   .hero-stars,
+  .hero-logo-left,
+  .hero-logo-right,
+  .hero-logo-mobile,
+  .hero-glow,
+  .ambient-glow,
+  .text-pulse,
+  .soft-bounce,
+  .icon-pulse,
+  .wa-float,
   .animate-pulse-orange,
   .glitch-text::before,
   .glitch-text::after,

@@ -1,6 +1,15 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 const CartContext = createContext(null);
+// Actions only, and referentially stable: components that just dispatch (the
+// product cards) subscribe here so they don't re-render on every cart change.
+const CartActionsContext = createContext(null);
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
@@ -33,47 +42,74 @@ export function CartProvider({ children }) {
 
   const clearCart = useCallback(() => setItems([]), []);
 
-  const totalItems = items.reduce((s, i) => s + i.qty, 0);
+  const { totalItems, totalPrice } = useMemo(() => {
+    return {
+      totalItems: items.reduce((s, i) => s + i.qty, 0),
+      totalPrice: items.reduce((s, i) => {
+        const num = parseInt(i.price.replace(/[^0-9]/g, ""), 10) || 0;
+        return s + num * i.qty;
+      }, 0),
+    };
+  }, [items]);
 
-  const totalPrice = items.reduce((s, i) => {
-    const num = parseInt(i.price.replace(/[^0-9]/g, ""), 10) || 0;
-    return s + num * i.qty;
-  }, 0);
-
-  const buildWhatsAppMessage = () => {
-    const lines = items.map(
-      (i) => `• ${i.qty}x ${i.name} — ${i.price}`
-    );
+  const buildWhatsAppMessage = useCallback(() => {
+    const lines = items.map((i) => `• ${i.qty}x ${i.name} — ${i.price}`);
     const total = totalPrice > 0
       ? `\n*Total estimado: $${totalPrice.toLocaleString("es-CO")}*`
       : "";
     return encodeURIComponent(
       `¡Hola SALCHIMAX! Quiero hacer este pedido:\n\n${lines.join("\n")}${total}\n\n¿Está disponible?`
     );
-  };
+  }, [items, totalPrice]);
+
+  // Memoized so adding one item doesn't re-render every consumer
+  // (the 20 product cards, navbar, cart drawer) on an unchanged reference.
+  const value = useMemo(
+    () => ({
+      items,
+      totalItems,
+      totalPrice,
+      isOpen,
+      setIsOpen,
+      addItem,
+      removeItem,
+      updateQty,
+      clearCart,
+      buildWhatsAppMessage,
+    }),
+    [
+      items,
+      totalItems,
+      totalPrice,
+      isOpen,
+      addItem,
+      removeItem,
+      updateQty,
+      clearCart,
+      buildWhatsAppMessage,
+    ]
+  );
+
+  const actions = useMemo(
+    () => ({ addItem, removeItem, updateQty, clearCart, setIsOpen }),
+    [addItem, removeItem, updateQty, clearCart]
+  );
 
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        totalItems,
-        totalPrice,
-        isOpen,
-        setIsOpen,
-        addItem,
-        removeItem,
-        updateQty,
-        clearCart,
-        buildWhatsAppMessage,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+    <CartActionsContext.Provider value={actions}>
+      <CartContext.Provider value={value}>{children}</CartContext.Provider>
+    </CartActionsContext.Provider>
   );
 }
 
 export function useCart() {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart must be used inside CartProvider");
+  return ctx;
+}
+
+export function useCartActions() {
+  const ctx = useContext(CartActionsContext);
+  if (!ctx) throw new Error("useCartActions must be used inside CartProvider");
   return ctx;
 }

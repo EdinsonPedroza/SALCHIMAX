@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -40,8 +40,9 @@ const galleryImages = [
 ];
 
 /* ── 3D tilt gallery item ── */
-function GalleryItem({ img, index }) {
+function GalleryItem({ img, index, tilt }) {
   const ref = useRef(null);
+  const rect = useRef(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
 
@@ -55,16 +56,23 @@ function GalleryItem({ img, index }) {
   });
   const scale = useSpring(1, { stiffness: 350, damping: 28 });
 
+  // Measure once per hover: getBoundingClientRect() inside mousemove forces a
+  // synchronous layout on every pointer event.
+  const onMouseEnter = () => {
+    rect.current = ref.current.getBoundingClientRect();
+    scale.set(1.04);
+  };
   const onMouseMove = (e) => {
-    const r = ref.current.getBoundingClientRect();
+    const r = rect.current;
+    if (!r) return;
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
-    scale.set(1.04);
   };
   const onMouseLeave = () => {
     mx.set(0);
     my.set(0);
     scale.set(1);
+    rect.current = null;
   };
 
   // Stagger from different directions for visual punch
@@ -89,14 +97,14 @@ function GalleryItem({ img, index }) {
         delay: index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
-      style={{
-        rotateX,
-        rotateY,
-        scale,
-        transformStyle: "preserve-3d",
-      }}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
+      style={
+        tilt
+          ? { rotateX, rotateY, scale, transformStyle: "preserve-3d" }
+          : undefined
+      }
+      onMouseEnter={tilt ? onMouseEnter : undefined}
+      onMouseMove={tilt ? onMouseMove : undefined}
+      onMouseLeave={tilt ? onMouseLeave : undefined}
       data-testid={`gallery-item-${index}`}
       className={`gallery-item overflow-hidden relative group ${img.span} cursor-none`}
     >
@@ -106,6 +114,7 @@ function GalleryItem({ img, index }) {
         alt={img.alt}
         className="gallery-img w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         loading="lazy"
+        decoding="async"
       />
 
       {/* Orange gradient overlay */}
@@ -139,6 +148,13 @@ function GalleryItem({ img, index }) {
 }
 
 export default function Gallery() {
+  // No hover on touch devices, so the 3D tilt only costs layer promotion there.
+  const [tilt] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  );
+
   return (
     <section
       id="gallery"
@@ -201,7 +217,7 @@ export default function Gallery() {
           style={{ gridAutoRows: "220px" }}
         >
           {galleryImages.map((img, i) => (
-            <GalleryItem key={i} img={img} index={i} />
+            <GalleryItem key={i} img={img} index={i} tilt={tilt} />
           ))}
         </div>
       </div>

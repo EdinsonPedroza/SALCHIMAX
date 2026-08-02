@@ -37,7 +37,9 @@ function PromoCard({ promo, index }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#171717] via-[#171717]/30 to-transparent" />
 
         {/* Day badge */}
-        <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full font-heading text-xs tracking-widest text-white">
+        {/* Solid instead of backdrop-blur: this badge sits on a card that moves
+            with the scroll, so the blur would be recomputed every frame. */}
+        <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/75 px-3 py-1 rounded-full font-heading text-xs tracking-widest text-white">
           <CalendarDays size={13} className="text-[#FF6600]" />
           {promo.day.toUpperCase()}
         </span>

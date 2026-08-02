@@ -31,20 +31,34 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { totalItems, setIsOpen: openCart } = useCart();
 
+  // rAF-throttled + passive: the raw scroll event can fire dozens of times per
+  // frame and this handler is on the critical scrolling path.
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 50);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <>
       <ScrollProgress />
+      {/* Solid background instead of backdrop-blur: a fixed blurred bar makes
+          the compositor re-blur everything behind it on every scroll frame,
+          which is the most expensive thing on this page on mobile. Over a
+          #0D0D0D page the visual difference is negligible. */}
       <nav
         data-testid="navbar"
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${
           scrolled
-            ? "bg-[#0D0D0D]/95 backdrop-blur-md shadow-lg shadow-black/50"
+            ? "bg-[#0D0D0D] shadow-lg shadow-black/50"
             : "bg-transparent"
         }`}
       >
@@ -189,7 +203,7 @@ export default function Navbar() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden md:hidden bg-[#0D0D0D]/98 backdrop-blur-md border-t border-[#FF6600]/20"
+              className="overflow-hidden md:hidden bg-[#0D0D0D] border-t border-[#FF6600]/20"
               data-testid="navbar-mobile-menu"
             >
               <div className="px-4 py-6 flex flex-col gap-5">

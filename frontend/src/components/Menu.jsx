@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, MessageCircle, Plus, Check } from "lucide-react";
-import { useCart } from "../context/CartContext";
+import { useCart, useCartActions } from "../context/CartContext";
 
 const WA_LINK = "https://wa.me/573177371695";
 
@@ -89,8 +89,10 @@ const menuData = {
   ],
 };
 
-function ProductCard({ item, index }) {
-  const { addItem } = useCart();
+// memo + actions-only context: adding one item used to re-render all 20 cards
+// (and their Framer Motion wrappers) through the cart context.
+const ProductCard = memo(function ProductCard({ item, index }) {
+  const { addItem } = useCartActions();
   const [added, setAdded] = useState(false);
   const [selectedPortion, setSelectedPortion] = useState(null);
 
@@ -223,7 +225,7 @@ function ProductCard({ item, index }) {
       </div>
     </motion.div>
   );
-}
+});
 
 export default function Menu() {
   const [activeTab, setActiveTab] = useState("salchipapas");

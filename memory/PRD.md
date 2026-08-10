@@ -14,7 +14,7 @@ Crear una landing page moderna, atractiva y optimizada para pedidos para el rest
 
 ## Arquitectura
 - **Frontend:** React + Tailwind CSS + Framer Motion
-- **Backend:** FastAPI (no usado por landing page estática)
+- **Backend:** Ninguno (landing estática; el boilerplate FastAPI se eliminó)
 - **Fonts:** Bebas Neue (headings) + Manrope (body)
 - **Colores:** #FF6600 (orange logo brand), #0D0D0D (dark bg), white text
 - **Estilo:** Dark urban, mobile-first

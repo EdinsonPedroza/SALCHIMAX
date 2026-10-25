@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Marquee from "react-fast-marquee";
+import FlipText from "./fx/FlipText";
 
 const reviews = [
   {
@@ -47,14 +48,15 @@ const reviews = [
   },
 ];
 
-/* Plain div + CSS hover: react-fast-marquee duplicates its children, so a
-   motion component here means dozens of hover listeners and springs mounted
-   for a purely decorative effect. */
+/* Plain div + CSS hover (.review-card tips toward the cursor in 3D):
+   react-fast-marquee duplicates its children, so a motion component here
+   means dozens of hover listeners and springs mounted for a purely
+   decorative effect. */
 function ReviewCard({ review }) {
   return (
     <div
       data-testid="testimonial-card"
-      className="bg-[#171717] border border-white/5 p-6 mx-3 w-72 flex-shrink-0 transition-[transform,border-color] duration-200 hover:scale-[1.02] hover:border-[#FF6600]/30"
+      className="review-card bg-[#171717] border border-white/5 p-6 mx-3 w-72 flex-shrink-0 hover:border-[#FF6600]/30"
     >
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-full bg-[#FF6600] flex items-center justify-center font-heading text-white text-lg">
@@ -98,9 +100,10 @@ export default function Testimonials() {
           <span className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block">
             Lo que dicen de nosotros
           </span>
-          <h2 className="font-heading text-5xl md:text-6xl text-white mb-3">
-            RESEÑAS <span className="text-[#FF6600]">REALES</span>
-          </h2>
+          <FlipText
+            className="font-heading text-5xl md:text-6xl text-white mb-3"
+            parts={["RESEÑAS", { text: "REALES", className: "text-[#FF6600]" }]}
+          />
           <div className="w-16 h-1 bg-[#FF6600] mx-auto mb-4" />
           <div className="flex items-center justify-center gap-2">
             <div className="flex">
@@ -114,19 +117,26 @@ export default function Testimonials() {
         </motion.div>
       </div>
 
-      {/* Marquee row 1 */}
-      <Marquee speed={40} gradient={false} play={inView} className="mb-4">
-        {reviews.map((r, i) => (
-          <ReviewCard key={i} review={r} />
-        ))}
-      </Marquee>
+      {/* The rows lean back at opposite angles, like the walls of a tunnel */}
+      <div style={{ perspective: 1100 }}>
+        {/* Marquee row 1 */}
+        <div className="mb-4" style={{ transform: "rotateY(-9deg) rotateX(3deg)" }}>
+          <Marquee speed={40} gradient={false} play={inView}>
+            {reviews.map((r, i) => (
+              <ReviewCard key={i} review={r} />
+            ))}
+          </Marquee>
+        </div>
 
-      {/* Marquee row 2 - reverse */}
-      <Marquee speed={35} gradient={false} play={inView} direction="right">
-        {[...reviews].reverse().map((r, i) => (
-          <ReviewCard key={i} review={r} />
-        ))}
-      </Marquee>
+        {/* Marquee row 2 - reverse */}
+        <div style={{ transform: "rotateY(9deg) rotateX(-3deg)" }}>
+          <Marquee speed={35} gradient={false} play={inView} direction="right">
+            {[...reviews].reverse().map((r, i) => (
+              <ReviewCard key={i} review={r} />
+            ))}
+          </Marquee>
+        </div>
+      </div>
     </section>
   );
 }

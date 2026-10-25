@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LETTERS = "SALCHIMAX".split("");
@@ -62,12 +62,20 @@ function Shockwave({ delay }) {
   );
 }
 
-export default function IntroScreen({ onComplete }) {
+export default function IntroScreen({ onComplete, onReveal }) {
   const [phase, setPhase] = useState("show");
+  // Ref, not a dependency: the timer below must run exactly once.
+  const onRevealRef = useRef(onReveal);
+  onRevealRef.current = onReveal;
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    const t = setTimeout(() => setPhase("exit"), 2200);
+    const t = setTimeout(() => {
+      setPhase("exit");
+      // The curtains start opening now — let the hero play its entrance
+      // while it is actually visible.
+      onRevealRef.current?.();
+    }, 2200);
     return () => {
       clearTimeout(t);
       document.body.style.overflow = "";
@@ -175,15 +183,16 @@ export default function IntroScreen({ onComplete }) {
               ))}
 
               {/* Logo */}
+              {/* Coin-flip entrance: drops in spinning on its vertical axis */}
               <motion.div
-                initial={{ scale: 0, y: -100, opacity: 0, rotate: -20 }}
-                animate={{ scale: 1, y: 0, opacity: 1, rotate: 0 }}
+                initial={{ scale: 0, y: -100, opacity: 0, rotateY: -540 }}
+                animate={{ scale: 1, y: 0, opacity: 1, rotateY: 0 }}
                 transition={{
-                  duration: 0.5,
-                  ease: [0.34, 1.5, 0.64, 1],
+                  duration: 0.9,
+                  ease: [0.34, 1.3, 0.64, 1],
                   delay: 0.06,
                 }}
-                style={{ willChange: "transform" }}
+                style={{ willChange: "transform", transformPerspective: 800 }}
               >
                 <motion.div
                   className="absolute inset-0 rounded-full pointer-events-none"
@@ -210,7 +219,10 @@ export default function IntroScreen({ onComplete }) {
             </div>
 
             {/* Letters — stagger with color pop on entry */}
-            <div className="flex mt-8 overflow-hidden gap-0.5 md:gap-1">
+            <div
+              className="flex mt-8 gap-0.5 md:gap-1"
+              style={{ perspective: 700 }}
+            >
               {LETTERS.map((letter, i) => (
                 <motion.span
                   key={i}
@@ -218,11 +230,12 @@ export default function IntroScreen({ onComplete }) {
                   style={{
                     willChange: "transform",
                     color: "white",
+                    transformOrigin: "50% 100%",
                   }}
-                  initial={{ y: 100, opacity: 0, skewX: -8 }}
-                  animate={{ y: 0, opacity: 1, skewX: 0 }}
+                  initial={{ rotateX: -90, y: 40, z: -120, opacity: 0 }}
+                  animate={{ rotateX: 0, y: 0, z: 0, opacity: 1 }}
                   transition={{
-                    duration: 0.38,
+                    duration: 0.55,
                     delay: 0.4 + i * 0.05,
                     ease: [0.22, 1, 0.36, 1],
                   }}

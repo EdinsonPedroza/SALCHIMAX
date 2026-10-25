@@ -1,6 +1,9 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
+import Reveal3D from "./fx/Reveal3D";
+import Tilt3D from "./fx/Tilt3D";
+import FlipText from "./fx/FlipText";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -13,6 +16,21 @@ L.Icon.Default.mergeOptions({
 });
 
 const SALCHIMAX_POS = [3.518157, -76.300247];
+
+/* Info card: stands up on scroll, then tilts with the cursor. */
+function InfoCard({ index, children }) {
+  return (
+    <Reveal3D from={{ rotateX: 45, y: 40, z: -100 }} delay={0.15 * index}>
+      <Tilt3D
+        max={5}
+        lift={10}
+        className="bg-[#171717] border border-white/5 p-6 hover:border-[#FF6600]/20 transition-colors duration-200"
+      >
+        {children}
+      </Tilt3D>
+    </Reveal3D>
+  );
+}
 
 export default function Location() {
   const mapRef = useRef(null);
@@ -38,20 +56,20 @@ export default function Location() {
           <span className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block">
             Encuéntranos
           </span>
-          <h2 className="font-heading text-5xl md:text-6xl text-white mb-3">
-            NUESTRA <span className="text-[#FF6600]">UBICACIÓN</span>
-          </h2>
+          <FlipText
+            className="font-heading text-5xl md:text-6xl text-white mb-3"
+            parts={["NUESTRA", { text: "UBICACIÓN", className: "text-[#FF6600]" }]}
+          />
           <div className="w-16 h-1 bg-[#FF6600] mx-auto" />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Map */}
-          <motion.div
+          <Reveal3D
             ref={mapRef}
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            from={{ rotateY: 28, x: -60, z: -120 }}
+            origin="0% 50%"
+            duration={1}
             data-testid="map-container"
             className="w-full h-80 md:h-96 overflow-hidden border border-white/10 bg-[#171717]"
           >
@@ -78,17 +96,11 @@ export default function Location() {
                 <MapPin size={32} className="text-[#FF6600]/40 animate-pulse" />
               </div>
             )}
-          </motion.div>
+          </Reveal3D>
 
           {/* Info */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
-          >
-            <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
+          <div className="space-y-6">
+            <InfoCard index={0}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
                   <MapPin size={20} className="text-[#FF6600]" />
@@ -102,9 +114,9 @@ export default function Location() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </InfoCard>
 
-            <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
+            <InfoCard index={1}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
                   <Clock size={20} className="text-[#FF6600]" />
@@ -119,9 +131,9 @@ export default function Location() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </InfoCard>
 
-            <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
+            <InfoCard index={2}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
                   <Phone size={20} className="text-[#FF6600]" />
@@ -146,7 +158,7 @@ export default function Location() {
                   </a>
                 </div>
               </div>
-            </motion.div>
+            </InfoCard>
 
             <motion.a
               href="https://maps.google.com/?q=Cra.+28+%2319-20,+Palmira,+Valle+del+Cauca"
@@ -160,7 +172,7 @@ export default function Location() {
               <MapPin size={20} />
               VER EN GOOGLE MAPS
             </motion.a>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

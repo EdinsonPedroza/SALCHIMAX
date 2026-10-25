@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 import { MessageCircle, CalendarDays } from "lucide-react";
 import { promos } from "../data/promos";
+import Reveal3D from "./fx/Reveal3D";
+import Tilt3D from "./fx/Tilt3D";
+import FlipText from "./fx/FlipText";
 
 const WA_LINK = "https://wa.me/573177371695";
 
@@ -13,66 +16,70 @@ function promoWaLink(promo) {
 
 function PromoCard({ promo, index }) {
   return (
-    <motion.a
+    <Reveal3D
+      as="a"
       href={promoWaLink(promo)}
       target="_blank"
       rel="noopener noreferrer"
       data-testid={`promo-card-${promo.day.toLowerCase()}`}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -6 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-[#171717] hover:border-[#FF6600] transition-colors duration-300"
+      from={{ rotateX: 50, y: 60, z: -140 }}
+      delay={index * 0.12}
+      whileHover={{ y: -6, transition: { duration: 0.25 } }}
+      className="block h-full"
     >
-      {/* Image */}
-      <div className="relative h-40">
-        <div className="media-fade-soft absolute inset-0 overflow-hidden">
-          <img
-            src={promo.img}
-            alt={promo.title}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        </div>
+      <Tilt3D
+        max={9}
+        className="group flex h-full flex-col rounded-lg border border-white/10 bg-[#171717] hover:border-[#FF6600] transition-colors duration-300"
+      >
+        {/* Image */}
+        <div className="preserve-3d relative h-40">
+          <div className="media-fade-soft absolute inset-0 overflow-hidden">
+            <img
+              src={promo.img}
+              alt={promo.title}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </div>
 
-        {/* Day badge */}
-        {/* Solid instead of backdrop-blur: this badge sits on a card that moves
-            with the scroll, so the blur would be recomputed every frame. */}
-        <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/75 px-3 py-1 rounded-full font-heading text-xs tracking-widest text-white">
-          <CalendarDays size={13} className="text-[#FF6600]" />
-          {promo.day.toUpperCase()}
-        </span>
-
-        {/* Highlight badge */}
-        {promo.badge && (
-          <span className="absolute top-3 right-3 bg-[#FF6600] text-white font-heading text-xs tracking-widest px-2.5 py-1 rounded">
-            {promo.badge}
+          {/* Day badge */}
+          {/* Solid instead of backdrop-blur: this badge sits on a card that moves
+              with the scroll, so the blur would be recomputed every frame. */}
+          <span className="depth-lg absolute top-3 left-3 flex items-center gap-1.5 bg-black/75 px-3 py-1 rounded-full font-heading text-xs tracking-widest text-white">
+            <CalendarDays size={13} className="text-[#FF6600]" />
+            {promo.day.toUpperCase()}
           </span>
-        )}
-      </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="font-heading text-xl text-white leading-tight mb-1.5">
-          {promo.title}
-        </h3>
-        <p className="font-body text-sm text-gray-400 leading-relaxed flex-1">
-          {promo.desc}
-        </p>
-
-        <div className="mt-4 flex items-center justify-between gap-2">
-          {promo.price && (
-            <span className="price-tag text-base">{promo.price}</span>
+          {/* Highlight badge */}
+          {promo.badge && (
+            <span className="depth-lg absolute top-3 right-3 bg-[#FF6600] text-white font-heading text-xs tracking-widest px-2.5 py-1 rounded">
+              {promo.badge}
+            </span>
           )}
-          <span className="ml-auto flex items-center gap-2 font-heading text-sm tracking-widest text-[#FF6600] group-hover:text-[#FF8533] transition-colors">
-            <MessageCircle size={16} />
-            PEDIR
-          </span>
         </div>
-      </div>
-    </motion.a>
+
+        {/* Content */}
+        <div className="preserve-3d flex flex-1 flex-col p-4">
+          <h3 className="depth-md font-heading text-xl text-white leading-tight mb-1.5">
+            {promo.title}
+          </h3>
+          <p className="font-body text-sm text-gray-400 leading-relaxed flex-1">
+            {promo.desc}
+          </p>
+
+          <div className="depth-sm mt-4 flex items-center justify-between gap-2">
+            {promo.price && (
+              <span className="price-tag text-base">{promo.price}</span>
+            )}
+            <span className="ml-auto flex items-center gap-2 font-heading text-sm tracking-widest text-[#FF6600] group-hover:text-[#FF8533] transition-colors">
+              <MessageCircle size={16} />
+              PEDIR
+            </span>
+          </div>
+        </div>
+      </Tilt3D>
+    </Reveal3D>
   );
 }
 
@@ -108,15 +115,10 @@ export default function Promos() {
           >
             Cada día una excusa para comer
           </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <FlipText
             className="font-heading text-5xl md:text-6xl text-white mb-3"
-          >
-            PROMOS DE LA <span className="text-[#FF6600]">SEMANA</span>
-          </motion.h2>
+            parts={["PROMOS DE LA", { text: "SEMANA", className: "text-[#FF6600]" }]}
+          />
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}

@@ -2,6 +2,9 @@ import { memo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, MessageCircle, Plus, Check } from "lucide-react";
 import { useCart, useCartActions } from "../context/CartContext";
+import Reveal3D from "./fx/Reveal3D";
+import Tilt3D from "./fx/Tilt3D";
+import FlipText from "./fx/FlipText";
 
 const WA_LINK = "https://wa.me/573177371695";
 
@@ -117,20 +120,19 @@ const ProductCard = memo(function ProductCard({ item, index }) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 26, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      whileHover={{ scale: 1.03, y: -6, transition: { duration: 0.2 } }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{
-        duration: 0.45,
-        // Stagger per grid row (max 4 columns) so delays never pile up
-        delay: (index % 4) * 0.07,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+    <Reveal3D
+      from={{ rotateX: 42, y: 40, z: -110 }}
+      // Stagger per grid row (max 4 columns) so delays never pile up
+      delay={(index % 4) * 0.08}
+      duration={0.7}
+      margin="-40px"
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-      className="food-card overflow-hidden group flex flex-col"
+      className="h-full"
     >
+    {/* No overflow-hidden on the card: it would flatten the 3D context. The
+        photo clips itself. */}
+    <Tilt3D max={7} lift={14} className="food-card group flex h-full flex-col">
       {/* Image */}
       <div className="media-fade overflow-hidden h-44 relative flex-shrink-0">
         <img
@@ -143,8 +145,8 @@ const ProductCard = memo(function ProductCard({ item, index }) {
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col flex-1">
-        <div className="flex justify-between items-start gap-2 mb-1.5">
+      <div className="preserve-3d p-4 flex flex-col flex-1">
+        <div className="depth-md flex justify-between items-start gap-2 mb-1.5">
           <h3 className="font-heading text-lg text-white tracking-wide leading-tight">{item.name}</h3>
           {!item.prices && !item.price2 && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
         </div>
@@ -201,7 +203,7 @@ const ProductCard = memo(function ProductCard({ item, index }) {
           data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
           onClick={handleAdd}
           disabled={requiresPortionSelection && !selectedPortion}
-          className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
+          className={`depth-sm [perspective:500px] mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
             added
               ? "bg-green-600 text-white"
               : requiresPortionSelection && !selectedPortion
@@ -209,20 +211,32 @@ const ProductCard = memo(function ProductCard({ item, index }) {
               : "bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] hover:bg-[#FF6600] hover:text-white"
           }`}
         >
-          {added ? (
-            <>
-              <Check size={15} />
-              AGREGADO
-            </>
-          ) : (
-            <>
-              <Plus size={15} />
-              AGREGAR AL PEDIDO
-            </>
-          )}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={added ? "added" : "idle"}
+              initial={{ rotateX: -90, opacity: 0 }}
+              animate={{ rotateX: 0, opacity: 1 }}
+              exit={{ rotateX: 90, opacity: 0 }}
+              transition={{ duration: 0.16 }}
+              className="flex items-center justify-center gap-2"
+            >
+              {added ? (
+                <>
+                  <Check size={15} />
+                  AGREGADO
+                </>
+              ) : (
+                <>
+                  <Plus size={15} />
+                  AGREGAR AL PEDIDO
+                </>
+              )}
+            </motion.span>
+          </AnimatePresence>
         </button>
       </div>
-    </motion.div>
+    </Tilt3D>
+    </Reveal3D>
   );
 });
 
@@ -245,7 +259,10 @@ export default function Menu() {
             <span className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block">
               Lo que más te gusta
             </span>
-            <h2 className="font-heading text-5xl md:text-6xl text-white mb-3">NUESTRO MENÚ</h2>
+            <FlipText
+              className="font-heading text-5xl md:text-6xl text-white mb-3"
+              parts={["NUESTRO MENÚ"]}
+            />
             <div className="w-16 h-1 bg-[#FF6600]" />
           </div>
 
@@ -337,13 +354,15 @@ export default function Menu() {
         )}
 
         {/* Product grid */}
+        <div style={{ perspective: 1400 }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
+            initial={{ opacity: 0, rotateX: 16, y: 20 }}
+            animate={{ opacity: 1, rotateX: 0, y: 0 }}
+            exit={{ opacity: 0, rotateX: -16, y: -16 }}
             transition={{ duration: 0.3 }}
+            style={{ transformOrigin: "50% 0%" }}
             data-testid={`menu-grid-${activeTab}`}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
           >
@@ -352,6 +371,7 @@ export default function Menu() {
             ))}
           </motion.div>
         </AnimatePresence>
+        </div>
 
         {/* Bottom CTA */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12">

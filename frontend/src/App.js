@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MotionConfig } from "framer-motion";
 import { CartProvider } from "./context/CartContext";
+import { IntroProvider } from "./context/IntroContext";
 import Home from "./pages/Home";
 import IntroScreen from "./components/IntroScreen";
 import { Analytics } from "@vercel/analytics/react";
@@ -20,12 +21,17 @@ function SeoRoute() {
 
 function App() {
   const [introVisible, setIntroVisible] = useState(true);
+  const [revealed, setRevealed] = useState(false);
 
   return (
     <MotionConfig reducedMotion="user">
     <CartProvider>
+    <IntroProvider value={revealed || !introVisible}>
       {introVisible && (
-        <IntroScreen onComplete={() => setIntroVisible(false)} />
+        <IntroScreen
+          onReveal={() => setRevealed(true)}
+          onComplete={() => setIntroVisible(false)}
+        />
       )}
       <div className="App bg-[#0D0D0D] min-h-screen font-body grain-overlay">
         <BrowserRouter>
@@ -41,6 +47,7 @@ function App() {
         <Analytics />
         <SpeedInsights />
       </div>
+    </IntroProvider>
     </CartProvider>
     </MotionConfig>
   );

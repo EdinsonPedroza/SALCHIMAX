@@ -26,15 +26,16 @@ function PromoCard({ promo, index }) {
       className="group relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-[#171717] hover:border-[#FF6600] transition-colors duration-300"
     >
       {/* Image */}
-      <div className="relative h-40 overflow-hidden">
-        <img
-          src={promo.img}
-          alt={promo.title}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#171717] via-[#171717]/30 to-transparent" />
+      <div className="relative h-40">
+        <div className="media-fade-soft absolute inset-0 overflow-hidden">
+          <img
+            src={promo.img}
+            alt={promo.title}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </div>
 
         {/* Day badge */}
         {/* Solid instead of backdrop-blur: this badge sits on a card that moves

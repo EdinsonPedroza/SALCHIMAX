@@ -132,7 +132,7 @@ const ProductCard = memo(function ProductCard({ item, index }) {
       className="food-card overflow-hidden group flex flex-col"
     >
       {/* Image */}
-      <div className="overflow-hidden h-44 relative flex-shrink-0">
+      <div className="media-fade overflow-hidden h-44 relative flex-shrink-0">
         <img
           src={item.img}
           alt={item.name}
@@ -140,7 +140,6 @@ const ProductCard = memo(function ProductCard({ item, index }) {
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#171717] to-transparent" />
       </div>
 
       {/* Content */}

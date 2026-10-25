@@ -77,6 +77,20 @@
   box-shadow: 0 10px 40px rgba(255, 102, 0, 0.15);
 }
 
+/* Photo → card-background fade, done as a mask on the photo's own wrapper.
+   A separate gradient overlay is clipped independently of the photo, so on
+   fractional-DPR screens (Windows 125%/150%) the last pixel row of the photo
+   bleeds through as a thin orange seam once the card is transformed on hover.
+   With a mask there is only one layer to clip, and its alpha is 0 at that edge. */
+.media-fade {
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 100%);
+  mask-image: linear-gradient(to top, transparent 0%, #000 100%);
+}
+.media-fade-soft {
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.7) 50%, #000 100%);
+  mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.7) 50%, #000 100%);
+}
+
 /* Section fade-in animation */
 @keyframes fadeInUp {
   from {

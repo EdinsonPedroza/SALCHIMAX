@@ -67,20 +67,17 @@ export default function Navbar() {
           <motion.a
             href="#"
             data-testid="navbar-logo"
-            className="flex items-center gap-2 [perspective:500px]"
+            className="flex items-center gap-2"
             whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Coin flip on hover: one full turn on the vertical axis */}
             <motion.img
               src={LOGO_URL}
               alt="SALCHIMAX Urban Food"
               className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
               whileHover={{
-                rotateY: 360,
                 boxShadow: "0 0 20px rgba(255,102,0,0.7)",
                 borderColor: "#FF6600",
-                transition: { rotateY: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
               }}
               style={{
                 border: "2px solid rgba(255,102,0,0.3)",

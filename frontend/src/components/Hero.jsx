@@ -6,13 +6,8 @@ import {
   useScroll,
   useTransform,
   useInView,
-  useReducedMotion,
 } from "framer-motion";
 import { MessageCircle, ChevronDown } from "lucide-react";
-import FlipText from "./fx/FlipText";
-import { perspectiveTemplate } from "./fx/utils";
-import { usePointerFx } from "../hooks/usePointerFx";
-import { useIntroRevealed } from "../context/IntroContext";
 
 const WA_LINK = "https://wa.me/573177371695";
 const HERO_BG_DESKTOP =
@@ -32,8 +27,6 @@ const isMobile = () =>
 const wantsParallax = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(min-width: 768px) and (pointer: fine)").matches;
-
-const scrollOutTemplate = perspectiveTemplate(1000);
 
 /* ── Floating embers ── */
 const EMBERS = Array.from({ length: 18 }, (_, i) => ({
@@ -137,58 +130,15 @@ export default function Hero() {
   const sectionRef = useRef(null);
   const [bgUrl] = useState(() => (isMobile() ? HERO_BG_MOBILE : HERO_BG_DESKTOP));
   const [parallax] = useState(wantsParallax);
-  const fx = usePointerFx();
-  const reduceMotion = useReducedMotion();
-  // Entrance animations wait for the intro curtains: they used to finish
-  // underneath the intro, so nobody ever saw them.
-  const play = useIntroRevealed();
   // Every looping decoration below is CSS-driven; freeze it once the hero
   // leaves the viewport so the rest of the page scrolls on an idle compositor.
   const inView = useInView(sectionRef, { margin: "100px 0px" });
-
-  /* Cursor-driven 3D: the whole content block tilts toward the pointer while
-     each layer sits at its own depth, and the logos drift the other way.
-     Normalised against the viewport so no layout is read on pointer events. */
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const smx = useSpring(mx, { stiffness: 90, damping: 20, mass: 0.6 });
-  const smy = useSpring(my, { stiffness: 90, damping: 20, mass: 0.6 });
-  const tiltY = useTransform(smx, [-0.5, 0.5], [-9, 9]);
-  const tiltX = useTransform(smy, [-0.5, 0.5], [7, -7]);
-  const logoLX = useTransform(smx, [-0.5, 0.5], [26, -26]);
-  const logoRX = useTransform(smx, [-0.5, 0.5], [36, -36]);
-  const logoY = useTransform(smy, [-0.5, 0.5], [18, -18]);
-
-  const onPointerMove = (e) => {
-    if (!fx || e.pointerType !== "mouse") return;
-    mx.set(e.clientX / window.innerWidth - 0.5);
-    my.set(e.clientY / window.innerHeight - 0.5);
-  };
-  const onPointerLeave = () => {
-    mx.set(0);
-    my.set(0);
-  };
-
-  /* Scroll-out: as the hero leaves, its content tips back into the page. */
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-  const outOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
-  const outY = useTransform(scrollYProgress, [0, 1], [0, 140]);
-  const outTilt = useTransform(scrollYProgress, [0, 1], [0, 24]);
-  const outScale = useTransform(scrollYProgress, [0, 1], [1, 0.86]);
-
-  // Static depth per layer — only with a pointer, where the tilt shows it off.
-  const depth = (z) => (fx ? { z } : undefined);
 
   return (
     <section
       ref={sectionRef}
       id="hero"
       data-testid="hero-section"
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
       className={`relative min-h-screen flex items-center justify-center overflow-hidden scan-lines ${
         inView ? "" : "anim-paused"
       }`}
@@ -227,171 +177,147 @@ export default function Hero() {
       {/* Floating embers */}
       <FloatingEmbers />
 
-      {/* Logo izquierdo — entrance in JS, idle float + 3D sway in CSS */}
+      {/* Logo izquierdo — entrance in JS, idle float in CSS */}
       <motion.div
         initial={{ opacity: 0, x: -80, rotate: -12 }}
-        animate={play ? { opacity: 1, x: 0, rotate: 0 } : undefined}
+        animate={{ opacity: 1, x: 0, rotate: 0 }}
         transition={{ duration: 0.7, delay: 0.2 }}
         className="absolute left-8 md:left-14 lg:left-20 top-1/2 -translate-y-1/2 hidden md:block z-10"
       >
-        <motion.div style={fx ? { x: logoLX, y: logoY } : undefined}>
-          <img
-            src={LOGO_URL}
-            alt="SALCHIMAX"
-            width={144}
-            height={144}
-            className="hero-logo-left w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)]"
-          />
-        </motion.div>
+        <img
+          src={LOGO_URL}
+          alt="SALCHIMAX"
+          width={144}
+          height={144}
+          className="hero-logo-left w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)]"
+        />
       </motion.div>
 
       {/* Logo derecho */}
       <motion.div
         initial={{ opacity: 0, x: 80, rotate: 12 }}
-        animate={play ? { opacity: 1, x: 0, rotate: 0 } : undefined}
+        animate={{ opacity: 1, x: 0, rotate: 0 }}
         transition={{ duration: 0.7, delay: 0.2 }}
         className="absolute right-8 md:right-14 lg:right-20 top-1/2 -translate-y-1/2 hidden md:block z-10"
       >
-        <motion.div style={fx ? { x: logoRX, y: logoY } : undefined}>
-          <img
+        <img
+          src={LOGO_URL}
+          alt="SALCHIMAX"
+          width={144}
+          height={144}
+          className="hero-logo-right w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)]"
+        />
+      </motion.div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
+        {/* Logo mobile */}
+        <div className="flex justify-center mb-6 md:hidden">
+          <motion.img
             src={LOGO_URL}
             alt="SALCHIMAX"
-            width={144}
-            height={144}
-            className="hero-logo-right w-24 h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_40px_rgba(255,102,0,0.7)]"
-          />
-        </motion.div>
-      </motion.div>
-
-      {/* Scroll-out wrapper → cursor tilt rig → content */}
-      <motion.div
-        className="relative z-10 w-full"
-        transformTemplate={scrollOutTemplate}
-        style={
-          reduceMotion
-            ? undefined
-            : {
-                opacity: outOpacity,
-                y: outY,
-                rotateX: outTilt,
-                scale: outScale,
-                transformOrigin: "50% 100%",
-              }
-        }
-      >
-        <motion.div
-          className="preserve-3d max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16"
-          style={
-            fx
-              ? { rotateX: tiltX, rotateY: tiltY, transformPerspective: 1200 }
-              : undefined
-          }
-        >
-          {/* Logo mobile */}
-          <div className="flex justify-center mb-6 md:hidden">
-            <motion.img
-              src={LOGO_URL}
-              alt="SALCHIMAX"
-              width={96}
-              height={96}
-              initial={{ opacity: 0 }}
-              animate={play ? { opacity: 1 } : undefined}
-              transition={{ duration: 0.6 }}
-              className="hero-logo-mobile w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)]"
-            />
-          </div>
-
-          {/* Main headline — every letter flips up out of the floor, at three depths */}
-          <div className="preserve-3d font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-8">
-            <FlipText
-              as="div"
-              by="letter"
-              play={play}
-              delay={0.15}
-              stagger={0.03}
-              className="text-extrude-w"
-              style={depth(30)}
-              parts={["LAS SALCHIPAPAS"]}
-            />
-            <FlipText
-              as="div"
-              by="letter"
-              play={play}
-              delay={0.5}
-              stagger={0.03}
-              // The pulse scales the whole line: per word it would squeeze the gap shut
-              className="text-extrude text-pulse"
-              style={depth(90)}
-              parts={[{ text: "MAS BRUTALES", className: "text-[#FF6600]" }]}
-            />
-            <FlipText
-              as="div"
-              by="letter"
-              play={play}
-              delay={0.85}
-              stagger={0.03}
-              className="text-extrude-w"
-              style={depth(30)}
-              parts={["DE PALMIRA"]}
-            />
-          </div>
-
-          {/* Magnetic CTA buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={play ? { opacity: 1, y: 0 } : undefined}
-            transition={{ duration: 0.6, delay: 1.2 }}
-            style={depth(55)}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          >
-            <MagneticBtn
-              href={WA_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              testid="hero-whatsapp-btn"
-              className="btn-orange-liquid flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
-            >
-              <MessageCircle size={22} />
-              PEDIR POR WHATSAPP
-            </MagneticBtn>
-
-            <MagneticBtn
-              href="#menu"
-              testid="hero-menu-btn"
-              className="btn-outline-orange flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center hover:scale-105 transition-transform"
-            >
-              VER MENÚ
-            </MagneticBtn>
-          </motion.div>
-
-          {/* Stars */}
-          <motion.div
+            width={96}
+            height={96}
             initial={{ opacity: 0 }}
-            animate={play ? { opacity: 1 } : undefined}
-            transition={{ duration: 0.6, delay: 1.45 }}
-            style={depth(20)}
-            className="flex items-center justify-center gap-2 mt-10"
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="hero-logo-mobile w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)]"
+          />
+        </div>
+
+        {/* Main headline — each line with clip-path reveal */}
+        <div className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-8">
+          {/* Line 1 — slide in from left */}
+          <div className="overflow-hidden">
+            <motion.div
+              initial={{ y: "110%", skewX: -6 }}
+              animate={{ y: 0, skewX: 0 }}
+              transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              LAS SALCHIPAPAS
+            </motion.div>
+          </div>
+
+          {/* Line 2 — GLITCH + pulse */}
+          <div className="overflow-hidden">
+            <motion.div
+              initial={{ y: "110%", scale: 0.9 }}
+              animate={{ y: 0, scale: 1 }}
+              transition={{ duration: 0.75, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
+              className="relative"
+            >
+              <span className="text-pulse text-[#FF6600] inline-block">
+                MAS BRUTALES
+              </span>
+            </motion.div>
+          </div>
+
+          {/* Line 3 — slide in from right */}
+          <div className="overflow-hidden">
+            <motion.div
+              initial={{ y: "110%", skewX: 6 }}
+              animate={{ y: 0, skewX: 0 }}
+              transition={{ duration: 0.75, delay: 0.62, ease: [0.16, 1, 0.3, 1] }}
+            >
+              DE PALMIRA
+            </motion.div>
+          </div>
+        </div>
+
+
+        {/* Magnetic CTA buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.78 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
+          <MagneticBtn
+            href={WA_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            testid="hero-whatsapp-btn"
+            className="btn-orange-liquid flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
           >
-            <div className="flex gap-1 hero-stars">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <span key={i} className="text-[#FF6600] text-lg">
-                  ★
-                </span>
-              ))}
-            </div>
-            <span className="font-body text-sm text-gray-400">
-              5.0 en Google Maps
-            </span>
-          </motion.div>
+            <MessageCircle size={22} />
+            PEDIR POR WHATSAPP
+          </MagneticBtn>
+
+          <MagneticBtn
+            href="#menu"
+            testid="hero-menu-btn"
+            className="btn-outline-orange flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center hover:scale-105 transition-transform"
+          >
+            VER MENÚ
+          </MagneticBtn>
         </motion.div>
-      </motion.div>
+
+        {/* Stars */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.95 }}
+          className="flex items-center justify-center gap-2 mt-10"
+        >
+          <div className="flex gap-1 hero-stars">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <span key={i} className="text-[#FF6600] text-lg">
+                ★
+              </span>
+            ))}
+          </div>
+          <span className="font-body text-sm text-gray-400">
+            5.0 en Google Maps
+          </span>
+        </motion.div>
+      </div>
 
       {/* Scroll indicator — bouncing + chevron */}
       <motion.a
         href="#menu"
         initial={{ opacity: 0 }}
-        animate={play ? { opacity: 1 } : undefined}
-        transition={{ duration: 1, delay: 1.8 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.4 }}
         className="soft-bounce absolute bottom-8 left-1/2 -translate-x-1/2 text-[#FF6600] z-10 flex flex-col items-center gap-1"
         data-testid="hero-scroll-indicator"
       >

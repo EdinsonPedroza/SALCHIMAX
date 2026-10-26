@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 5 — Persianas</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_wall.css">
+<style>
+  /* Cuatro franjas; la activa se abre y las demás se cierran a una "persiana" de color.
+     Es la única animación de layout (grid-template-*): son 4 elementos y funciona como un acordeón. */
+  .slats { --spine: clamp(60px, 6.6vw, 88px); display: grid; grid-template-columns: var(--cols); gap: 10px; height: clamp(470px, 64vh, 610px); transition: grid-template-columns 780ms var(--ease-out); }
+
+  .sl { position: relative; min-width: 0; overflow: hidden; background: var(--ink); cursor: pointer; isolation: isolate; outline-offset: 4px; }
+  .sl:not(.in) { opacity: 0; }
+  .sl.in { animation: slide 800ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 90ms); }
+  @keyframes slide { from { opacity: 0; transform: translateY(70px); clip-path: inset(0 0 100% 0); } to { opacity: 1; transform: none; clip-path: inset(0); } }
+
+  .sl-ph { position: absolute; inset: 0 0 0 var(--spine); overflow: hidden; }
+  .sl-ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.14); transition: transform 1100ms var(--ease-out); }
+  .sl.on .sl-ph img { transform: scale(1); }
+  .sl-ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(13, 13, 13, 0.94) 0%, rgba(13, 13, 13, 0.55) 34%, rgba(13, 13, 13, 0) 62%); }
+  .dim { position: absolute; inset: 0; z-index: 1; background: var(--ink); opacity: 0.6; transition: opacity 560ms var(--ease-out); }
+  .sl.on .dim { opacity: 0; }
+
+  /* Lomo de color con el día en vertical */
+  .spine { position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: var(--spine); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16px 0 14px; background: var(--c); color: var(--ink); }
+  .spine .no { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2em; }
+  .spine .v { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--f-head); font-size: clamp(2.4rem, 4.3vw, 3.9rem); line-height: 1; letter-spacing: 0.06em; white-space: nowrap; }
+  .spine .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ink); opacity: 0.25; transition: opacity 300ms var(--ease-out); }
+  .sl.on .spine .dot { opacity: 1; }
+  .prog { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: 6px; background: var(--c); transform: scaleX(0); transform-origin: left; }
+  .slats.play .sl.on .prog { animation: fill var(--dur, 5200ms) linear forwards; }
+  .slats:hover .prog, .slats:focus-within .prog { animation-play-state: paused; }
+  @keyframes fill { to { transform: scaleX(1); } }
+
+  .chip { position: absolute; z-index: 3; right: 22px; top: 22px; display: grid; place-items: center; width: clamp(92px, 9vw, 128px); aspect-ratio: 1; background: var(--c); color: var(--ink); clip-path: var(--burst); font-family: var(--f-head); font-size: clamp(1.7rem, 2.6vw, 2.5rem); line-height: 1; text-align: center; opacity: 0; transform: scale(1.8) rotate(-26deg); transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out); }
+  .sl.on .chip { opacity: 1; transform: scale(1) rotate(var(--br, -10deg)); transition: opacity 120ms var(--ease-out) 340ms, transform 460ms var(--ease-out) 340ms; }
+
+  /* Panel: ancho fijo para que el texto no se reacomode mientras la franja se abre */
+  .panel { position: absolute; z-index: 3; left: calc(var(--spine) + 28px); bottom: 28px; width: min(440px, 38vw); color: #fff; opacity: 0; transform: translateY(20px); visibility: hidden; transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out), visibility 0s linear 200ms; }
+  .sl.on .panel { opacity: 1; transform: none; visibility: visible; transition: opacity 460ms var(--ease-out) 260ms, transform 460ms var(--ease-out) 260ms, visibility 0s; }
+  .panel .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(2rem, 3.6vw, 3.4rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .panel .de { margin-top: 8px; font-size: clamp(0.88rem, 1.1vw, 1.02rem); font-weight: 600; line-height: 1.45; color: rgba(255, 255, 255, 0.84); }
+  .panel .ft { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; margin-top: 16px; }
+  .panel .pr { font-family: var(--f-head); font-size: clamp(2.6rem, 4.6vw, 4.4rem); line-height: 0.88; color: var(--c); }
+  .panel .btn { background: var(--c); }
+  .panel .btn::before { background: var(--paper); }
+
+  .hoy { position: absolute; z-index: 5; left: calc(var(--spine) + 14px); top: 14px; display: flex; align-items: center; gap: 7px; padding: 5px 11px 3px; background: var(--ink); color: #fff; border: 2px solid var(--c); font-family: var(--f-head); font-size: 1.1rem; letter-spacing: 0.12em; line-height: 1; }
+  .hoy i { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: blink 1.2s ease-in-out infinite; }
+
+  .hint { margin-top: 16px; font-size: 11px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); text-align: center; }
+
+  @media (max-width: 760px) {
+    .slats { grid-template-columns: 1fr; grid-template-rows: var(--cols); height: 640px; gap: 8px; transition-property: grid-template-rows; }
+    .spine { left: 0; right: 0; top: 0; bottom: auto; width: auto; height: 54px; flex-direction: row; padding: 0 16px; }
+    .spine .v { writing-mode: horizontal-tb; transform: none; font-size: 2rem; }
+    .spine .dot { display: none; }
+    .sl-ph { inset: 54px 0 0 0; }
+    .panel { left: 16px; right: 16px; width: auto; bottom: 16px; }
+    .panel .ti { font-size: 2.1rem; }
+    .panel .pr { font-size: 2.8rem; }
+    .chip { top: 70px; right: 14px; width: 84px; font-size: 1.6rem; }
+    .hoy { left: auto; right: 14px; top: 11px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slats, .sl-ph img, .dim, .panel, .sl.on .panel, .chip, .sl.on .chip { transition: none; }
+    .sl.in, .hoy i { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wall">
+  <div class="marquee tape t1" aria-hidden="true"><div class="marquee-track" id="m1"></div></div>
+
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2">
+      <span class="stroke" id="stroke" aria-label="Promos"></span>
+      <span class="hl">DE LA SEMANA</span>
+    </h2>
+    <a class="today" href="#slats"><span class="dot"></span><span id="todayT"></span></a>
+  </header>
+
+  <div class="stage">
+    <div class="slats" id="slats" role="list"></div>
+    <p class="hint" id="hint">Pasa el mouse o toca una franja</p>
+  </div>
+
+  <div class="marquee tape t2 rev" aria-hidden="true"><div class="marquee-track" id="m2"></div></div>
+</main>
+
+<script src="_shared.js"></script>
+<script src="_wall.js"></script>
+<script>
+const slats = $("#slats"), N = PROMOS.length, BURST = burst(14, 0.84);
+const ARROW = '<svg width="20" height="13" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 7h19M13 1l6 6-6 6"/></svg>';
+const els = PROMOS.map((p, i) => {
+  const s = document.createElement("article");
+  s.className = "sl"; s.setAttribute("role", "listitem"); s.tabIndex = 0;
+  s.setAttribute("aria-label", `${p.day}: ${p.title}`);
+  s.style.cssText = `--c:${p.c};--i:${i};--burst:${BURST};--br:${[-10, 8, -7, 11][i]}deg`;
+  s.innerHTML = `
+    <div class="sl-ph"><img src="${p.img}" alt="" loading="lazy" draggable="false"></div>
+    <span class="dim"></span>
+    <div class="spine"><span class="no">${pad(i + 1)}</span><span class="v" aria-hidden="true">${p.day.toUpperCase()}</span><span class="dot"></span></div>
+    ${i === TODAY_I ? '<span class="hoy"><i></i>HOY</span>' : ""}
+    <span class="chip" aria-hidden="true">${p.badge}</span>
+    <div class="panel">
+      <h3 class="ti">${p.title}</h3>
+      <p class="de">${p.desc}</p>
+      <div class="ft"><span class="pr">${p.price}</span><a class="btn" href="${promoWa(p)}" target="_blank" rel="noopener" tabindex="-1">PEDIR ${ARROW}</a></div>
+    </div>
+    <i class="prog"></i>`;
+  slats.appendChild(s);
+  return s;
+});
+
+/* La activa ocupa 5.2 partes; el resto 1. Cambiar --cols dispara la transición del grid */
+let active = TODAY_I >= 0 ? TODAY_I : 0;
+function activate(i) {
+  active = i;
+  slats.style.setProperty("--cols", PROMOS.map((_, k) => (k === i ? "5.2fr" : "1fr")).join(" "));
+  els.forEach((el, k) => {
+    el.classList.toggle("on", k === i);
+    el.setAttribute("aria-expanded", String(k === i));
+    $(".btn", el).tabIndex = k === i ? 0 : -1;
+    const prog = $(".prog", el); prog.style.animation = "none"; void prog.offsetWidth; prog.style.animation = "";
+  });
+}
+els.forEach((el, i) => {
+  if (FINE) el.addEventListener("pointerenter", () => { if (active !== i) activate(i); });
+  el.addEventListener("click", (e) => { if (active !== i) { e.preventDefault(); activate(i); } });
+  el.addEventListener("focus", () => { if (active !== i) activate(i); });
+  el.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); els[(i + 1) % N].focus(); }
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); els[(i - 1 + N) % N].focus(); }
+  });
+});
+activate(active);
+
+/* Pasa sola a la siguiente cada ~5 s mientras es visible y nadie la toca (la barra inferior marca el tiempo) */
+if (!REDUCED) {
+  slats.addEventListener("animationend", (e) => { if (e.animationName === "fill") activate((active + 1) % N); });
+  new IntersectionObserver(([e]) => slats.classList.toggle("play", e.isIntersecting), { threshold: 0.5 }).observe(slats);
+}
+$("#hint").textContent = FINE ? "Pasa el mouse por una franja" : "Toca una franja";
+revealOnView(".sl", 0.15);
+</script>
+</body>
+</html>

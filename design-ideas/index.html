@@ -69,6 +69,16 @@ const IDEAS = [
   { file: "promos-3-cupones.html", name: "Cupones que se rasgan · lúdica",
     desc: "Cada promo es un cupón troquelado con código de barras. Se «imprimen» uno a uno desde una impresora, se inclinan en 3D con brillo siguiendo el mouse y, al tocarlos, el talón se rasga y sale volando mientras se abre WhatsApp. El cupón de hoy insinúa el rasgado.",
     react: "Entrada con motion + clipPath (inset) y delay por índice · tilt con useMotionValue + useSpring (solo pointer: fine) · rasgado = estado local `torn` con variants (talón: x, y, rotate, opacity) y un timeout que lo devuelve · el enlace sigue siendo un <a href='wa.me/…'> real." },
+  /* Segunda ronda: tarjetas nuevas para la idea 1 (mismo encabezado y cintas, sin look de papel) */
+  { sep: true, file: "promos-4-vitrina-neon.html", name: "Vitrina de neón · foto",
+    desc: "Tarjetas altas con la foto a sangre y un marco de neón del color de cada promo. El nombre del día va en contorno y se rellena al pasar el mouse, el neón se enciende a tirones al entrar y parpadea de vez en cuando. Al pasar: la tarjeta sube, la foto se acerca y un destello cruza.",
+    react: "motion.a con whileInView y delay por índice · foto destapada con clipPath inset · neón = capa con keyframes de opacidad escalonados (steps) · destello con un gradiente que cruza con x · el color de cada promo como variable CSS (--c) y color-mix para el brillo. En móvil: 1–2 columnas." },
+  { file: "promos-5-persianas.html", name: "Persianas · acordeón",
+    desc: "Cuatro franjas de color en una sola fila (todo cabe en una pantalla). Al pasar el mouse o tocar, una se abre con la foto grande, el precio y el botón mientras las otras se cierran y quedan como un lomo con el día en vertical. Pasa sola cada 5 s con una barra de tiempo.",
+    react: "Estado `active` + grid-template-columns animado con variables (la única animación de layout, justificada: 4 elementos y comportamiento de acordeón) · panel con ancho fijo y opacidad/transform con retardo · sello que se estampa al abrir · autoplay con onAnimationEnd de la barra · flechas del teclado y foco. En móvil: franjas apiladas." },
+  { file: "promos-6-chapas.html", name: "Chapas · medallones",
+    desc: "Cada promo es una chapa de botella: borde dentado, foto circular y el texto «LUNES ★ DE 2 PA' 2 ★ $46.000» girando alrededor. Caen y rebotan al entrar; al pasar el mouse el anillo acelera con un resorte y la chapa se inclina. Debajo, el texto y el botón.",
+    react: "SVG con textPath (el texto se ajusta con textLength) y rotación con CSS · aceleración con useSpring sobre animation.playbackRate · entrada con keyframes de caída y rebote o animate() con tipo spring · dentado con clipPath polygon. En móvil: 2 columnas." },
 ];
 const NOTES = [
   ["Datos", "Las tres leen la misma lista que frontend/src/data/promos.js (día, título, descripción, precio, badge, foto, active). Cambiar una promo no requiere tocar el diseño."],
@@ -82,6 +92,7 @@ const tabs = IDEAS.map((it, i) => {
   const b = document.createElement("button");
   b.className = "tab"; b.innerHTML = `<b>${i + 1}</b>${it.name}`;
   b.addEventListener("click", () => select(i));
+  if (it.sep) { const s = document.createElement("span"); s.className = "sep"; s.setAttribute("aria-hidden", "true"); $("#tabs").appendChild(s); }
   $("#tabs").appendChild(b);
   return b;
 });

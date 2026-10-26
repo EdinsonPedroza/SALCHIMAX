@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 6 — Chapas</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_wall.css">
+<style>
+  .row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 2.6vw, 40px); align-items: start; }
+
+  .item { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
+  .item:nth-child(even) { margin-top: clamp(0px, 3.4vw, 46px); }
+
+  /* La chapa: borde dentado + anillo de texto que gira + foto circular */
+  .cap { position: relative; width: 100%; max-width: 320px; aspect-ratio: 1; container-type: inline-size; transition: transform 380ms var(--ease-out); }
+  .item:not(.in) .cap { opacity: 0; }
+  .item.in .cap { animation: toss 1100ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 110ms); }
+  @keyframes toss {
+    0% { opacity: 0; transform: translateY(-150px) rotate(-260deg) scale(0.7); }
+    35% { opacity: 1; }
+    62% { transform: translateY(12px) rotate(14deg) scale(1); }
+    80% { transform: translateY(-6px) rotate(-5deg); }
+    100% { transform: none; }
+  }
+  .crown { position: absolute; inset: 0; background: var(--c); clip-path: var(--teeth); }
+  .crown::after { content: ""; position: absolute; inset: 4.5%; border-radius: 50%; border: 2px dashed rgba(13, 13, 13, 0.45); }
+  .ring { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--ink); animation: spin var(--spin, 26s) linear infinite; }
+  .ring text { font-family: var(--f-head); fill: currentColor; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .photo { position: absolute; inset: 17.5%; border-radius: 50%; overflow: hidden; border: 0.9cqi solid var(--ink); background: var(--ink); box-shadow: 0 0 0 1.4cqi var(--c); }
+  .photo img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform 900ms var(--ease-out); }
+
+  .stamp { position: absolute; z-index: 3; right: -1%; bottom: 5%; display: grid; place-items: center; width: 33%; aspect-ratio: 1; background: var(--ink); color: var(--c); clip-path: var(--burst); font-family: var(--f-head); font-size: 11cqi; line-height: 1; text-align: center; transform: rotate(var(--br, -12deg)); transition: transform 360ms var(--ease-out); }
+  .item.in .stamp { animation: stampIn 480ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 110ms + 900ms); }
+  @keyframes stampIn { from { opacity: 0; transform: scale(2.4) rotate(calc(var(--br, -12deg) - 36deg)); } 45% { opacity: 1; } to { transform: scale(1) rotate(var(--br, -12deg)); } }
+
+  .hoy { position: absolute; z-index: 4; left: 4%; top: 2%; display: flex; align-items: center; gap: 7px; padding: 5px 12px 3px; background: var(--ink); color: #fff; border: 2px solid var(--c); font-family: var(--f-head); font-size: 1.2rem; letter-spacing: 0.1em; line-height: 1; transform: rotate(-8deg); }
+  .hoy i { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: blink 1.2s ease-in-out infinite; }
+  .item.is-today .crown { filter: drop-shadow(0 0 22px color-mix(in srgb, var(--c) 70%, transparent)); }
+
+  .txt { margin-top: clamp(14px, 1.8vw, 22px); max-width: 300px; }
+  .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.7rem, 2.5vw, 2.4rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .de { margin-top: 6px; font-size: clamp(0.82rem, 1vw, 0.94rem); font-weight: 600; line-height: 1.42; color: rgba(255, 255, 255, 0.72); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .pr { display: block; margin-top: 10px; font-family: var(--f-head); font-size: clamp(2.2rem, 3.2vw, 3.2rem); line-height: 0.9; color: var(--c); }
+  .btn { margin-top: 14px; font-size: 1.15rem; padding: 11px 20px; background: var(--c); }
+  .btn::before { background: var(--paper); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .item:hover .cap { transform: scale(1.05) rotate(-4deg); }
+    .item:hover .photo img { transform: scale(1.18); }
+    .item:hover .stamp { transform: rotate(calc(var(--br, -12deg) + 18deg)) scale(1.12); }
+  }
+  .item:active .cap { transform: scale(0.97); }
+
+  @media (max-width: 1000px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 44px; } .item:nth-child(even) { margin-top: 30px; } }
+  @media (max-width: 480px) { .row { column-gap: 12px; } .ti { font-size: 1.5rem; } .de { font-size: 0.78rem; } .btn { font-size: 1rem; padding: 10px 14px; } .pr { font-size: 2rem; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring, .item.in .cap, .item.in .stamp, .hoy i { animation: none; }
+    .cap, .photo img, .stamp { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wall">
+  <div class="marquee tape t1" aria-hidden="true"><div class="marquee-track" id="m1"></div></div>
+
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2">
+      <span class="stroke" id="stroke" aria-label="Promos"></span>
+      <span class="hl">DE LA SEMANA</span>
+    </h2>
+    <a class="today" href="#row"><span class="dot"></span><span id="todayT"></span></a>
+  </header>
+
+  <div class="stage"><div class="row" id="row"></div></div>
+
+  <div class="marquee tape t2 rev" aria-hidden="true"><div class="marquee-track" id="m2"></div></div>
+</main>
+
+<script src="_shared.js"></script>
+<script src="_wall.js"></script>
+<script>
+const TEETH = burst(26, 0.955), BURST = burst(14, 0.84);
+const ARROW = '<svg width="20" height="13" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 7h19M13 1l6 6-6 6"/></svg>';
+
+/* Anillo de texto sobre una circunferencia de r = 79 (viewBox 200): la frase se repite 1–3 veces
+   y el tamaño se ajusta para que llene el anillo sin salirse del borde dentado */
+const RING_LEN = 2 * Math.PI * 79;
+const fsFor = (L) => (RING_LEN / L - 1) / 0.42;
+function ringText(p) {
+  const unit = `${p.day.toUpperCase()} ★ ${p.title.toUpperCase()} ★ ${p.price} ★ `;
+  let r = 1;
+  while (r < 3 && fsFor(unit.length * r) > 23) r++;
+  if (fsFor(unit.length * r) < 15 && r > 1) r--;
+  const fs = clamp(fsFor(unit.length * r), 15, 23);
+  return `<svg class="ring" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="rp${p.dow}" d="M100,100 m-79,0 a79,79 0 1,1 158,0 a79,79 0 1,1 -158,0"/></defs><text font-size="${fs.toFixed(1)}"><textPath href="#rp${p.dow}" textLength="${RING_LEN.toFixed(1)}" lengthAdjust="spacing">${unit.repeat(r)}</textPath></text></svg>`;
+}
+
+const row = $("#row");
+const rings = [];
+PROMOS.forEach((p, i) => {
+  const it = document.createElement("article");
+  it.className = "item" + (i === TODAY_I ? " is-today" : "");
+  it.style.cssText = `--c:${p.c};--i:${i};--teeth:${TEETH};--burst:${BURST};--br:${[-12, 10, -8, 12][i]}deg`;
+  it.innerHTML = `
+    <div class="cap">
+      ${i === TODAY_I ? '<span class="hoy"><i></i>HOY</span>' : ""}
+      <div class="crown"></div>
+      ${ringText(p)}
+      <div class="photo"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false"></div>
+      <span class="stamp">${p.badge}</span>
+    </div>
+    <div class="txt">
+      <h3 class="ti">${p.title}</h3>
+      <p class="de">${p.desc}</p>
+      <span class="pr">${p.price}</span>
+      <a class="btn" href="${promoWa(p)}" target="_blank" rel="noopener">PEDIR ${ARROW}</a>
+    </div>`;
+  row.appendChild(it);
+  rings.push($(".ring", it));
+});
+
+/* El anillo gira más rápido mientras se pasa el mouse y vuelve a su ritmo con un resorte */
+if (FINE && !REDUCED) {
+  const sp = rings.map(() => new Spring(1, { k: 60, c: 11 }));
+  const anims = rings.map((r) => r.getAnimations()[0]);
+  $$(".item").forEach((it, i) => {
+    it.addEventListener("pointerenter", () => { sp[i].target = 6; });
+    it.addEventListener("pointerleave", () => { sp[i].target = 1; });
+  });
+  loop((dt) => sp.forEach((s, i) => { const v = s.step(dt); if (anims[i]) anims[i].playbackRate = v; }));
+}
+revealOnView(".item", 0.2);
+</script>
+</body>
+</html>

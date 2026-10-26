@@ -14,8 +14,7 @@
   .tape.t2 { bottom: clamp(26px, 5vw, 60px); background: var(--orange); transform: rotate(1.6deg); }
 
   /* Encabezado */
-  .layout { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; }
-  .head { position: relative; margin: 0 0 clamp(48px, 7vw, 90px); }
+  .head { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto clamp(48px, 7vw, 90px); }
   .head .eyebrow { display: block; margin-bottom: 10px; }
   .h2 { font-family: var(--f-head); font-weight: 400; line-height: 0.82; }
   .h2 .stroke { display: block; font-size: clamp(5rem, 19vw, 17rem); letter-spacing: 0.01em; color: transparent; -webkit-text-stroke: 2px #fff; }
@@ -32,7 +31,7 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
 
   /* Muro */
-  .grid { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(22px, 2.6vw, 38px); align-items: start; }
+  .grid { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(22px, 2.6vw, 38px); align-items: start; }
 
   .poster { --ty: 0px; --r: 0deg; position: relative; isolation: isolate; container-type: inline-size; display: flex; flex-direction: column; background: var(--c); color: var(--ink); border: 3px solid var(--ink); transform: translateY(var(--ty)) rotate(var(--r)); transition: transform 300ms var(--ease-out); }
   .poster:not(.in) { opacity: 0; }
@@ -71,7 +70,7 @@
 
   .p-title { margin-top: 5cqi; font-family: var(--f-head); font-weight: 400; font-size: clamp(1.7rem, 12.5cqi, 2.6rem); line-height: 0.95; letter-spacing: 0.01em; }
   .p-desc { margin-top: 2.5cqi; font-size: clamp(0.85rem, 4.4cqi, 1rem); font-weight: 600; line-height: 1.42; }
-  .p-foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 10px; margin-top: auto; padding-top: 5cqi; }
+  .p-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 5cqi; }
   .p-price { font-family: var(--f-head); font-size: clamp(2rem, 16cqi, 3.4rem); line-height: 0.85; }
   .p-cta { display: inline-flex; align-items: center; gap: 8px; padding: 0.55em 0.9em 0.45em; background: var(--ink); color: var(--c); font-family: var(--f-head); font-size: clamp(1.05rem, 6.4cqi, 1.35rem); letter-spacing: 0.08em; line-height: 1; }
   .p-cta::after { content: ""; position: absolute; inset: 0; } /* el enlace cubre todo el cartel */
@@ -93,29 +92,11 @@
   .poster:active { transform: translateY(calc(var(--ty) + 2px)) rotate(0deg) scale(0.985); }
 
   .poster:nth-child(1) { --r: -2.2deg; --ty: 0px; --tr: -5deg; }
-  .poster:nth-child(2) { --r: 1.7deg; --ty: 30px; --tr: 4deg; }
-  .poster:nth-child(3) { --r: -1.2deg; --ty: -12px; --tr: -3deg; }
-  .poster:nth-child(4) { --r: 2.4deg; --ty: 22px; --tr: 6deg; }
+  .poster:nth-child(2) { --r: 1.7deg; --ty: 40px; --tr: 4deg; }
+  .poster:nth-child(3) { --r: -1.2deg; --ty: -14px; --tr: -3deg; }
+  .poster:nth-child(4) { --r: 2.4deg; --ty: 30px; --tr: 6deg; }
 
-  /* Escritorio: título a la izquierda y los 4 carteles compactos a la derecha,
-     para ver todas las promos sin tener que scrollear */
-  @media (min-width: 1100px) {
-    .wall { padding-top: clamp(110px, 9.4vw, 150px); padding-bottom: clamp(110px, 9.4vw, 150px); }
-    .tape.t1 { top: clamp(18px, 2.2vw, 34px); }
-    .tape.t2 { bottom: clamp(18px, 2.2vw, 34px); }
-    .layout { display: grid; grid-template-columns: clamp(290px, 25vw, 440px) minmax(0, 1fr); align-items: center; gap: clamp(28px, 3.4vw, 64px); max-width: 1560px; }
-    .head { container-type: inline-size; margin: 0; }
-    .h2 .stroke { font-size: 38cqi; }
-    .h2 .hl { font-size: 16.5cqi; margin-top: -3cqi; }
-    .today { margin-top: 22px; font-size: 0.82rem; }
-    .grid { gap: clamp(16px, 1.7vw, 30px); }
-    .p-title { font-size: clamp(1.25rem, 11.5cqi, 2.4rem); }
-    .p-desc { font-size: clamp(0.72rem, 4.8cqi, 0.95rem); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-    .p-cta { font-size: clamp(0.95rem, 6.2cqi, 1.3rem); }
-    .p-badge { right: -6cqi; top: -10cqi; }
-  }
-
-  @media (max-width: 1099px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 56px; } .grid .poster:nth-child(n) { --ty: 0px; } .poster:nth-child(even) { margin-top: 30px; } }
+  @media (max-width: 1080px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 56px; } .grid .poster:nth-child(n) { --ty: 0px; } .poster:nth-child(even) { margin-top: 30px; } }
   @media (max-width: 620px) { .grid { grid-template-columns: 1fr; row-gap: 52px; } .poster:nth-child(even) { margin-top: 0; } .poster { max-width: 440px; width: 100%; justify-self: center; } .p-badge { right: -4cqi; } }
 
   @media (prefers-reduced-motion: reduce) {
@@ -129,18 +110,16 @@
 <main class="wall" id="wall">
   <div class="marquee tape t1" aria-hidden="true"><div class="marquee-track" id="m1"></div></div>
 
-  <div class="layout">
-    <header class="head">
-      <span class="eyebrow">Cada día una excusa para comer</span>
-      <h2 class="h2">
-        <span class="stroke" id="stroke" aria-label="Promos"></span>
-        <span class="hl">DE LA SEMANA</span>
-      </h2>
-      <a class="today" id="today" href="#grid"><span class="dot"></span><span id="todayT"></span></a>
-    </header>
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2">
+      <span class="stroke" id="stroke" aria-label="Promos"></span>
+      <span class="hl">DE LA SEMANA</span>
+    </h2>
+    <a class="today" id="today" href="#grid"><span class="dot"></span><span id="todayT"></span></a>
+  </header>
 
-    <div class="grid" id="grid"></div>
-  </div>
+  <div class="grid" id="grid"></div>
 
   <div class="marquee tape t2 rev" aria-hidden="true"><div class="marquee-track" id="m2"></div></div>
 </main>

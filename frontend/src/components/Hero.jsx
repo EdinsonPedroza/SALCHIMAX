@@ -225,51 +225,43 @@ export default function Hero() {
           />
         </div>
 
-        {/* Main headline — each line with clip-path reveal */}
+        {/* Main headline — each line fades in (no slide), staggered */}
         <div className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-8">
-          {/* Line 1 — slide in from left */}
-          <div className="overflow-hidden">
-            <motion.div
-              initial={{ y: "110%", skewX: -6 }}
-              animate={{ y: 0, skewX: 0 }}
-              transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              LAS SALCHIPAPAS
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+          >
+            LAS SALCHIPAPAS
+          </motion.div>
 
           {/* Line 2 — GLITCH + pulse */}
-          <div className="overflow-hidden">
-            <motion.div
-              initial={{ y: "110%", scale: 0.9 }}
-              animate={{ y: 0, scale: 1 }}
-              transition={{ duration: 0.75, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
-              className="relative"
-            >
-              <span className="text-pulse text-[#FF6600] inline-block">
-                MAS BRUTALES
-              </span>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="relative"
+          >
+            <span className="text-pulse text-[#FF6600] inline-block">
+              MAS BRUTALES
+            </span>
+          </motion.div>
 
-          {/* Line 3 — slide in from right */}
-          <div className="overflow-hidden">
-            <motion.div
-              initial={{ y: "110%", skewX: 6 }}
-              animate={{ y: 0, skewX: 0 }}
-              transition={{ duration: 0.75, delay: 0.62, ease: [0.16, 1, 0.3, 1] }}
-            >
-              DE PALMIRA
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+          >
+            DE PALMIRA
+          </motion.div>
         </div>
 
 
         {/* Magnetic CTA buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.78 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           <MagneticBtn

@@ -75,25 +75,14 @@ function GalleryItem({ img, index, tilt }) {
     rect.current = null;
   };
 
-  // Stagger from different directions for visual punch
-  const directions = [
-    { x: -60, y: 0 },
-    { x: 0, y: -60 },
-    { x: 60, y: 0 },
-    { x: 60, y: 0 },
-    { x: 0, y: 60 },
-    { x: -60, y: 60 },
-  ];
-  const dir = directions[index] || { x: 0, y: 40 };
-
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: dir.x, y: dir.y, scale: 0.88 }}
-      whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+      initial={{ opacity: 0, scale: 0.94 }}
+      whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{
-        duration: 0.75,
+        duration: 0.6,
         delay: index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
@@ -182,8 +171,8 @@ export default function Gallery() {
         {/* Header */}
         <div className="text-center mb-12">
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block"
@@ -192,10 +181,10 @@ export default function Gallery() {
           </motion.span>
           <div className="overflow-hidden">
             <motion.h2
-              initial={{ y: "100%" }}
-              whileInView={{ y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="font-heading text-5xl md:text-6xl text-white mb-3"
             >
               GALERÍA DE{" "}

@@ -1,14 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import {
-  motion,
-  useInView,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-  useVelocity,
-} from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { promos } from "../data/promos";
 
@@ -48,23 +39,15 @@ function findToday(list, dow) {
 
 function PromoCard({ promo, index, isToday }) {
   const delay = index * 0.1;
-  // Cada promo entra escalonada: la tarjeta sube, la foto se destapa desde abajo,
-  // las letras del día suben una a una y el sello se estampa al final.
+  // Entrada sin deslizamientos: cada tarjeta aparece con un fundido escalonado y
+  // el sello se estampa al final. Solo opacity/transform: nada que repinte por cuadro.
   const card = {
-    hidden: { opacity: 0, y: 42 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.76, ease: EASE, delay } },
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 0.5, ease: EASE, delay } },
   };
-  const photo = {
-    hidden: { clipPath: "inset(100% 0% 0% 0%)" },
-    show: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 0.95, ease: EASE, delay: delay + 0.06 } },
-  };
-  const letter = (k) => ({
-    hidden: { y: "105%" },
-    show: { y: "0%", transition: { duration: 0.64, ease: EASE, delay: delay + 0.42 + k * 0.034 } },
-  });
   const tag = {
     hidden: { opacity: 0, scale: 1.9, rotate: -14 },
-    show: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.44, ease: EASE, delay: delay + 0.8 } },
+    show: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.44, ease: EASE, delay: delay + 0.45 } },
   };
 
   return (
@@ -89,7 +72,7 @@ function PromoCard({ promo, index, isToday }) {
         </span>
       )}
 
-      <motion.div variants={photo} className="promo-card__photo">
+      <div className="promo-card__photo">
         <img
           src={promo.img}
           alt={promo.title}
@@ -98,17 +81,11 @@ function PromoCard({ promo, index, isToday }) {
           draggable="false"
         />
         <span className="promo-card__sheen" />
-      </motion.div>
+      </div>
 
       <div className="promo-card__info">
         <div className="promo-card__eyebrow">
-          <h3 className="promo-card__day" aria-label={promo.day}>
-            {[...promo.day.toUpperCase()].map((ch, k) => (
-              <motion.span key={k} aria-hidden="true" variants={letter(k)} className="inline-block">
-                {ch === " " ? " " : ch}
-              </motion.span>
-            ))}
-          </h3>
+          <h3 className="promo-card__day">{promo.day.toUpperCase()}</h3>
           {promo.badge && (
             <motion.span variants={tag} className="promo-card__tag">
               {promo.badge}
@@ -133,12 +110,8 @@ function PromoCard({ promo, index, isToday }) {
 
 export default function Promos() {
   const sectionRef = useRef(null);
-  const tapeRefs = useRef([]);
-  const reduce = useReducedMotion();
   // Pausa las cintas (y el parpadeo) cuando la sección no se ve
   const inView = useInView(sectionRef, { margin: "100px 0px" });
-  const inViewRef = useRef(false);
-  inViewRef.current = inView;
 
   const [dow] = useState(() => new Date().getDay());
 
@@ -150,20 +123,6 @@ export default function Promos() {
     []
   );
   const today = useMemo(() => findToday(list, dow), [list, dow]);
-
-  // Las cintas aceleran con la velocidad del scroll y se frenan solas con un resorte
-  const { scrollY } = useScroll();
-  const scrollSpeed = useVelocity(scrollY);
-  const boost = useTransform(scrollSpeed, (v) => 1 + Math.min(Math.abs(v) / 500, 7));
-  const rate = useSpring(boost, { stiffness: 40, damping: 9 });
-  useMotionValueEvent(rate, "change", (r) => {
-    if (reduce || !inViewRef.current) return;
-    tapeRefs.current.forEach((el) => {
-      el?.getAnimations().forEach((a) => {
-        a.playbackRate = Math.max(0.2, r);
-      });
-    });
-  });
 
   const tapeText = useMemo(() => {
     const badges = [...new Set(list.map((p) => p.badge).filter(Boolean))];
@@ -184,7 +143,7 @@ export default function Promos() {
         });
 
   const tape =
-    "absolute -left-[6%] z-0 w-[112%] overflow-hidden border-y-[3px] border-[#0D0D0D] py-[0.4em] font-heading text-[clamp(1.3rem,2.4vw,2rem)] leading-none tracking-[0.14em] text-[#0D0D0D]";
+    "absolute -left-[6%] z-0 w-[112%] border-y-[3px] border-[#0D0D0D] py-[0.4em] font-heading text-[clamp(1.3rem,2.4vw,2rem)] leading-none tracking-[0.14em] text-[#0D0D0D]";
 
   return (
     <section
@@ -201,7 +160,7 @@ export default function Promos() {
         aria-hidden="true"
         className={`${tape} top-[clamp(22px,3.6vw,46px)] -rotate-[2.2deg] bg-[#FFCC00]`}
       >
-        <div ref={(el) => { tapeRefs.current[0] = el; }} className="promo-tape-track">
+        <div className="promo-tape-track">
           {Array.from({ length: 6 }, (_, i) => <span key={i}>{tapeText}</span>)}
         </div>
       </div>
@@ -209,7 +168,7 @@ export default function Promos() {
         aria-hidden="true"
         className={`${tape} bottom-[clamp(22px,3.6vw,46px)] rotate-[1.6deg] bg-[#FF6600]`}
       >
-        <div ref={(el) => { tapeRefs.current[1] = el; }} className="promo-tape-track is-reverse">
+        <div className="promo-tape-track is-reverse">
           {Array.from({ length: 6 }, (_, i) => <span key={i}>{tapeText}</span>)}
         </div>
       </div>
@@ -218,8 +177,8 @@ export default function Promos() {
         {/* Encabezado */}
         <header className="mb-[clamp(34px,4.6vw,60px)]">
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: EASE }}
             className="mb-2 block font-body text-xs font-extrabold uppercase tracking-[0.28em] text-[#FF6600]"
@@ -228,36 +187,22 @@ export default function Promos() {
           </motion.span>
 
           <h2 id="promos-title" aria-label="Promos de la semana" className="font-heading font-normal leading-[0.82]">
-            {/* La visibilidad se detecta en este contenedor: las letras arrancan recortadas
-                (fuera de su caja), así que ellas solas nunca "entrarían" en pantalla. */}
             <motion.span
               aria-hidden="true"
-              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.045, delayChildren: 0.12 } } }}
-              initial="hidden"
-              whileInView="show"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
               className="block text-[clamp(4.2rem,13vw,11.5rem)] tracking-[0.01em] text-transparent [-webkit-text-stroke:2px_#fff]"
             >
-              {[..."PROMOS"].map((ch, k) => (
-                <span key={k} className="inline-block overflow-hidden pb-[0.04em] align-top">
-                  <motion.i
-                    variants={{
-                      hidden: { y: "105%" },
-                      show: { y: "0%", transition: { duration: 0.72, ease: EASE } },
-                    }}
-                    className="inline-block not-italic"
-                  >
-                    {ch}
-                  </motion.i>
-                </span>
-              ))}
+              PROMOS
             </motion.span>
             <motion.span
               aria-hidden="true"
-              initial={{ clipPath: "inset(0% 100% 0% 0%)" }}
-              whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: EASE, delay: 0.56 }}
+              transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
               className="mt-[clamp(-26px,-2vw,-8px)] inline-block origin-left -rotate-2 bg-[#FF6600] px-[0.3em] pb-[0.02em] pt-[0.1em] text-[clamp(2.2rem,6.2vw,5.6rem)] text-[#0D0D0D]"
             >
               DE LA SEMANA
@@ -267,10 +212,10 @@ export default function Promos() {
           {pill && (
             <motion.a
               href="#promos-grid"
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: EASE, delay: 1 }}
+              transition={{ duration: 0.5, ease: EASE, delay: 0.5 }}
               data-testid="promos-today"
               className="mt-[clamp(18px,2.4vw,28px)] inline-flex items-center gap-3 border-2 border-white px-4 py-2.5 font-body text-[0.95rem] font-extrabold tracking-[0.04em] text-white"
             >

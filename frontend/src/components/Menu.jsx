@@ -118,14 +118,14 @@ const ProductCard = memo(function ProductCard({ item, index }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 26, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       whileHover={{ scale: 1.03, y: -6, transition: { duration: 0.2 } }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{
-        duration: 0.45,
+        duration: 0.4,
         // Stagger per grid row (max 4 columns) so delays never pile up
-        delay: (index % 4) * 0.07,
+        delay: (index % 4) * 0.06,
         ease: [0.16, 1, 0.3, 1],
       }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
@@ -235,10 +235,10 @@ export default function Menu() {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
           className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10"
         >
           <div>
@@ -340,10 +340,10 @@ export default function Menu() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
             data-testid={`menu-grid-${activeTab}`}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
           >

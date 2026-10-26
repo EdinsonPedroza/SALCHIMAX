@@ -77,8 +77,8 @@ function TiltCard({ children, className, index, tilt }) {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50, scale: 0.88 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, scale: 0.96 }}
+      whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{
         duration: 0.6,
@@ -188,10 +188,10 @@ export default function WhyUs() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header — clip-path reveal */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-14"
         >
           <motion.span
@@ -205,10 +205,10 @@ export default function WhyUs() {
           </motion.span>
           <div className="overflow-hidden">
             <motion.h2
-              initial={{ y: "100%" }}
-              whileInView={{ y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="font-heading text-5xl md:text-6xl text-white mb-3"
             >
               ¿POR QUÉ ELEGIR{" "}
@@ -266,10 +266,10 @@ export default function WhyUs() {
 
         {/* Stats row — animated counters */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="grid grid-cols-3 gap-4 mt-14 border-t border-white/10 pt-12"
         >
           {[

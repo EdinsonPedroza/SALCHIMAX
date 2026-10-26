@@ -27,7 +27,7 @@ function App() {
       {introVisible && (
         <IntroScreen onComplete={() => setIntroVisible(false)} />
       )}
-      <div className="App bg-[#0D0D0D] min-h-screen font-body grain-overlay">
+      <div className="App bg-[#0D0D0D] min-h-screen font-body">
         <BrowserRouter>
           <SeoRoute />
           <Suspense fallback={null}>

@@ -19,10 +19,10 @@ export default function Footer() {
       <div className="bg-[#121212] border-b border-white/5 py-14">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             className="text-center"
           >
             <span className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-4 block">
@@ -124,13 +124,13 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Big brand name — rises from the fold as you reach the bottom */}
+        {/* Big brand name — fades in as you reach the bottom */}
         <div className="border-t border-white/5 pt-10 overflow-hidden">
           <motion.div
-            initial={{ y: "45%", opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="font-heading text-[18vw] md:text-[15vw] text-white/5 leading-none text-center select-none tracking-tighter"
           >
             SALCHIMAX

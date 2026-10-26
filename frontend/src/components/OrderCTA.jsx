@@ -46,11 +46,10 @@ export default function OrderCTA() {
               <motion.span
                 className="block"
                 variants={{
-                  hidden: { y: "100%", skewX: -6 },
+                  hidden: { opacity: 0 },
                   visible: {
-                    y: 0,
-                    skewX: 0,
-                    transition: { duration: 0.7, delay: 0.05, ease: [0.16, 1, 0.3, 1] },
+                    opacity: 1,
+                    transition: { duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] },
                   },
                 }}
               >
@@ -61,11 +60,10 @@ export default function OrderCTA() {
               <motion.span
                 className="block text-[#FF6600]"
                 variants={{
-                  hidden: { y: "100%", skewX: 6 },
+                  hidden: { opacity: 0 },
                   visible: {
-                    y: 0,
-                    skewX: 0,
-                    transition: { duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] },
+                    opacity: 1,
+                    transition: { duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] },
                   },
                 }}
               >

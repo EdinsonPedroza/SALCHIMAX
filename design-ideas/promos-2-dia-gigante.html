@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 2 — Día gigante</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .track { position: relative; height: 560vh; }
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--ink); color: var(--ink); }
+
+  /* El color de cada promo "inunda" la pantalla desde la foto */
+  .floods, .fl { position: absolute; inset: 0; }
+  .fl { background: var(--c); }
+
+  .strip { position: absolute; z-index: 4; left: 0; right: 0; top: 0; background: var(--ink); color: var(--paper); font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.16em; line-height: 1; padding: 0.7em 0 0.55em; }
+  .strip em { font-style: normal; color: var(--orange); }
+
+  .content { position: relative; z-index: 2; height: 100%; display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr); align-items: center; gap: 3vw; padding: 64px 5vw clamp(96px, 15vh, 130px); }
+
+  .copy { container-type: inline-size; position: relative; min-width: 0; }
+  .kicker { display: flex; align-items: center; gap: 14px; margin-bottom: clamp(4px, 1.2vh, 14px); font-size: 12px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; }
+  .kicker .line { width: 48px; height: 3px; background: var(--ink); }
+  .kicker .tag { padding: 4px 10px 3px; background: var(--ink); color: var(--paper); font-family: var(--f-head); font-size: 1.05rem; letter-spacing: 0.12em; line-height: 1; }
+  .kicker .tag i { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 50%; background: var(--red); animation: blink 1.2s ease-in-out infinite; }
+  .kicker .tag[hidden] { display: none; }
+  .kicker .hint { margin-left: auto; transition: opacity 200ms; }
+  @keyframes blink { 50% { opacity: 0.25; } }
+
+  /* Día gigante: letras que suben/bajan en cascada */
+  .days { --ds: clamp(4.2rem, min(14vw, 25vh), 15rem); position: relative; height: calc(var(--ds) * 1.04); margin-top: calc(var(--ds) * -0.04); }
+  .day { position: absolute; inset: 0; display: flex; overflow: hidden; padding-top: 0.15em; font-family: var(--f-head); font-size: min(var(--ds), calc(100cqi / (var(--len) * 0.415))); line-height: 0.88; letter-spacing: 0.005em; }
+  .day i { display: inline-block; font-style: normal; will-change: transform; }
+  .titles { position: relative; height: 1.15em; font-family: var(--f-head); font-size: clamp(1.9rem, 3.6vw, 3.4rem); line-height: 1.05; letter-spacing: 0.01em; margin-top: clamp(2px, 1vh, 10px); }
+  .titles .t, .descs p { position: absolute; left: 0; top: 0; will-change: transform, opacity; }
+  .titles .t { white-space: nowrap; }
+  .descs { position: relative; height: 4.5em; max-width: 46ch; margin-top: clamp(4px, 1vh, 12px); font-size: clamp(0.95rem, 1.2vw, 1.15rem); font-weight: 700; line-height: 1.45; }
+
+  .buy { display: flex; align-items: center; flex-wrap: wrap; gap: 14px clamp(18px, 3vw, 40px); margin-top: clamp(6px, 1.4vh, 16px); }
+  .prices { position: relative; width: 3.3em; height: 0.88em; font-family: var(--f-head); font-size: clamp(3.2rem, 7.4vw, 7rem); line-height: 0.88; }
+  .prices span { position: absolute; left: 0; bottom: 0; transform-origin: left bottom; will-change: transform, opacity; white-space: nowrap; }
+  .stage .btn { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .stage .btn::before { background: rgba(13, 13, 13, 0.3); }
+  .btn .sm { display: none; }
+
+  /* Foto: marco inclinado + cortes diagonales entre promos */
+  .deck { position: relative; display: grid; place-items: center; min-width: 0; }
+  .ph-wrap { position: relative; height: min(56vh, 520px); aspect-ratio: 5 / 4; max-width: 100%; will-change: transform; }
+  .ph-shadow { position: absolute; inset: 0; background: var(--ink); transform: translate(16px, 16px); }
+  .ph-slides { position: absolute; inset: 0; overflow: hidden; border: 4px solid var(--ink); background: var(--ink); }
+  .sl { position: absolute; inset: 0; will-change: clip-path; }
+  .sl img { width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+  .badges { position: absolute; inset: 0; pointer-events: none; }
+  .bd { position: absolute; right: -2%; top: 0; z-index: 3; display: grid; place-items: center; width: clamp(104px, 15vw, 210px); aspect-ratio: 1; background: var(--ink); color: var(--c); clip-path: var(--burst); font-family: var(--f-head); font-size: clamp(2rem, 4.2vw, 4.4rem); line-height: 1; text-align: center; will-change: transform, opacity; }
+
+  /* Semana: tira L M X J V S D */
+  .week { position: absolute; z-index: 5; left: 5vw; right: 5vw; bottom: clamp(14px, 3.4vh, 30px); display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(4px, 0.8vw, 10px); }
+  .cell { position: relative; display: grid; place-items: center; height: clamp(42px, 7.4vh, 62px); border: 3px dashed rgba(13, 13, 13, 0.4); color: rgba(13, 13, 13, 0.55); font-family: var(--f-head); font-size: clamp(1.1rem, 1.8vw, 1.7rem); letter-spacing: 0.1em; line-height: 1; transition: transform 220ms var(--ease-out), background-color 220ms, color 220ms; }
+  .cell.has { border: 3px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; }
+  .cell.on { background: var(--paper); color: var(--ink); transform: translateY(-9px); }
+  .cell .s { display: none; }
+  .cell .hoy { position: absolute; left: 50%; top: -25px; translate: -50% 0; display: flex; align-items: center; gap: 5px; padding: 3px 8px 2px; background: var(--ink); color: var(--paper); font-size: 0.85rem; letter-spacing: 0.12em; white-space: nowrap; }
+  .cell .hoy i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: blink 1.2s ease-in-out infinite; }
+  .cell:active { transform: translateY(-3px) scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .cell.has:not(.on):hover { transform: translateY(-5px); } }
+
+  @media (max-width: 900px) {
+    .content { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); align-items: start; gap: 2.2svh; padding: 56px 18px clamp(84px, 14svh, 110px); }
+    .deck { order: -1; align-self: start; }
+    .ph-wrap { height: 27svh; }
+    .ph-shadow { transform: translate(10px, 10px); }
+    .days { --ds: clamp(3.6rem, min(24vw, 13svh), 8rem); }
+    .titles { font-size: clamp(1.7rem, 7.4vw, 2.4rem); }
+    .descs { height: 4.4em; font-size: 0.92rem; }
+    .prices { font-size: clamp(2.8rem, 12vw, 4rem); }
+    .btn { padding: 12px 18px; font-size: 1.15rem; }
+    .btn .lg { display: none; } .btn .sm { display: inline; }
+    .kicker .line, .kicker .hint { display: none; }
+    .cell .l { display: none; } .cell .s { display: inline; }
+    .cell { font-size: 1.3rem; border-width: 2px; }
+    .cell.has { border-width: 2px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cell { transition: none; }
+    .kicker .tag i, .cell .hoy i { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="track" id="track">
+  <section class="stage" id="stage" aria-label="Promos de la semana">
+    <div class="floods" id="floods" aria-hidden="true"></div>
+    <div class="marquee strip" aria-hidden="true"><div class="marquee-track" id="mq"></div></div>
+
+    <div class="content">
+      <div class="copy">
+        <div class="kicker"><span id="count"></span><span class="line"></span><span class="tag" id="tag" hidden><i></i>HOY</span><span class="hint" id="hint">↓ Desliza</span></div>
+        <h2 class="sr">Promos de la semana</h2>
+        <div class="days" id="days"></div>
+        <div class="titles" id="titles"></div>
+        <div class="descs" id="descs"></div>
+        <div class="buy">
+          <div class="prices" id="prices"></div>
+          <a class="btn" id="cta" href="#" target="_blank" rel="noopener"><span class="lg">PEDIR POR WHATSAPP</span><span class="sm">PEDIR</span> <span id="ic"></span></a>
+        </div>
+      </div>
+
+      <div class="deck" id="deck">
+        <div class="ph-wrap" id="phwrap">
+          <div class="ph-shadow"></div>
+          <div class="ph-slides" id="slides"></div>
+          <div class="badges" id="badges"></div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="week" id="week" aria-label="Semana"></nav>
+  </section>
+</div>
+
+<script src="_shared.js"></script>
+<script>
+grain();
+const N = PROMOS.length;
+const track = $("#track"), floods = $("#floods"), daysEl = $("#days"), titlesEl = $("#titles"), descsEl = $("#descs");
+const pricesEl = $("#prices"), slidesEl = $("#slides"), badgesEl = $("#badges"), weekEl = $("#week");
+const countEl = $("#count"), tagEl = $("#tag"), cta = $("#cta"), hint = $("#hint"), wrap = $("#phwrap");
+$("#ic").innerHTML = WA_ICON;
+const BURST = burst(14, 0.84);
+
+/* Cinta superior */
+$("#mq").innerHTML = Array.from({ length: 4 }, () => `<span>${PROMOS.map((p) => `${p.day.toUpperCase()} <em>★</em> ${p.title.toUpperCase()} <em>★</em> ${p.price}`).join(" <em>★</em> ")} <em>★</em> </span>`).join("");
+
+/* Construcción: un bloque por promo */
+const fls = [], days = [], titles = [], descs = [], prices = [], slides = [], badges = [];
+PROMOS.forEach((p, i) => {
+  const f = document.createElement("div"); f.className = "fl"; f.style.setProperty("--c", p.c); floods.appendChild(f); fls.push(f);
+
+  const d = document.createElement("div"); d.className = "day"; d.style.setProperty("--len", p.day.length);
+  d.setAttribute("aria-hidden", "true");
+  const chars = [...p.day.toUpperCase()].map((ch) => { const s = document.createElement("i"); s.textContent = ch; d.appendChild(s); return s; });
+  daysEl.appendChild(d); days.push({ el: d, chars });
+
+  const t = document.createElement("div"); t.className = "t"; t.textContent = p.title; titlesEl.appendChild(t); titles.push(t);
+  const ds = document.createElement("p"); ds.textContent = p.desc; descsEl.appendChild(ds); descs.push(ds);
+  const pr = document.createElement("span"); pr.textContent = p.price; pricesEl.appendChild(pr); prices.push(pr);
+
+  const s = document.createElement("div"); s.className = "sl"; s.innerHTML = `<img src="${p.img}" alt="${p.title}" draggable="false">`; slidesEl.appendChild(s);
+  slides.push({ el: s, img: $("img", s) });
+
+  const b = document.createElement("div"); b.className = "bd"; b.textContent = p.badge; b.style.setProperty("--c", p.c); b.style.setProperty("--burst", BURST);
+  b.dataset.br = [-12, 9, -8, 12][i]; badgesEl.appendChild(b); badges.push(b);
+});
+
+/* Semana: Lun → Dom. Solo los días con promo son botones */
+const WEEK = [["LUN", "L", 1], ["MAR", "M", 2], ["MIÉ", "X", 3], ["JUE", "J", 4], ["VIE", "V", 5], ["SÁB", "S", 6], ["DOM", "D", 0]];
+const cells = {};
+WEEK.forEach(([long, short, dow]) => {
+  const pi = PROMOS.findIndex((p) => p.dow === dow);
+  const c = document.createElement(pi >= 0 ? "button" : "span");
+  c.className = "cell" + (pi >= 0 ? " has" : "");
+  c.innerHTML = `<span class="l">${long}</span><span class="s">${short}</span>` + (dow === DOW ? '<span class="hoy"><i></i>HOY</span>' : "");
+  if (pi >= 0) { c.setAttribute("aria-label", `Ver la promo del ${DAYS[dow]}`); c.addEventListener("click", () => scrollTo({ top: (pi / (N - 1)) * maxScroll(), behavior: REDUCED ? "auto" : "smooth" })); cells[pi] = c; }
+  weekEl.appendChild(c);
+});
+
+const maxScroll = () => track.offsetHeight - innerHeight;
+
+/* Scroll → índice continuo con mesetas: cada promo se queda quieta un momento */
+function targetIndex() {
+  const raw = clamp(scrollY / maxScroll(), 0, 1) * (N - 1);
+  const f = Math.floor(raw);
+  if (f >= N - 1) return N - 1;
+  return f + smooth(clamp((raw - f - 0.28) / 0.44, 0, 1));
+}
+
+/* Parallax de ratón sobre el marco */
+const MX = new Spring(0, { k: 60, c: 14 }), MY = new Spring(0, { k: 60, c: 14 });
+if (FINE && !REDUCED) addEventListener("pointermove", (e) => { MX.target = e.clientX / innerWidth - 0.5; MY.target = e.clientY / innerHeight - 0.5; });
+
+const IDX = new Spring(0, { k: 95, c: 21 });     // movimiento principal: sin rebote
+const IDX2 = new Spring(0, { k: 210, c: 13 });   // sellos y precio: con rebote (el "slam")
+let lastActive = -1;
+
+loop((dt) => {
+  const target = targetIndex();
+  IDX.target = target; IDX2.target = target;
+  let idx, idx2;
+  if (REDUCED) { idx = IDX.value = target; idx2 = IDX2.value = target; }
+  else { idx = IDX.step(dt); idx2 = IDX2.step(dt); }
+  MX.step(dt); MY.step(dt);
+
+  /* Inundación de color: círculo que crece desde la foto */
+  fls.forEach((f, i) => {
+    if (i === 0) return;
+    const r = clamp(idx - (i - 1), 0, 1) * 150;
+    f.style.clipPath = r < 0.1 ? "circle(0px at 72% 52%)" : `circle(${r}vmax at 72% 52%)`;
+  });
+
+  /* Marco inclinado + parallax */
+  wrap.style.transform = `translate3d(${MX.value * -16}px, ${MY.value * -10}px, 0) rotate(${-3 + MX.value * 2.2}deg)`;
+
+  slides.forEach((s, i) => {
+    const d = i - idx, a = Math.abs(d);
+    let poly;
+    if (d >= 0) { const x = 100 - clamp(1 - d, 0, 1) * 112, k = 14 * clamp(d * 3, 0, 1); poly = `polygon(${x}% 0,100% 0,100% 100%,${x - k}% 100%)`; }
+    else { const x = 100 - clamp(a, 0, 1) * 112, k = 14 * clamp(a * 3, 0, 1); poly = `polygon(0 0,${x}% 0,${x - k}% 100%,0 100%)`; }
+    s.el.style.clipPath = poly;
+    s.el.style.zIndex = d >= 0 ? 2 : 1;
+    s.img.style.transform = `scale(${1 + a * 0.3}) translateX(${d * -6}%)`;
+  });
+
+  badges.forEach((b, i) => {
+    const d = i - idx, d2 = i - idx2;
+    const sc = clamp(1 + clamp(d2, 0, 1.4) * 2.1 - clamp(-d2, 0, 1) * 0.5, 0.15, 3.4);
+    b.style.transform = `translate3d(0,0,0) rotate(${+b.dataset.br + d2 * 46}deg) scale(${sc})`;
+    b.style.opacity = clamp(1 - Math.abs(d) * 3.2, 0, 1);
+  });
+
+  days.forEach((dd, i) => {
+    const d = i - idx, K = dd.chars.length - 1;
+    dd.chars.forEach((c, k) => {
+      const m = d >= 0 ? 1 + k * 0.08 : 1 + (K - k) * 0.08;
+      const v = clamp(d * m, -1, 1);
+      c.style.transform = `translateY(${v * 118}%) rotate(${v * -7}deg)`;
+    });
+  });
+
+  titles.forEach((t, i) => {
+    const d = i - idx;
+    t.style.opacity = clamp(1 - Math.abs(d) * 2.4, 0, 1);
+    t.style.transform = `translateY(${d * 34}px)`;
+  });
+  descs.forEach((p, i) => {
+    const d = i - idx;
+    p.style.opacity = clamp(1 - Math.abs(d) * 2.4, 0, 1);
+    p.style.transform = `translateY(${d * 26}px)`;
+  });
+  prices.forEach((p, i) => {
+    const d = i - idx, d2 = i - idx2;
+    const sc = clamp(1 + clamp(d2, 0, 1.4) * 1.5 - clamp(-d2, 0, 1) * 0.35, 0.3, 2.6);
+    p.style.transform = `translate3d(0,0,0) rotate(${d2 * -5}deg) scale(${sc})`;
+    p.style.opacity = clamp(1 - Math.abs(d) * 2.6, 0, 1);
+  });
+
+  const act = clamp(Math.round(idx), 0, N - 1);
+  if (act !== lastActive) {
+    lastActive = act;
+    countEl.textContent = `PROMO ${pad(act + 1)} / ${pad(N)}`;
+    tagEl.hidden = act !== TODAY_I;
+    cta.href = promoWa(PROMOS[act]);
+    Object.entries(cells).forEach(([k, c]) => c.classList.toggle("on", +k === act));
+  }
+  hint.style.opacity = clamp(1 - scrollY / 160, 0, 1);
+});
+</script>
+</body>
+</html>

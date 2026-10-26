@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 3 — Cupones que se rasgan</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .page { position: relative; overflow: hidden; padding: clamp(60px, 9vw, 120px) clamp(16px, 4vw, 56px) clamp(80px, 10vw, 140px); }
+  .page::before { content: ""; position: absolute; left: 50%; top: -10%; width: 90vw; height: 70vh; translate: -50% 0; background: radial-gradient(ellipse at 50% 30%, rgba(255, 102, 0, 0.22), transparent 62%); pointer-events: none; }
+
+  .head { position: relative; max-width: 1180px; margin: 0 auto; text-align: center; }
+  .head .eyebrow { display: block; margin-bottom: 8px; }
+  .h2 { font-family: var(--f-head); font-weight: 400; line-height: 0.84; font-size: clamp(4.6rem, 15vw, 14rem); letter-spacing: 0.005em; }
+  .h2 .row { display: block; overflow: hidden; padding: 0.12em 0 0.02em; margin: -0.12em 0 0; }
+  .h2 .row i { display: inline-block; font-style: normal; animation: rise 760ms var(--ease-out) backwards; animation-delay: calc(var(--k) * 38ms + 100ms); }
+  .h2 .r2 { color: var(--orange); font-size: 0.62em; letter-spacing: 0.02em; }
+  @keyframes rise { from { transform: translateY(108%) rotate(6deg); } }
+  .sub { display: inline-flex; align-items: center; gap: 10px; margin-top: clamp(14px, 2vw, 22px); font-size: clamp(0.95rem, 1.4vw, 1.15rem); font-weight: 800; color: var(--paper); animation: fadeUp 600ms var(--ease-out) 700ms backwards; }
+  .sub svg { color: var(--orange); animation: snip 2.4s var(--ease-io) infinite; transform-origin: 50% 50%; }
+  @keyframes snip { 0%, 60%, 100% { transform: rotate(0); } 70% { transform: rotate(-22deg); } 80% { transform: rotate(8deg); } 90% { transform: rotate(-14deg); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
+
+  /* Impresora de cupones */
+  .printer { position: relative; z-index: 6; display: flex; align-items: center; gap: 14px; max-width: 1180px; height: clamp(54px, 5.4vw, 68px); margin: clamp(30px, 4.4vw, 56px) auto 0; padding: 0 clamp(16px, 2vw, 26px); background: #1b1b1b; border: 3px solid var(--paper); font-family: var(--f-head); font-size: clamp(1.05rem, 1.7vw, 1.4rem); letter-spacing: 0.16em; line-height: 1; }
+  .printer::after { content: ""; position: absolute; left: 2.4%; right: 2.4%; bottom: -10px; height: 10px; background: var(--ink); border: 3px solid var(--paper); border-top: 0; }
+  .printer .led { width: 12px; height: 12px; border-radius: 50%; background: #3dff7a; box-shadow: 0 0 12px #3dff7a; animation: blink 1.1s steps(2, jump-none) infinite; }
+  .printer small { margin-left: auto; font-family: var(--f-body); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.22em; color: rgba(244, 239, 230, 0.6); }
+  @keyframes blink { 50% { opacity: 0.2; } }
+
+  .rack { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(30px, 4vw, 54px) clamp(26px, 3.6vw, 52px); max-width: 1180px; margin: 0 auto; padding: clamp(40px, 5vw, 70px) clamp(6px, 1vw, 14px) 0; }
+
+  /* Cupón: dos piezas (talón + cuerpo) con muescas en la perforación */
+  .cp { --r: 0deg; --n: 12px; perspective: 1200px; }
+  .cp:not(.in) { opacity: 0; }
+  .cp.in { animation: print 950ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 150ms); }
+  @keyframes print {
+    from { opacity: 1; clip-path: inset(-40px -40px 100% -40px); transform: translateY(-96px); }
+    to { opacity: 1; clip-path: inset(-40px -40px -40px -40px); transform: none; }
+  }
+  .cp-in { position: relative; display: flex; min-height: clamp(206px, 18.4vw, 246px); filter: drop-shadow(8px 8px 0 rgba(244, 239, 230, 0.92)); transform: rotate(var(--r)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 220ms var(--ease-out); }
+
+  .stub { position: relative; z-index: 2; flex: none; display: flex; flex-direction: column; align-items: center; justify-content: space-between; width: clamp(84px, 8.6vw, 112px); padding: 16px 8px 14px; background: var(--c); color: var(--ink); border-right: 3px dashed var(--ink); transform-origin: 100% 100%;
+    -webkit-mask: radial-gradient(circle var(--n) at 100% 0, #0000 98%, #000) top / 100% 51% no-repeat, radial-gradient(circle var(--n) at 100% 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    mask: radial-gradient(circle var(--n) at 100% 0, #0000 98%, #000) top / 100% 51% no-repeat, radial-gradient(circle var(--n) at 100% 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    transition: transform 520ms var(--ease-out), opacity 240ms ease-out; }
+  .stub .no { font-size: 0.64rem; font-weight: 800; letter-spacing: 0.2em; }
+  .stub .v { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--f-head); line-height: 1; letter-spacing: 0.06em; white-space: nowrap; }
+  .stub .bars { width: 78%; height: 22px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px, var(--ink) 8px 11px, transparent 11px 12px, var(--ink) 12px 13px, transparent 13px 15px); }
+
+  .main { position: relative; z-index: 1; flex: 1; min-width: 0; display: block; overflow: hidden; background: var(--ink); color: #fff;
+    -webkit-mask: radial-gradient(circle var(--n) at 0 0, #0000 98%, #000) top / 100% 51% no-repeat, radial-gradient(circle var(--n) at 0 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    mask: radial-gradient(circle var(--n) at 0 0, #0000 98%, #000) top / 100% 51% no-repeat, radial-gradient(circle var(--n) at 0 100%, #0000 98%, #000) bottom / 100% 51% no-repeat; }
+  .main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; transform: scale(1.04); transition: transform 800ms var(--ease-out); }
+  .main::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(13, 13, 13, 0.96) 0%, rgba(13, 13, 13, 0.84) 40%, rgba(13, 13, 13, 0.12) 100%); }
+  .glare { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.24), transparent 52%); transition: opacity 220ms; }
+
+  .mc { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; height: 100%; min-height: inherit; max-width: 66%; padding: clamp(16px, 1.8vw, 24px) 10px clamp(14px, 1.6vw, 20px) clamp(22px, 2.4vw, 32px); }
+  .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.7rem, 2.7vw, 2.5rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .de { margin-top: 6px; font-size: clamp(0.78rem, 1vw, 0.9rem); font-weight: 600; line-height: 1.4; color: rgba(255, 255, 255, 0.82); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .ft { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
+  .pr { font-family: var(--f-head); font-size: clamp(2rem, 3.2vw, 3rem); line-height: 0.9; color: var(--c); }
+  .rip { display: inline-flex; align-items: center; gap: 8px; padding: 0.5em 0.85em 0.4em; background: var(--c); color: var(--ink); font-family: var(--f-head); font-size: clamp(0.98rem, 1.3vw, 1.2rem); letter-spacing: 0.1em; line-height: 1; }
+  .rip svg { transition: transform 220ms var(--ease-out); }
+
+  .chip { position: absolute; z-index: 3; top: 14px; right: 16px; padding: 5px 12px 2px; background: var(--c); color: var(--ink); border: 3px solid var(--ink); font-family: var(--f-head); font-size: clamp(1.3rem, 1.9vw, 1.8rem); line-height: 1; letter-spacing: 0.04em; transform: rotate(5deg); }
+  .stamp { position: absolute; z-index: 5; left: 50%; top: 50%; margin: -0.5em 0 0 -3.2em; width: 6.4em; padding: 0.25em 0 0.12em; text-align: center; border: 4px solid var(--c); color: var(--c); background: rgba(13, 13, 13, 0.72); font-family: var(--f-head); font-size: clamp(2rem, 3vw, 3rem); letter-spacing: 0.06em; line-height: 1; opacity: 0; transform: scale(1.9) rotate(-16deg); pointer-events: none; }
+
+  .hoy { position: absolute; z-index: 7; top: -16px; left: clamp(26px, 3vw, 40px); display: flex; align-items: center; gap: 7px; padding: 6px 12px 4px; background: var(--ink); color: #fff; border: 2px solid var(--paper); font-family: var(--f-head); font-size: 1.25rem; letter-spacing: 0.1em; line-height: 1; transform: rotate(-4deg); }
+  .hoy i { width: 9px; height: 9px; border-radius: 50%; background: var(--red); animation: blink 1.2s ease-in-out infinite; }
+
+  /* Estado rasgado: el talón sale volando y vuelve solo (transiciones: se pueden interrumpir) */
+  .cp.torn .stub { transform: translate(-34px, -46px) rotate(-26deg); opacity: 0; pointer-events: none; transition: transform 640ms var(--ease-out), opacity 260ms ease-out 340ms; }
+  .cp.torn .main { animation: tug 440ms var(--ease-out); }
+  .cp.torn .stamp { opacity: 1; transform: scale(1) rotate(-9deg); transition: transform 380ms var(--ease-out) 240ms, opacity 120ms ease-out 240ms; }
+  @keyframes tug { 0% { transform: none; } 28% { transform: translateX(9px) rotate(0.7deg); } 100% { transform: none; } }
+
+  /* Insinúa el rasgado en el cupón de hoy */
+  .cp.is-today:not(.torn) .stub { animation: tease 3.6s var(--ease-io) 1.6s infinite; }
+  @keyframes tease { 0%, 86%, 100% { transform: none; } 91% { transform: rotate(-3.5deg) translate(-4px, -3px); } 96% { transform: rotate(-1deg) translate(-1px, -1px); } }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cp:hover .glare { opacity: 1; }
+    .cp:hover .main img { transform: scale(1.12); }
+    .cp:not(.torn):hover .stub { transform: rotate(-2.5deg) translate(-3px, -3px); }
+    .cp:hover .rip svg { transform: rotate(-24deg); }
+  }
+  .cp:active .cp-in { transform: rotate(var(--r)) scale(0.985); }
+
+  .cp:nth-child(1) { --r: -1.3deg; }
+  .cp:nth-child(2) { --r: 1deg; }
+  .cp:nth-child(3) { --r: -0.8deg; }
+  .cp:nth-child(4) { --r: 1.5deg; }
+  @media (min-width: 861px) { .cp:nth-child(even) { margin-top: 46px; } }
+  @media (max-width: 860px) { .rack { grid-template-columns: 1fr; max-width: 560px; } .cp { --n: 10px; } .stub .no { display: none; } .mc { max-width: 76%; } .printer small { display: none; } .ti { padding-right: 4.2rem; } }
+  @media (max-width: 420px) { .mc { max-width: 100%; } .ti { font-size: 1.6rem; } .main::before { background: linear-gradient(90deg, rgba(13, 13, 13, 0.95) 0%, rgba(13, 13, 13, 0.72) 100%); } .chip { top: 10px; right: 10px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .h2 .row i, .sub, .sub svg, .cp.in, .cp.torn .main, .cp.is-today:not(.torn) .stub, .printer .led, .hoy i { animation: none; }
+    .stub, .cp.torn .stub, .cp.torn .stamp, .main img, .cp-in, .rip svg { transition: none; }
+    .cp.torn .stub { transform: none; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2" aria-label="Promos de la semana">
+      <span class="row r1" id="r1" aria-hidden="true"></span>
+      <span class="row r2" id="r2" aria-hidden="true"></span>
+    </h2>
+    <p class="sub"><span id="sc"></span> Rasga el cupón y pídelo por WhatsApp</p>
+  </header>
+
+  <div class="printer" aria-hidden="true"><span class="led"></span>IMPRESORA DE CUPONES<small id="cnt"></small></div>
+  <div class="rack" id="rack"></div>
+</main>
+
+<script src="_shared.js"></script>
+<script>
+grain();
+$("#sc").innerHTML = SCISSORS;
+const split = (el, s, off = 0) => { el.innerHTML = [...s].map((ch, k) => `<i style="--k:${k + off}">${ch === " " ? "&nbsp;" : ch}</i>`).join(""); };
+split($("#r1"), "PROMOS", 0); split($("#r2"), "DE LA SEMANA", 6);
+$("#cnt").textContent = `${pad(PROMOS.length)} CUPONES ACTIVOS`;
+
+const rack = $("#rack");
+PROMOS.forEach((p, i) => {
+  const cp = document.createElement("article");
+  cp.className = "cp" + (i === TODAY_I ? " is-today" : "");
+  cp.style.cssText = `--c:${p.c};--i:${i}`;
+  const vs = Math.min(3.2, 8 / (p.day.length * 0.42)).toFixed(2);
+  cp.innerHTML = `
+    ${i === TODAY_I ? '<span class="hoy"><i></i>VÁLIDO HOY</span>' : ""}
+    <div class="cp-in">
+      <div class="stub" aria-hidden="true"><span class="no">Nº ${pad(i + 1)}</span><span class="v" style="font-size:${vs}rem">${p.day.toUpperCase()}</span><span class="bars"></span></div>
+      <a class="main" href="${promoWa(p)}" target="_blank" rel="noopener" aria-label="Rasgar el cupón y pedir: ${p.title}">
+        <img src="${p.img}" alt="" loading="lazy" draggable="false">
+        <span class="glare"></span>
+        <span class="chip">${p.badge}</span>
+        <span class="stamp" aria-hidden="true">¡A PEDIR!</span>
+        <div class="mc">
+          <div><h3 class="ti">${p.title}</h3><p class="de">${p.desc}</p></div>
+          <div class="ft"><span class="pr">${p.price}</span><span class="rip">${SCISSORS} RASGAR Y PEDIR</span></div>
+        </div>
+      </a>
+    </div>`;
+  rack.appendChild(cp);
+
+  const inner = $(".cp-in", cp), main = $(".main", cp), glare = $(".glare", cp);
+  let timer;
+  /* Rasgar: el enlace abre WhatsApp y el talón vuela; a los 2.8 s vuelve a pegarse */
+  main.addEventListener("click", () => {
+    cp.classList.add("torn");
+    clearTimeout(timer);
+    timer = setTimeout(() => cp.classList.remove("torn"), 2800);
+  });
+  /* Inclinación 3D + brillo que sigue al cursor (solo con mouse) */
+  if (FINE && !REDUCED) {
+    cp.addEventListener("pointermove", (e) => {
+      const r = inner.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      inner.style.setProperty("--ry", `${(x - 0.5) * 9}deg`);
+      inner.style.setProperty("--rx", `${(0.5 - y) * 7}deg`);
+      glare.style.setProperty("--gx", `${x * 100}%`); glare.style.setProperty("--gy", `${y * 100}%`);
+    });
+    cp.addEventListener("pointerleave", () => { inner.style.setProperty("--ry", "0deg"); inner.style.setProperty("--rx", "0deg"); });
+  }
+});
+
+/* Cada cupón se imprime al entrar en pantalla */
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.2 });
+$$(".cp").forEach((el) => io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ideas de diseño — Promos de la semana</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+  .top { flex: none; z-index: 10; display: flex; align-items: center; gap: 16px; padding: 10px 16px; background: rgba(13, 13, 13, 0.96); border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+  .top::-webkit-scrollbar { display: none; }
+  .brand { display: flex; align-items: center; gap: 10px; flex: none; font-family: var(--f-head); font-size: 1.35rem; letter-spacing: 0.08em; line-height: 1; }
+  .brand img { height: 30px; width: 30px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; }
+  .brand small { display: block; margin-top: 3px; font-family: var(--f-body); font-size: 9px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+  .sep { width: 1px; height: 28px; background: var(--line); flex: none; }
+  .grp { display: flex; align-items: center; gap: 6px; flex: none; }
+  .tab { padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 800; color: rgba(255, 255, 255, 0.62); border: 1px solid transparent; white-space: nowrap; transition: color 200ms var(--ease-out), background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 160ms var(--ease-out); }
+  .tab b { margin-right: 7px; font-weight: 800; color: rgba(255, 255, 255, 0.32); }
+  .tab:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .tab:hover { color: #fff; background: rgba(255, 255, 255, 0.06); } }
+  .tab.on { color: #fff; background: rgba(255, 102, 0, 0.16); border-color: rgba(255, 102, 0, 0.6); }
+  .tab.on b { color: var(--orange); }
+
+  .view { position: relative; flex: 1; min-height: 0; background: #000; }
+  .view iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: var(--bg); }
+
+  .cap { flex: none; z-index: 10; background: rgba(13, 13, 13, 0.98); border-top: 1px solid var(--line); }
+  .cap-row { display: flex; align-items: center; gap: 18px; padding: 10px 16px; }
+  .cap-row .t { flex: 1; min-width: 0; font-size: 12.5px; line-height: 1.45; color: rgba(255, 255, 255, 0.66); }
+  .cap-row .t b { color: #fff; margin-right: 8px; }
+  .cap-row button { flex: none; padding: 7px 13px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; border: 1px solid rgba(255, 255, 255, 0.2); color: rgba(255, 255, 255, 0.8); transition: background-color 200ms, transform 160ms var(--ease-out); }
+  .cap-row button:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .cap-row button:hover { background: rgba(255, 255, 255, 0.08); } }
+  .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms var(--ease-out); }
+  .more.open { grid-template-rows: 1fr; }
+  .more > div { overflow: hidden; min-height: 0; }
+  .more ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 28px; padding: 4px 16px 14px; font-size: 12px; line-height: 1.5; color: rgba(255, 255, 255, 0.6); }
+  .more li b { display: block; margin-bottom: 2px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); }
+  @media (max-width: 760px) { .cap-row .t { font-size: 11.5px; } }
+  @media (prefers-reduced-motion: reduce) { .more { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="../frontend/public/logo.jpeg" alt="SalchiMax"><div>SALCHIMAX<small>Ideas · Promos de la semana</small></div></div>
+  <span class="sep"></span>
+  <nav class="grp" id="tabs" aria-label="Ideas"></nav>
+</header>
+
+<main class="view"><iframe id="frame" title="Prototipo"></iframe></main>
+
+<footer class="cap">
+  <div class="cap-row">
+    <p class="t"><b id="capT"></b><span id="capD"></span></p>
+    <button id="capB" aria-expanded="false">Cómo llevarlo a la landing ▴</button>
+  </div>
+  <div class="more" id="more"><div><ul id="notes"></ul></div></div>
+</footer>
+
+<script src="_shared.js"></script>
+<script>
+const IDEAS = [
+  { file: "promos-1-muro-de-carteles.html", name: "Muro de carteles · callejera",
+    desc: "Cuatro carteles pegados a la pared, cada uno de un color y con un ángulo distinto. Entran de un golpe («slap»), los días suben letra por letra y el sello 2x1 / COMBO / GRATIS se estampa. Cintas de precaución que aceleran con el scroll y un aviso «HOY ES…» que sabe qué día es.",
+    react: "Cada cartel con motion.article y whileInView (once) · variants con staggerChildren para día → foto → sello · cintas con useAnimationFrame y useVelocity(scrollY) para la velocidad · el estado «hoy» sale de new Date().getDay(). En móvil: una columna, sin ángulos de más." },
+  { file: "promos-2-dia-gigante.html", name: "Día gigante · intensa",
+    desc: "Sección anclada: cada promo ocupa toda la pantalla. El color de la promo inunda la página desde la foto, el nombre del día (LUNES, JUEVES…) cae en cascada, la foto cambia con un corte diagonal y el precio / sello rebotan al entrar. Tira L M X J V S D abajo con marca «HOY».",
+    react: "useScroll({ target }) + useTransform con mesetas por promo · inundación = clipPath: circle() animado · letras con useTransform y retardo por letra · precio y sello con useSpring de rebote (bounce) distinto al resto · la tira de la semana hace scrollTo a cada promo. En móvil la foto pasa arriba." },
+  { file: "promos-3-cupones.html", name: "Cupones que se rasgan · lúdica",
+    desc: "Cada promo es un cupón troquelado con código de barras. Se «imprimen» uno a uno desde una impresora, se inclinan en 3D con brillo siguiendo el mouse y, al tocarlos, el talón se rasga y sale volando mientras se abre WhatsApp. El cupón de hoy insinúa el rasgado.",
+    react: "Entrada con motion + clipPath (inset) y delay por índice · tilt con useMotionValue + useSpring (solo pointer: fine) · rasgado = estado local `torn` con variants (talón: x, y, rotate, opacity) y un timeout que lo devuelve · el enlace sigue siendo un <a href='wa.me/…'> real." },
+];
+const NOTES = [
+  ["Datos", "Las tres leen la misma lista que frontend/src/data/promos.js (día, título, descripción, precio, badge, foto, active). Cambiar una promo no requiere tocar el diseño."],
+  ["«Hoy»", "Resalta la promo del día con new Date().getDay(). Si hoy no hay promo, la idea 1 avisa cuál es la siguiente. Para probar otro día: agrega ?hoy=0..6 a la URL de cada prototipo."],
+  ["Rendimiento", "Todo se mueve con transform y opacity (más clip-path en los recortes). Nada anima width, height ni top/left. Curvas: ease-out fuerte cubic-bezier(.23,1,.32,1) y ease-in-out cubic-bezier(.77,0,.175,1)."],
+  ["Accesibilidad", "prefers-reduced-motion: sin cintas, sin inclinaciones y el estado final fijo. Hover solo con mouse (hover: hover). Toda la CTA es un enlace real a WhatsApp con el mensaje de la promo."],
+];
+
+const frame = $("#frame"), capT = $("#capT"), capD = $("#capD"), notes = $("#notes"), more = $("#more"), capB = $("#capB");
+const tabs = IDEAS.map((it, i) => {
+  const b = document.createElement("button");
+  b.className = "tab"; b.innerHTML = `<b>${i + 1}</b>${it.name}`;
+  b.addEventListener("click", () => select(i));
+  $("#tabs").appendChild(b);
+  return b;
+});
+
+function select(i) {
+  const it = IDEAS[i];
+  tabs.forEach((t, k) => { t.classList.toggle("on", k === i); t.setAttribute("aria-current", k === i ? "true" : "false"); });
+  frame.src = it.file + location.search;
+  capT.textContent = `Promos · ${it.name}`;
+  capD.textContent = it.desc;
+  notes.innerHTML = `<li><b>En React + Framer Motion</b>${it.react}</li>` + NOTES.map(([t, d]) => `<li><b>${t}</b>${d}</li>`).join("");
+  history.replaceState(null, "", location.search + "#" + (i + 1));
+}
+capB.addEventListener("click", () => {
+  const open = more.classList.toggle("open");
+  capB.setAttribute("aria-expanded", String(open));
+  capB.textContent = open ? "Cómo llevarlo a la landing ▾" : "Cómo llevarlo a la landing ▴";
+});
+addEventListener("keydown", (e) => { const n = Number(e.key); if (n >= 1 && n <= IDEAS.length) select(n - 1); });
+select(clamp((parseInt(location.hash.slice(1), 10) || 1) - 1, 0, IDEAS.length - 1));
+</script>
+</body>
+</html>

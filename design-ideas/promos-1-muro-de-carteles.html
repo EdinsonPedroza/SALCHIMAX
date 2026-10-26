@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 1 — Muro de carteles</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .wall { position: relative; overflow: hidden; padding: clamp(110px, 16vw, 190px) clamp(16px, 4vw, 56px) clamp(120px, 14vw, 180px); }
+
+  /* Cintas de precaución que corren (aceleran con el scroll) */
+  .tape { position: absolute; left: -6%; width: 112%; z-index: 0; color: var(--ink); font-family: var(--f-head); font-size: clamp(1.3rem, 2.4vw, 2rem); letter-spacing: 0.14em; line-height: 1; padding: 0.4em 0; border-block: 3px solid var(--ink); }
+  .tape.t1 { top: clamp(26px, 5vw, 60px); background: var(--yellow); transform: rotate(-2.2deg); }
+  .tape.t2 { bottom: clamp(26px, 5vw, 60px); background: var(--orange); transform: rotate(1.6deg); }
+
+  /* Encabezado */
+  .head { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto clamp(48px, 7vw, 90px); }
+  .head .eyebrow { display: block; margin-bottom: 10px; }
+  .h2 { font-family: var(--f-head); font-weight: 400; line-height: 0.82; }
+  .h2 .stroke { display: block; font-size: clamp(5rem, 19vw, 17rem); letter-spacing: 0.01em; color: transparent; -webkit-text-stroke: 2px #fff; }
+  .h2 .stroke .ch { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.04em; }
+  .h2 .stroke .ch i { display: inline-block; font-style: normal; animation: rise 720ms var(--ease-out) backwards; animation-delay: calc(var(--k) * 45ms + 120ms); }
+  .h2 .hl { position: relative; display: inline-block; margin-top: clamp(-30px, -2.4vw, -10px); padding: 0.1em 0.3em 0.02em; font-size: clamp(2.6rem, 8.4vw, 7.4rem); background: var(--orange); color: var(--ink); transform: rotate(-2deg); transform-origin: left center; animation: wipe 700ms var(--ease-io) 560ms backwards; }
+  @keyframes rise { from { transform: translateY(105%); } }
+  @keyframes wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+  .today { display: inline-flex; align-items: center; gap: 12px; margin-top: clamp(22px, 3vw, 34px); padding: 10px 16px; border: 2px solid #fff; font-size: 0.95rem; font-weight: 800; letter-spacing: 0.04em; animation: fadeUp 600ms var(--ease-out) 1000ms backwards; }
+  .today b { color: var(--yellow); font-weight: 800; }
+  .today .dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--red); animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: 0.25; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
+
+  /* Muro */
+  .grid { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(22px, 2.6vw, 38px); align-items: start; }
+
+  .poster { --ty: 0px; --r: 0deg; position: relative; isolation: isolate; container-type: inline-size; display: flex; flex-direction: column; background: var(--c); color: var(--ink); border: 3px solid var(--ink); transform: translateY(var(--ty)) rotate(var(--r)); transition: transform 300ms var(--ease-out); }
+  .poster:not(.in) { opacity: 0; }
+  .poster.in { animation: slap 720ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 90ms); }
+  @keyframes slap {
+    from { opacity: 0; transform: translateY(90px) rotate(calc(var(--r) + 9deg)) scale(1.16); }
+    55% { opacity: 1; }
+    to { opacity: 1; transform: translateY(var(--ty)) rotate(var(--r)) scale(1); }
+  }
+  /* Bloque de sombra dura */
+  .poster::after { content: ""; position: absolute; inset: -3px; z-index: -1; background: var(--sh); transform: translate(10px, 10px); transition: transform 300ms var(--ease-out); }
+  /* Cinta adhesiva */
+  .poster::before { content: ""; position: absolute; top: -17px; left: 50%; width: 34cqi; height: 8cqi; margin-left: -17cqi; background: rgba(244, 239, 230, 0.82); transform: rotate(var(--tr, -4deg)); z-index: 3; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
+
+  /* cqi del propio contenedor se resuelve contra la ventana: el padding va en un hijo */
+  .pin { display: flex; flex: 1; flex-direction: column; padding: 7cqi 7cqi 6cqi; }
+  .p-day { display: flex; overflow: hidden; font-family: var(--f-head); line-height: 0.86; letter-spacing: 0.01em; padding: 0.16em 0 0.04em; margin: -0.16em 0 4cqi; }
+  .p-day i { display: inline-block; font-style: normal; }
+  .poster.in .p-day i { animation: rise 640ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 90ms + var(--k) * 32ms + 160ms); }
+
+  .p-photo { position: relative; aspect-ratio: 4 / 3; border: 3px solid var(--ink); background: var(--ink); transform: rotate(calc(var(--r) * -0.7)); }
+  .p-photo .ph { position: absolute; inset: 0; overflow: hidden; }
+  .p-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 700ms var(--ease-out); }
+  .poster.in .p-photo img { animation: punch 1000ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 90ms + 200ms); }
+  @keyframes punch { from { transform: scale(1.35); } }
+
+  /* Sello estrella */
+  .p-badge { --br: -12deg; position: absolute; right: -9cqi; top: -11cqi; z-index: 4; display: grid; place-items: center; width: 31cqi; height: 31cqi; background: var(--ink); color: var(--c); clip-path: var(--burst); font-family: var(--f-head); font-size: 10.5cqi; line-height: 1; letter-spacing: 0.02em; text-align: center; transform: rotate(var(--br)); transition: transform 320ms var(--ease-out); }
+  .poster:nth-child(even) .p-badge { --br: 10deg; }
+  .poster.in .p-badge { animation: stamp 480ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 90ms + 520ms); }
+  @keyframes stamp {
+    from { opacity: 0; transform: scale(2.6) rotate(calc(var(--br) - 40deg)); }
+    45% { opacity: 1; }
+    to { transform: scale(1) rotate(var(--br)); }
+  }
+
+  .p-title { margin-top: 5cqi; font-family: var(--f-head); font-weight: 400; font-size: clamp(1.7rem, 12.5cqi, 2.6rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .p-desc { margin-top: 2.5cqi; font-size: clamp(0.85rem, 4.4cqi, 1rem); font-weight: 600; line-height: 1.42; }
+  .p-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 5cqi; }
+  .p-price { font-family: var(--f-head); font-size: clamp(2rem, 16cqi, 3.4rem); line-height: 0.85; }
+  .p-cta { display: inline-flex; align-items: center; gap: 8px; padding: 0.55em 0.9em 0.45em; background: var(--ink); color: var(--c); font-family: var(--f-head); font-size: clamp(1.05rem, 6.4cqi, 1.35rem); letter-spacing: 0.08em; line-height: 1; }
+  .p-cta::after { content: ""; position: absolute; inset: 0; } /* el enlace cubre todo el cartel */
+  .p-cta svg { transition: transform 240ms var(--ease-out); }
+
+  /* Hoy */
+  .p-today { position: absolute; z-index: 5; top: -16px; left: -12px; display: flex; align-items: center; gap: 7px; padding: 6px 12px 4px; background: var(--ink); color: #fff; border: 2px solid #fff; font-family: var(--f-head); font-size: 1.3rem; letter-spacing: 0.1em; line-height: 1; transform: rotate(-6deg); animation: nudge 2.4s var(--ease-io) infinite; }
+  .p-today i { width: 9px; height: 9px; border-radius: 50%; background: var(--red); animation: blink 1.2s ease-in-out infinite; }
+  @keyframes nudge { 0%, 70%, 100% { transform: rotate(-6deg) translateY(0); } 80% { transform: rotate(-9deg) translateY(-4px); } 90% { transform: rotate(-4deg) translateY(0); } }
+  .poster.is-today { outline: 3px dashed #fff; outline-offset: 9px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .grid .poster:hover { --r: 0deg; --ty: -12px; z-index: 6; }
+    .poster:hover::after { transform: translate(17px, 17px); }
+    .poster:hover .p-photo img { transform: scale(1.1); }
+    .poster:hover .p-badge { transform: rotate(calc(var(--br) + 16deg)) scale(1.1); }
+    .poster:hover .p-cta svg { transform: translateX(5px); }
+  }
+  .poster:active { transform: translateY(calc(var(--ty) + 2px)) rotate(0deg) scale(0.985); }
+
+  .poster:nth-child(1) { --r: -2.2deg; --ty: 0px; --tr: -5deg; }
+  .poster:nth-child(2) { --r: 1.7deg; --ty: 40px; --tr: 4deg; }
+  .poster:nth-child(3) { --r: -1.2deg; --ty: -14px; --tr: -3deg; }
+  .poster:nth-child(4) { --r: 2.4deg; --ty: 30px; --tr: 6deg; }
+
+  @media (max-width: 1080px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 56px; } .grid .poster:nth-child(n) { --ty: 0px; } .poster:nth-child(even) { margin-top: 30px; } }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; row-gap: 52px; } .poster:nth-child(even) { margin-top: 0; } .poster { max-width: 440px; width: 100%; justify-self: center; } .p-badge { right: -4cqi; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .h2 .stroke .ch i, .h2 .hl, .today, .poster.in, .poster.in .p-day i, .poster.in .p-photo img, .poster.in .p-badge { animation: none; }
+    .p-today { animation: none; }
+    .poster, .poster::after, .p-badge, .p-photo img { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wall" id="wall">
+  <div class="marquee tape t1" aria-hidden="true"><div class="marquee-track" id="m1"></div></div>
+
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2">
+      <span class="stroke" id="stroke" aria-label="Promos"></span>
+      <span class="hl">DE LA SEMANA</span>
+    </h2>
+    <a class="today" id="today" href="#grid"><span class="dot"></span><span id="todayT"></span></a>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="marquee tape t2 rev" aria-hidden="true"><div class="marquee-track" id="m2"></div></div>
+</main>
+
+<script src="_shared.js"></script>
+<script>
+grain();
+const BURST = burst(14, 0.84);
+
+/* Título: cada letra sube sola */
+$("#stroke").innerHTML = [..."PROMOS"].map((ch, k) => `<span class="ch" aria-hidden="true"><i style="--k:${k}">${ch}</i></span>`).join("");
+
+/* Cintas: la misma frase repetida; el track mide 2× para el loop de -50% */
+const phrase = "2x1 ★ COMBO ★ GRATIS ★ PIDE POR WHATSAPP ★ LUNES ★ MIÉRCOLES ★ JUEVES ★ DOMINGO ★ ";
+const strip = Array.from({ length: 6 }, () => `<span>${phrase}</span>`).join("");
+$("#m1").innerHTML = strip; $("#m2").innerHTML = strip;
+
+/* "Hoy" */
+const t = $("#todayT");
+if (TODAY_I >= 0) t.innerHTML = `HOY ES ${DAYS[DOW].toUpperCase()} · <b>${PROMOS[TODAY_I].title.toUpperCase()}</b> ¡APROVECHA!`;
+else { const n = nextPromo(); t.innerHTML = `HOY ES ${DAYS[DOW].toUpperCase()} · ${n.in === 1 ? "MAÑANA" : "EN " + n.in + " DÍAS"}: <b>${PROMOS[n.i].title.toUpperCase()}</b>`; }
+
+/* Carteles */
+const grid = $("#grid");
+PROMOS.forEach((p, i) => {
+  const a = document.createElement("article");
+  a.className = "poster" + (i === TODAY_I ? " is-today" : "");
+  a.style.cssText = `--c:${p.c};--sh:${["#f4efe6", "#ff6600", "#ffcc00", "#ff6600"][i]};--i:${i};--burst:${BURST}`;
+  const size = Math.min(31, 90 / (p.day.length * 0.4)).toFixed(1);
+  a.innerHTML = `
+    ${i === TODAY_I ? '<span class="p-today"><i></i>HOY</span>' : ""}
+    <div class="pin">
+    <h3 class="p-day" style="font-size:${size}cqi" aria-label="${p.day}">${[...p.day.toUpperCase()].map((ch, k) => `<i style="--k:${k}" aria-hidden="true">${ch}</i>`).join("")}</h3>
+    <div class="p-photo"><div class="ph"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false"></div><span class="p-badge">${p.badge}</span></div>
+    <h4 class="p-title">${p.title}</h4>
+    <p class="p-desc">${p.desc}</p>
+    <div class="p-foot"><span class="p-price">${p.price}</span><a class="p-cta" href="${promoWa(p)}" target="_blank" rel="noopener">PEDIR <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 7h19M13 1l6 6-6 6"/></svg></a></div>
+    </div>`;
+  grid.appendChild(a);
+});
+
+/* Entran cuando el muro es visible: se pegan con "slap", luego el sello */
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.18 });
+$$(".poster").forEach((el) => io.observe(el));
+
+/* Las cintas aceleran con la velocidad del scroll (se frenan solas con un resorte) */
+if (!REDUCED) {
+  const speed = new Spring(1, { k: 40, c: 9 });
+  let lastY = scrollY;
+  const anims = () => document.getAnimations().filter((a) => a.animationName === "marquee");
+  loop((dt) => {
+    const v = Math.abs(scrollY - lastY) / Math.max(dt, 0.001); lastY = scrollY;
+    speed.target = 1 + clamp(v / 500, 0, 7);
+    const s = speed.step(dt);
+    anims().forEach((a) => { a.playbackRate = s; });
+  });
+}
+</script>
+</body>
+</html>

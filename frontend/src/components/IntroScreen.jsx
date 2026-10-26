@@ -62,16 +62,34 @@ function Shockwave({ delay }) {
   );
 }
 
+// The 3D flip needs a capable GPU; phones (and in-app browsers) can leave the
+// 3D layers stuck, so they get the flat entrance instead.
+const wants3D = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(min-width: 768px) and (pointer: fine)").matches;
+
+const EXIT_AT_MS = 2200;
+// Exit animation is ~0.6s; if it never reports completion (throttled tab,
+// stuck compositor layer) unmount anyway so the page is never left covered.
+const FAILSAFE_MS = EXIT_AT_MS + 1500;
+
 export default function IntroScreen({ onComplete }) {
   const [phase, setPhase] = useState("show");
+  const [is3D] = useState(wants3D);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    const t = setTimeout(() => setPhase("exit"), 2200);
+    const exitTimer = setTimeout(() => setPhase("exit"), EXIT_AT_MS);
+    const failsafeTimer = setTimeout(() => {
+      document.body.style.overflow = "";
+      onComplete?.();
+    }, FAILSAFE_MS);
     return () => {
-      clearTimeout(t);
+      clearTimeout(exitTimer);
+      clearTimeout(failsafeTimer);
       document.body.style.overflow = "";
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleExitComplete = () => {
@@ -175,16 +193,28 @@ export default function IntroScreen({ onComplete }) {
               ))}
 
               {/* Logo */}
-              {/* Coin-flip entrance: drops in spinning on its vertical axis */}
+              {/* Desktop: coin-flip on the vertical axis. Mobile: flat drop-in. */}
               <motion.div
-                initial={{ scale: 0, y: -100, opacity: 0, rotateY: -540 }}
-                animate={{ scale: 1, y: 0, opacity: 1, rotateY: 0 }}
+                initial={
+                  is3D
+                    ? { scale: 0, y: -100, opacity: 0, rotateY: -540 }
+                    : { scale: 0, y: -100, opacity: 0, rotate: -20 }
+                }
+                animate={
+                  is3D
+                    ? { scale: 1, y: 0, opacity: 1, rotateY: 0 }
+                    : { scale: 1, y: 0, opacity: 1, rotate: 0 }
+                }
                 transition={{
-                  duration: 0.9,
-                  ease: [0.34, 1.3, 0.64, 1],
+                  duration: is3D ? 0.9 : 0.5,
+                  ease: [0.34, is3D ? 1.3 : 1.5, 0.64, 1],
                   delay: 0.06,
                 }}
-                style={{ willChange: "transform", transformPerspective: 800 }}
+                style={
+                  is3D
+                    ? { willChange: "transform", transformPerspective: 800 }
+                    : { willChange: "transform" }
+                }
               >
                 <motion.div
                   className="absolute inset-0 rounded-full pointer-events-none"
@@ -212,8 +242,8 @@ export default function IntroScreen({ onComplete }) {
 
             {/* Letters — stagger with color pop on entry */}
             <div
-              className="flex mt-8 gap-0.5 md:gap-1"
-              style={{ perspective: 700 }}
+              className={`flex mt-8 gap-0.5 md:gap-1 ${is3D ? "" : "overflow-hidden"}`}
+              style={is3D ? { perspective: 700 } : undefined}
             >
               {LETTERS.map((letter, i) => (
                 <motion.span
@@ -224,10 +254,18 @@ export default function IntroScreen({ onComplete }) {
                     color: "white",
                     transformOrigin: "50% 100%",
                   }}
-                  initial={{ rotateX: -90, y: 40, z: -120, opacity: 0 }}
-                  animate={{ rotateX: 0, y: 0, z: 0, opacity: 1 }}
+                  initial={
+                    is3D
+                      ? { rotateX: -90, y: 40, z: -120, opacity: 0 }
+                      : { y: 100, opacity: 0, skewX: -8 }
+                  }
+                  animate={
+                    is3D
+                      ? { rotateX: 0, y: 0, z: 0, opacity: 1 }
+                      : { y: 0, opacity: 1, skewX: 0 }
+                  }
                   transition={{
-                    duration: 0.55,
+                    duration: is3D ? 0.55 : 0.38,
                     delay: 0.4 + i * 0.05,
                     ease: [0.22, 1, 0.36, 1],
                   }}

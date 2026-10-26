@@ -2,7 +2,9 @@
 //  PROMOS — Edita SOLO este archivo para cambiar las promociones.
 //
 //  Cómo funciona cada promo:
-//   - day:    día(s) de la promo (etiqueta que se muestra arriba)
+//   - day:    día(s) de la promo (etiqueta que se muestra arriba). Escribe el
+//             nombre del día ("Lunes", "Lunes y Martes"): así se marca la de HOY
+//   - color:  (opcional) color de acento, ej "#FF6600". Si no, se asigna uno solo
 //   - title:  nombre de la promo
 //   - desc:   descripción corta
 //   - price:  precio (deja "" si no aplica)

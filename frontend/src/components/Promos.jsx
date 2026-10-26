@@ -1,8 +1,32 @@
-import { motion } from "framer-motion";
-import { MessageCircle, CalendarDays } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import {
+  motion,
+  useInView,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { promos } from "../data/promos";
 
 const WA_LINK = "https://wa.me/573177371695";
+const EASE = [0.23, 1, 0.32, 1];
+
+// Color de acento por promo (naranja, amarillo, rojo, crema). Una promo puede
+// fijar el suyo con `color` en data/promos.js.
+const PALETTE = ["#FF6600", "#FFCC00", "#FF003C", "#F4EFE6"];
+
+const DAY_NAMES = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const stripAccents = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+// Días de la semana (0 = domingo) que menciona la etiqueta de una promo, ej. "Lunes y Martes".
+function dowsOf(label) {
+  const text = stripAccents(label);
+  return DAY_NAMES.map((d, i) => (text.includes(stripAccents(d)) ? i : -1)).filter((i) => i >= 0);
+}
 
 function promoWaLink(promo) {
   const text = encodeURIComponent(
@@ -11,64 +35,95 @@ function promoWaLink(promo) {
   return `${WA_LINK}?text=${text}`;
 }
 
-function PromoCard({ promo, index }) {
+// Qué promo toca hoy; si hoy no hay, cuál es la siguiente y en cuántos días.
+function findToday(list, dow) {
+  const hoy = list.findIndex((p) => p.dows.includes(dow));
+  if (hoy >= 0) return { kind: "today", index: hoy };
+  for (let n = 1; n <= 7; n += 1) {
+    const next = list.findIndex((p) => p.dows.includes((dow + n) % 7));
+    if (next >= 0) return { kind: n === 1 ? "tomorrow" : "later", index: next, in: n };
+  }
+  return null;
+}
+
+function PromoCard({ promo, index, isToday }) {
+  const delay = index * 0.1;
+  // Cada promo entra escalonada: la tarjeta sube, la foto se destapa desde abajo,
+  // las letras del día suben una a una y el sello se estampa al final.
+  const card = {
+    hidden: { opacity: 0, y: 42 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.76, ease: EASE, delay } },
+  };
+  const photo = {
+    hidden: { clipPath: "inset(100% 0% 0% 0%)" },
+    show: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 0.95, ease: EASE, delay: delay + 0.06 } },
+  };
+  const letter = (k) => ({
+    hidden: { y: "105%" },
+    show: { y: "0%", transition: { duration: 0.64, ease: EASE, delay: delay + 0.42 + k * 0.034 } },
+  });
+  const tag = {
+    hidden: { opacity: 0, scale: 1.9, rotate: -14 },
+    show: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.44, ease: EASE, delay: delay + 0.8 } },
+  };
+
   return (
     <motion.a
       href={promoWaLink(promo)}
       target="_blank"
       rel="noopener noreferrer"
       data-testid={`promo-card-${promo.day.toLowerCase()}`}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -6 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-[#171717] hover:border-[#FF6600] transition-colors duration-300"
+      className="promo-card"
+      style={{ "--c": promo.accent }}
+      variants={card}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.18 }}
+      whileHover={{ y: -8, transition: { duration: 0.32, ease: EASE } }}
+      whileTap={{ scale: 0.985 }}
     >
-      {/* Image */}
-      <div className="relative h-40">
-        <div className="media-fade-soft absolute inset-0 overflow-hidden">
-          <img
-            src={promo.img}
-            alt={promo.title}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+      {isToday && (
+        <span className="absolute left-1/2 -top-[14px] z-10 flex -translate-x-1/2 items-center gap-[7px] rounded-full border-2 border-[var(--c)] bg-[#0D0D0D] px-3 pb-[3px] pt-[5px] font-heading text-[1.15rem] leading-none tracking-[0.12em] text-white">
+          <i className="promo-blink h-2 w-2 rounded-full bg-[var(--c)]" />
+          HOY
+        </span>
+      )}
+
+      <motion.div variants={photo} className="promo-card__photo">
+        <img
+          src={promo.img}
+          alt={promo.title}
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        />
+        <span className="promo-card__sheen" />
+      </motion.div>
+
+      <div className="promo-card__info">
+        <div className="promo-card__eyebrow">
+          <h3 className="promo-card__day" aria-label={promo.day}>
+            {[...promo.day.toUpperCase()].map((ch, k) => (
+              <motion.span key={k} aria-hidden="true" variants={letter(k)} className="inline-block">
+                {ch === " " ? " " : ch}
+              </motion.span>
+            ))}
+          </h3>
+          {promo.badge && (
+            <motion.span variants={tag} className="promo-card__tag">
+              {promo.badge}
+            </motion.span>
+          )}
         </div>
 
-        {/* Day badge */}
-        {/* Solid instead of backdrop-blur: this badge sits on a card that moves
-            with the scroll, so the blur would be recomputed every frame. */}
-        <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/75 px-3 py-1 rounded-full font-heading text-xs tracking-widest text-white">
-          <CalendarDays size={13} className="text-[#FF6600]" />
-          {promo.day.toUpperCase()}
-        </span>
+        <h4 className="promo-card__title">{promo.title}</h4>
+        <p className="promo-card__desc">{promo.desc}</p>
 
-        {/* Highlight badge */}
-        {promo.badge && (
-          <span className="absolute top-3 right-3 bg-[#FF6600] text-white font-heading text-xs tracking-widest px-2.5 py-1 rounded">
-            {promo.badge}
-          </span>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="font-heading text-xl text-white leading-tight mb-1.5">
-          {promo.title}
-        </h3>
-        <p className="font-body text-sm text-gray-400 leading-relaxed flex-1">
-          {promo.desc}
-        </p>
-
-        <div className="mt-4 flex items-center justify-between gap-2">
-          {promo.price && (
-            <span className="price-tag text-base">{promo.price}</span>
-          )}
-          <span className="ml-auto flex items-center gap-2 font-heading text-sm tracking-widest text-[#FF6600] group-hover:text-[#FF8533] transition-colors">
-            <MessageCircle size={16} />
+        <div className="promo-card__foot">
+          {promo.price && <span className="promo-card__price">{promo.price}</span>}
+          <span className="promo-card__go">
             PEDIR
+            <ArrowRight size={18} strokeWidth={3} aria-hidden="true" />
           </span>
         </div>
       </div>
@@ -77,59 +132,171 @@ function PromoCard({ promo, index }) {
 }
 
 export default function Promos() {
-  const activePromos = promos.filter((p) => p.active);
+  const sectionRef = useRef(null);
+  const tapeRefs = useRef([]);
+  const reduce = useReducedMotion();
+  // Pausa las cintas (y el parpadeo) cuando la sección no se ve
+  const inView = useInView(sectionRef, { margin: "100px 0px" });
+  const inViewRef = useRef(false);
+  inViewRef.current = inView;
 
-  if (activePromos.length === 0) return null;
+  const [dow] = useState(() => new Date().getDay());
+
+  const list = useMemo(
+    () =>
+      promos
+        .filter((p) => p.active)
+        .map((p, i) => ({ ...p, dows: dowsOf(p.day), accent: p.color || PALETTE[i % PALETTE.length] })),
+    []
+  );
+  const today = useMemo(() => findToday(list, dow), [list, dow]);
+
+  // Las cintas aceleran con la velocidad del scroll y se frenan solas con un resorte
+  const { scrollY } = useScroll();
+  const scrollSpeed = useVelocity(scrollY);
+  const boost = useTransform(scrollSpeed, (v) => 1 + Math.min(Math.abs(v) / 500, 7));
+  const rate = useSpring(boost, { stiffness: 40, damping: 9 });
+  useMotionValueEvent(rate, "change", (r) => {
+    if (reduce || !inViewRef.current) return;
+    tapeRefs.current.forEach((el) => {
+      el?.getAnimations().forEach((a) => {
+        a.playbackRate = Math.max(0.2, r);
+      });
+    });
+  });
+
+  const tapeText = useMemo(() => {
+    const badges = [...new Set(list.map((p) => p.badge).filter(Boolean))];
+    const days = list.map((p) => p.day.toUpperCase());
+    return `${[...badges, "PIDE POR WHATSAPP", ...days].join(" ★ ")} ★ `;
+  }, [list]);
+
+  if (list.length === 0) return null;
+
+  const pill =
+    today &&
+    (today.kind === "today"
+      ? { lead: `HOY ES ${DAY_NAMES[dow].toUpperCase()} · `, strong: list[today.index].title.toUpperCase(), tail: " ¡APROVECHA!" }
+      : {
+          lead: `HOY ES ${DAY_NAMES[dow].toUpperCase()} · ${today.kind === "tomorrow" ? "MAÑANA" : `EN ${today.in} DÍAS`}: `,
+          strong: list[today.index].title.toUpperCase(),
+          tail: "",
+        });
+
+  const tape =
+    "absolute -left-[6%] z-0 w-[112%] overflow-hidden border-y-[3px] border-[#0D0D0D] py-[0.4em] font-heading text-[clamp(1.3rem,2.4vw,2rem)] leading-none tracking-[0.14em] text-[#0D0D0D]";
 
   return (
     <section
+      ref={sectionRef}
       id="promos"
       data-testid="promos-section"
-      className="py-20 md:py-28 bg-[#0D0D0D] relative overflow-hidden"
+      aria-labelledby="promos-title"
+      className={`relative overflow-hidden bg-[#0D0D0D] px-[clamp(16px,4vw,56px)] pb-[clamp(110px,11vw,160px)] pt-[clamp(96px,10vw,140px)] ${
+        inView ? "" : "anim-paused"
+      }`}
     >
-      {/* Ambient glow */}
+      {/* Cintas de precaución */}
       <div
-        className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(255,102,0,0.10) 0%, transparent 70%)",
-        }}
-      />
+        aria-hidden="true"
+        className={`${tape} top-[clamp(22px,3.6vw,46px)] -rotate-[2.2deg] bg-[#FFCC00]`}
+      >
+        <div ref={(el) => { tapeRefs.current[0] = el; }} className="promo-tape-track">
+          {Array.from({ length: 6 }, (_, i) => <span key={i}>{tapeText}</span>)}
+        </div>
+      </div>
+      <div
+        aria-hidden="true"
+        className={`${tape} bottom-[clamp(22px,3.6vw,46px)] rotate-[1.6deg] bg-[#FF6600]`}
+      >
+        <div ref={(el) => { tapeRefs.current[1] = el; }} className="promo-tape-track is-reverse">
+          {Array.from({ length: 6 }, (_, i) => <span key={i}>{tapeText}</span>)}
+        </div>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 relative">
-        {/* Header */}
-        <div className="text-center mb-12">
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* Encabezado */}
+        <header className="mb-[clamp(34px,4.6vw,60px)]">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block"
+            transition={{ duration: 0.5, ease: EASE }}
+            className="mb-2 block font-body text-xs font-extrabold uppercase tracking-[0.28em] text-[#FF6600]"
           >
             Cada día una excusa para comer
           </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="font-heading text-5xl md:text-6xl text-white mb-3"
-          >
-            PROMOS DE LA <span className="text-[#FF6600]">SEMANA</span>
-          </motion.h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="w-16 h-1 bg-[#FF6600] mx-auto origin-center"
-          />
-        </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {activePromos.map((promo, i) => (
-            <PromoCard key={promo.day + promo.title} promo={promo} index={i} />
+          <h2 id="promos-title" aria-label="Promos de la semana" className="font-heading font-normal leading-[0.82]">
+            {/* La visibilidad se detecta en este contenedor: las letras arrancan recortadas
+                (fuera de su caja), así que ellas solas nunca "entrarían" en pantalla. */}
+            <motion.span
+              aria-hidden="true"
+              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.045, delayChildren: 0.12 } } }}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="block text-[clamp(4.2rem,13vw,11.5rem)] tracking-[0.01em] text-transparent [-webkit-text-stroke:2px_#fff]"
+            >
+              {[..."PROMOS"].map((ch, k) => (
+                <span key={k} className="inline-block overflow-hidden pb-[0.04em] align-top">
+                  <motion.i
+                    variants={{
+                      hidden: { y: "105%" },
+                      show: { y: "0%", transition: { duration: 0.72, ease: EASE } },
+                    }}
+                    className="inline-block not-italic"
+                  >
+                    {ch}
+                  </motion.i>
+                </span>
+              ))}
+            </motion.span>
+            <motion.span
+              aria-hidden="true"
+              initial={{ clipPath: "inset(0% 100% 0% 0%)" }}
+              whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: EASE, delay: 0.56 }}
+              className="mt-[clamp(-26px,-2vw,-8px)] inline-block origin-left -rotate-2 bg-[#FF6600] px-[0.3em] pb-[0.02em] pt-[0.1em] text-[clamp(2.2rem,6.2vw,5.6rem)] text-[#0D0D0D]"
+            >
+              DE LA SEMANA
+            </motion.span>
+          </h2>
+
+          {pill && (
+            <motion.a
+              href="#promos-grid"
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: EASE, delay: 1 }}
+              data-testid="promos-today"
+              className="mt-[clamp(18px,2.4vw,28px)] inline-flex items-center gap-3 border-2 border-white px-4 py-2.5 font-body text-[0.95rem] font-extrabold tracking-[0.04em] text-white"
+            >
+              <span className="promo-blink h-2.5 w-2.5 flex-none rounded-full bg-[#FF003C]" />
+              <span>
+                {pill.lead}
+                <b className="font-extrabold text-[#FFCC00]">{pill.strong}</b>
+                {pill.tail}
+              </span>
+            </motion.a>
+          )}
+        </header>
+
+        {/* Vitrina */}
+        <div
+          id="promos-grid"
+          style={{ "--n": Math.min(list.length, 4) }}
+          className="mx-auto grid max-w-[420px] grid-cols-1 items-start gap-[clamp(18px,2.2vw,32px)] min-[521px]:max-w-none min-[521px]:grid-cols-2 min-[521px]:gap-y-[38px] min-[1001px]:grid-cols-[repeat(var(--n),minmax(0,1fr))]"
+        >
+          {list.map((promo, i) => (
+            <PromoCard
+              key={promo.day + promo.title}
+              promo={promo}
+              index={i}
+              isToday={today?.kind === "today" && today.index === i}
+            />
           ))}
         </div>
       </div>

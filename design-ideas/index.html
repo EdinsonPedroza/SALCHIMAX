@@ -63,6 +63,9 @@ const IDEAS = [
   { file: "promos-1-muro-de-carteles.html", name: "Muro de carteles · callejera",
     desc: "Cuatro carteles pegados a la pared, cada uno de un color y con un ángulo distinto. Entran de un golpe («slap»), los días suben letra por letra y el sello 2x1 / COMBO / GRATIS se estampa. Cintas de precaución que aceleran con el scroll y un aviso «HOY ES…» que sabe qué día es.",
     react: "Cada cartel con motion.article y whileInView (once) · variants con staggerChildren para día → foto → sello · cintas con useAnimationFrame y useVelocity(scrollY) para la velocidad · el estado «hoy» sale de new Date().getDay(). En móvil: una columna, sin ángulos de más." },
+  { file: "promos-1b-muro-calmado.html", name: "Muro calmado · menos saturada",
+    desc: "La idea 1 con menos color: los carteles pasan a papel crema (o carbón, con el interruptor de arriba a la derecha) y el color de cada promo queda solo en el subrayado del día, el sello, la sombra y la cinta. La foto del producto resalta en vez de mimetizarse con un fondo naranja.",
+    react: "Mismo código que la idea 1; el tono es un par de variables CSS (--pbg, --ptx, --acc…) por promo y una clase en el contenedor. El papel va en su propia capa para que la sombra de color quede detrás. En producción basta elegir un tono." },
   { file: "promos-2-dia-gigante.html", name: "Día gigante · intensa",
     desc: "Sección anclada: cada promo ocupa toda la pantalla. El color de la promo inunda la página desde la foto, el nombre del día (LUNES, JUEVES…) cae en cascada, la foto cambia con un corte diagonal y el precio / sello rebotan al entrar. Tira L M X J V S D abajo con marca «HOY».",
     react: "useScroll({ target }) + useTransform con mesetas por promo · inundación = clipPath: circle() animado · letras con useTransform y retardo por letra · precio y sello con useSpring de rebote (bounce) distinto al resto · la tira de la semana hace scrollTo a cada promo. En móvil la foto pasa arriba." },
@@ -88,9 +91,10 @@ const NOTES = [
 ];
 
 const frame = $("#frame"), capT = $("#capT"), capD = $("#capD"), notes = $("#notes"), more = $("#more"), capB = $("#capB");
+const LABELS = ["1", "1b", "2", "3", "4", "5", "6"];   // 1b es la versión calmada de la 1
 const tabs = IDEAS.map((it, i) => {
   const b = document.createElement("button");
-  b.className = "tab"; b.innerHTML = `<b>${i + 1}</b>${it.name}`;
+  b.className = "tab"; b.innerHTML = `<b>${LABELS[i]}</b>${it.name}`;
   b.addEventListener("click", () => select(i));
   if (it.sep) { const s = document.createElement("span"); s.className = "sep"; s.setAttribute("aria-hidden", "true"); $("#tabs").appendChild(s); }
   $("#tabs").appendChild(b);
@@ -111,7 +115,8 @@ capB.addEventListener("click", () => {
   capB.setAttribute("aria-expanded", String(open));
   capB.textContent = open ? "Cómo llevarlo a la landing ▾" : "Cómo llevarlo a la landing ▴";
 });
-addEventListener("keydown", (e) => { const n = Number(e.key); if (n >= 1 && n <= IDEAS.length) select(n - 1); });
+/* Teclas 1–6 para las ideas; la tecla B abre la 1b */
+addEventListener("keydown", (e) => { const j = LABELS.indexOf(e.key === "b" || e.key === "B" ? "1b" : e.key); if (j >= 0) select(j); });
 select(clamp((parseInt(location.hash.slice(1), 10) || 1) - 1, 0, IDEAS.length - 1));
 </script>
 </body>

@@ -7,52 +7,50 @@
 <link rel="stylesheet" href="_shared.css">
 <link rel="stylesheet" href="_wall.css">
 <style>
-  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.2vw, 32px); }
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.2vw, 32px); align-items: start; }
 
-  .nc { --glow: color-mix(in srgb, var(--c) 58%, transparent); position: relative; display: block; container-type: inline-size; aspect-ratio: 3 / 4.25; isolation: isolate; transition: transform 320ms var(--ease-out); }
+  /* Tarjeta oscura con marco de neón fino. La foto va limpia: nada se apila encima del producto. */
+  .nc { --glow: color-mix(in srgb, var(--c) 40%, transparent); position: relative; display: flex; flex-direction: column; container-type: inline-size; background: #151515; border-radius: 12px; isolation: isolate; transition: transform 320ms var(--ease-out); }
   .nc:not(.in) { opacity: 0; }
+  .pad { display: flex; flex-direction: column; flex: 1; padding: 5.5cqi 5.5cqi 6cqi; }
 
-  /* Foto a sangre + sombra para leer el texto */
-  .ph { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: 12px; background: var(--ink); }
-  .ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 900ms var(--ease-out); }
-  .ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 13, 13, 0.62) 0%, rgba(13, 13, 13, 0) 30%, rgba(13, 13, 13, 0) 36%, rgba(13, 13, 13, 0.82) 66%, rgba(13, 13, 13, 0.96) 100%); }
-  .sheen { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.26) 50%, transparent 62%); transform: translateX(-130%); }
+  .neon { position: absolute; inset: 0; z-index: 3; pointer-events: none; border: 2px solid var(--c); border-radius: 12px; box-shadow: 0 0 12px var(--glow); }
+  .neon::after { content: ""; position: absolute; inset: -2px; border-radius: 14px; box-shadow: 0 0 34px 2px var(--glow); opacity: 0; transition: opacity 320ms var(--ease-out); }
 
-  /* Marco de neón: el parpadeo anima solo la opacidad de esta capa */
-  .neon { position: absolute; inset: 0; z-index: 3; pointer-events: none; border: 2px solid var(--c); border-radius: 12px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 0 16px var(--glow), inset 0 0 18px var(--glow); }
-  .neon::after { content: ""; position: absolute; inset: -2px; border-radius: 14px; box-shadow: 0 0 46px 6px var(--glow); opacity: 0; transition: opacity 320ms var(--ease-out); }
-
-  .day { position: absolute; z-index: 2; left: 7cqi; right: 7cqi; top: 5cqi; display: flex; overflow: hidden; padding: 0.16em 0 0.02em; margin-top: -0.16em; font-family: var(--f-head); font-size: min(27cqi, calc(86cqi / (var(--len) * 0.4))); line-height: 0.9; letter-spacing: 0.01em; color: transparent; -webkit-text-stroke: 2px var(--c); transition: color 280ms var(--ease-out); }
+  /* Fila superior: día y sello, fuera de la foto */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4cqi; }
+  .day { display: flex; overflow: hidden; padding: 0.16em 0 0.02em; margin-top: -0.16em; font-family: var(--f-head); font-weight: 400; font-size: clamp(1.9rem, 13.5cqi, 3.1rem); line-height: 0.9; letter-spacing: 0.02em; color: var(--c); }
   .day i { display: inline-block; font-style: normal; }
-  .nc.in .day i { animation: rise 640ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + var(--k) * 34ms + 320ms); }
+  .nc.in .day i { animation: rise 640ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + var(--k) * 34ms + 300ms); }
+  .tag { flex: none; padding: 1.4cqi 3.6cqi 0.4cqi; border: 2px solid var(--c); border-radius: 6px; color: var(--c); font-family: var(--f-head); font-size: clamp(1.1rem, 8cqi, 1.6rem); line-height: 1; letter-spacing: 0.06em; transform: rotate(3deg); }
+  .nc.in .tag { animation: stamp 440ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 760ms); }
+  @keyframes stamp { from { opacity: 0; transform: scale(1.9) rotate(-16deg); } 45% { opacity: 1; } to { transform: scale(1) rotate(3deg); } }
 
-  .tag { position: absolute; z-index: 3; right: 6cqi; top: 33cqi; padding: 1.4cqi 4.4cqi 0.6cqi; border: 2px solid var(--c); border-radius: 6px; background: rgba(13, 13, 13, 0.7); color: var(--c); font-family: var(--f-head); font-size: 10.5cqi; line-height: 1; letter-spacing: 0.04em; text-shadow: 0 0 12px var(--glow); transform: rotate(4deg); box-shadow: 0 0 14px var(--glow); }
-  .nc.in .tag { animation: stamp 460ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 800ms); }
-  @keyframes stamp { from { opacity: 0; transform: scale(2) rotate(-18deg); } 45% { opacity: 1; } to { transform: scale(1) rotate(4deg); } }
+  /* Foto sin degradados ni textos encima */
+  .ph { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 8px; background: #0a0a0a; }
+  .ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 900ms var(--ease-out); }
+  .sheen { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.2) 50%, transparent 62%); transform: translateX(-130%); }
 
-  .info { position: absolute; z-index: 2; left: 7cqi; right: 7cqi; bottom: 6.5cqi; }
-  .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.5rem, 10.8cqi, 2.4rem); line-height: 0.95; letter-spacing: 0.01em; }
-  .de { margin-top: 2.2cqi; font-size: clamp(0.78rem, 4.5cqi, 0.95rem); font-weight: 600; line-height: 1.4; color: rgba(255, 255, 255, 0.78); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .ft { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; margin-top: 4.4cqi; }
-  .pr { font-family: var(--f-head); font-size: clamp(2rem, 15cqi, 3.2rem); line-height: 0.9; color: var(--c); text-shadow: 0 0 18px var(--glow); }
+  .info { margin-top: 4.6cqi; }
+  .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.45rem, 10.4cqi, 2.3rem); line-height: 0.96; letter-spacing: 0.01em; }
+  .de { margin-top: 2cqi; font-size: clamp(0.8rem, 4.5cqi, 0.94rem); font-weight: 600; line-height: 1.4; color: rgba(255, 255, 255, 0.66); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 4.2em; }
+  .ft { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; margin-top: 4cqi; }
+  .pr { font-family: var(--f-head); font-size: clamp(1.9rem, 14cqi, 3rem); line-height: 0.9; color: var(--c); }
   .go { display: inline-flex; align-items: center; gap: 8px; padding: 0.5em 0.9em 0.4em; border: 2px solid var(--c); border-radius: 6px; color: var(--c); font-family: var(--f-head); font-size: clamp(1rem, 6.2cqi, 1.3rem); letter-spacing: 0.1em; line-height: 1; transition: background-color 220ms var(--ease-out), color 220ms var(--ease-out); }
   .go svg { transition: transform 240ms var(--ease-out); }
 
-  .hoy { position: absolute; z-index: 4; left: 50%; top: -14px; translate: -50% 0; display: flex; align-items: center; gap: 7px; padding: 5px 12px 3px; border: 2px solid var(--c); border-radius: 999px; background: var(--ink); color: #fff; font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.12em; line-height: 1; box-shadow: 0 0 16px var(--glow); }
-  .hoy i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); animation: blink 1.2s ease-in-out infinite; }
+  .hoy { position: absolute; z-index: 4; left: 50%; top: -14px; translate: -50% 0; display: flex; align-items: center; gap: 7px; padding: 5px 12px 3px; border: 2px solid var(--c); border-radius: 999px; background: var(--ink); color: #fff; font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.12em; line-height: 1; }
+  .hoy i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); animation: blink 1.2s ease-in-out infinite; }
 
-  /* Entrada: la foto se destapa de abajo hacia arriba y el neón se enciende a tirones */
-  .nc.in .ph { animation: reveal 900ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms); }
+  /* Entrada: la foto se destapa de abajo hacia arriba y el neón se enciende (una sola vez) */
+  .nc.in .ph { animation: reveal 900ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 60ms); }
   @keyframes reveal { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
-  /* El parpadeo ocioso arranca después de que termina el encendido (retardo positivo) */
-  .nc.in .neon { animation: poweron 1000ms steps(1, end) backwards, idle 8s steps(1, end) infinite; animation-delay: calc(var(--i) * 100ms + 120ms), calc(1.8s + var(--i) * 1.3s); }
-  @keyframes poweron { 0% { opacity: 0; } 10% { opacity: 1; } 16% { opacity: 0.1; } 28% { opacity: 1; } 34% { opacity: 0.25; } 52% { opacity: 1; } 58% { opacity: 0.5; } 70% { opacity: 1; } }
-  @keyframes idle { 0%, 90%, 94%, 100% { opacity: 1; } 91% { opacity: 0.55; } 92% { opacity: 1; } 95% { opacity: 0.7; } 96% { opacity: 1; } }
+  .nc.in .neon { animation: poweron 900ms steps(1, end) backwards; animation-delay: calc(var(--i) * 100ms + 120ms); }
+  @keyframes poweron { 0% { opacity: 0; } 12% { opacity: 1; } 20% { opacity: 0.15; } 36% { opacity: 1; } 44% { opacity: 0.4; } 60% { opacity: 1; } }
 
   @media (hover: hover) and (pointer: fine) {
-    .nc:hover { transform: translateY(-9px); }
-    .nc:hover .ph img { transform: scale(1.1); }
-    .nc:hover .day { color: var(--c); }
+    .nc:hover { transform: translateY(-8px); }
+    .nc:hover .ph img { transform: scale(1.08); }
     .nc:hover .neon::after { opacity: 1; }
     .nc:hover .sheen { animation: sheen 900ms var(--ease-out); }
     .nc:hover .go { background: var(--c); color: var(--ink); }
@@ -62,7 +60,7 @@
   @keyframes sheen { to { transform: translateX(130%); } }
 
   @media (max-width: 1000px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 38px; } }
-  @media (max-width: 520px) { .cards { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } .nc { aspect-ratio: 5 / 5.6; } }
+  @media (max-width: 520px) { .cards { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
 
   @media (prefers-reduced-motion: reduce) {
     .nc.in .day i, .nc.in .tag, .nc.in .ph, .nc.in .neon, .hoy i { animation: none; }
@@ -97,18 +95,21 @@ PROMOS.forEach((p, i) => {
   const a = document.createElement("a");
   a.className = "nc";
   a.href = promoWa(p); a.target = "_blank"; a.rel = "noopener";
-  a.style.cssText = `--c:${p.c};--i:${i};--len:${p.day.length}`;
+  a.style.cssText = `--c:${p.c};--i:${i}`;
   a.innerHTML = `
     ${i === TODAY_I ? '<span class="hoy"><i></i>HOY</span>' : ""}
-    <div class="ph"><img src="${p.img}" alt="" loading="lazy" draggable="false"></div>
-    <span class="sheen"></span>
     <span class="neon"></span>
-    <h3 class="day" aria-label="${p.day}">${[...p.day.toUpperCase()].map((ch, k) => `<i style="--k:${k}" aria-hidden="true">${ch}</i>`).join("")}</h3>
-    <span class="tag">${p.badge}</span>
-    <div class="info">
-      <h4 class="ti">${p.title}</h4>
-      <p class="de">${p.desc}</p>
-      <div class="ft"><span class="pr">${p.price}</span><span class="go">PEDIR ${ARROW}</span></div>
+    <div class="pad">
+      <div class="top">
+        <h3 class="day" aria-label="${p.day}">${[...p.day.toUpperCase()].map((ch, k) => `<i style="--k:${k}" aria-hidden="true">${ch}</i>`).join("")}</h3>
+        <span class="tag">${p.badge}</span>
+      </div>
+      <div class="ph"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false"><span class="sheen"></span></div>
+      <div class="info">
+        <h4 class="ti">${p.title}</h4>
+        <p class="de">${p.desc}</p>
+        <div class="ft"><span class="pr">${p.price}</span><span class="go">PEDIR ${ARROW}</span></div>
+      </div>
     </div>`;
   cards.appendChild(a);
 });

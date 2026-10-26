@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 4c — Vitrina con foco</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_wall.css">
+<style>
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.2vw, 32px); align-items: start; }
+
+  /* Vitrina con foco: una luz cae desde arriba sobre el producto (degradado suave, sin brillos de neón).
+     Todo va centrado, como un objeto expuesto. */
+  .nc { position: relative; display: flex; flex-direction: column; container-type: inline-size; background: radial-gradient(110% 62% at 50% 0%, color-mix(in srgb, var(--c) 15%, #141414) 0%, #141414 72%); border: 1px solid rgba(244, 239, 230, 0.1); border-radius: 14px; transition: transform 320ms var(--ease-out), border-color 240ms var(--ease-out); }
+  .nc:not(.in) { opacity: 0; }
+  .nc.in { animation: up 760ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms); }
+  @keyframes up { from { opacity: 0; transform: translateY(42px); } }
+
+  .beam { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
+  .cone { position: absolute; left: 50%; top: 0; width: 92%; height: 64%; translate: -50% 0; background: linear-gradient(180deg, color-mix(in srgb, var(--c) 28%, transparent), transparent 88%); clip-path: polygon(33% 0, 67% 0, 100% 100%, 0 100%); opacity: 0.6; pointer-events: none; transition: opacity 520ms var(--ease-out); }
+  .nc.in .cone { animation: lamp 1100ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 200ms); }
+  @keyframes lamp { from { opacity: 0; } }
+
+  .pad { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; align-items: center; text-align: center; padding: 6cqi 6.5cqi 6.5cqi; }
+
+  /* Placa con el día */
+  .plaque { display: flex; align-items: center; justify-content: center; gap: 3.4cqi; width: 100%; margin-bottom: 4.4cqi; }
+  .plaque::before, .plaque::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--c)); }
+  .plaque::after { transform: scaleX(-1); }
+  .day { display: flex; overflow: hidden; padding: 0.16em 0 0.02em; margin-top: -0.16em; font-family: var(--f-head); font-weight: 400; font-size: clamp(1.5rem, 10.5cqi, 2.4rem); line-height: 0.9; letter-spacing: 0.14em; color: var(--c); }
+  .day i { display: inline-block; font-style: normal; }
+  .nc.in .day i { animation: rise 640ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + var(--k) * 34ms + 300ms); }
+
+  .ph { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 8px; background: #0a0a0a; box-shadow: 0 22px 28px -16px rgba(0, 0, 0, 0.85); }
+  .ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 900ms var(--ease-out); }
+  .nc.in .ph { animation: reveal 900ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 60ms); }
+  @keyframes reveal { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+  .info { width: 100%; margin-top: 5.4cqi; }
+  .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.45rem, 10.4cqi, 2.3rem); line-height: 0.96; letter-spacing: 0.01em; }
+  .de { margin-top: 2cqi; font-size: clamp(0.8rem, 4.4cqi, 0.93rem); font-weight: 600; line-height: 1.4; color: rgba(255, 255, 255, 0.64); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 4.2em; }
+  .row { display: flex; align-items: center; justify-content: center; gap: 3.6cqi; margin-top: 4cqi; }
+  .pr { font-family: var(--f-head); font-size: clamp(2rem, 15cqi, 3.2rem); line-height: 0.9; color: var(--paper); }
+  .tag { padding: 1.4cqi 3.4cqi 0.4cqi; border: 1.5px solid var(--c); border-radius: 5px; color: var(--c); font-family: var(--f-head); font-size: clamp(1rem, 7cqi, 1.4rem); line-height: 1; letter-spacing: 0.06em; }
+  .go { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 4cqi; padding: 0.55em 0.9em 0.45em; border: 1.5px solid color-mix(in srgb, var(--c) 70%, transparent); border-radius: 8px; color: var(--c); font-family: var(--f-head); font-size: clamp(1rem, 6.2cqi, 1.3rem); letter-spacing: 0.12em; line-height: 1; transition: background-color 220ms var(--ease-out), color 220ms var(--ease-out); }
+  .go svg { transition: transform 240ms var(--ease-out); }
+
+  .hoy { position: absolute; z-index: 4; left: 50%; top: -19px; translate: -50% 0; display: flex; align-items: center; gap: 7px; padding: 5px 12px 3px; border: 2px solid var(--c); border-radius: 999px; background: var(--ink); color: #fff; font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.12em; line-height: 1; }
+  .hoy i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); animation: blink 1.2s ease-in-out infinite; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nc:hover { transform: translateY(-8px); border-color: color-mix(in srgb, var(--c) 55%, transparent); }
+    .nc:hover .cone { opacity: 1; }
+    .nc:hover .ph img { transform: scale(1.06); }
+    .nc:hover .go { background: var(--c); color: var(--ink); }
+    .nc:hover .go svg { transform: translateX(4px); }
+  }
+  .nc:active { transform: translateY(-3px) scale(0.985); }
+
+  @media (max-width: 1000px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 38px; } }
+  @media (max-width: 520px) { .cards { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nc.in, .nc.in .cone, .nc.in .day i, .nc.in .ph, .hoy i { animation: none; }
+    .nc, .cone, .ph img, .go, .go svg { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wall">
+  <div class="marquee tape t1" aria-hidden="true"><div class="marquee-track" id="m1"></div></div>
+
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2">
+      <span class="stroke" id="stroke" aria-label="Promos"></span>
+      <span class="hl">DE LA SEMANA</span>
+    </h2>
+    <a class="today" href="#cards"><span class="dot"></span><span id="todayT"></span></a>
+  </header>
+
+  <div class="stage"><div class="cards" id="cards"></div></div>
+
+  <div class="marquee tape t2 rev" aria-hidden="true"><div class="marquee-track" id="m2"></div></div>
+</main>
+
+<script src="_shared.js"></script>
+<script src="_wall.js"></script>
+<script>
+const ARROW = '<svg width="20" height="13" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 7h19M13 1l6 6-6 6"/></svg>';
+const cards = $("#cards");
+PROMOS.forEach((p, i) => {
+  const a = document.createElement("a");
+  a.className = "nc" + (i === TODAY_I ? " is-today" : "");
+  a.href = promoWa(p); a.target = "_blank"; a.rel = "noopener";
+  a.style.cssText = `--c:${p.c};--i:${i}`;
+  a.innerHTML = `
+    <span class="beam"><span class="cone"></span></span>
+    ${i === TODAY_I ? '<span class="hoy"><i></i>HOY</span>' : ""}
+    <div class="pad">
+      <div class="plaque"><h3 class="day" aria-label="${p.day}">${[...p.day.toUpperCase()].map((ch, k) => `<i style="--k:${k}" aria-hidden="true">${ch}</i>`).join("")}</h3></div>
+      <div class="ph"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false"></div>
+      <div class="info">
+        <h4 class="ti">${p.title}</h4>
+        <p class="de">${p.desc}</p>
+        <div class="row"><span class="pr">${p.price}</span><span class="tag">${p.badge}</span></div>
+        <span class="go">PEDIR ${ARROW}</span>
+      </div>
+    </div>`;
+  cards.appendChild(a);
+});
+revealOnView(".nc", 0.18);
+</script>
+</body>
+</html>

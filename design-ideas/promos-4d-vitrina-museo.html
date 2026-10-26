@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 4d — Vitrina de museo</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_wall.css">
+<style>
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.2vw, 32px); align-items: start; }
+
+  /* Vitrina de museo: el plato como obra enmarcada con paspartú crema, rótulo en versalitas y botón de texto.
+     Es la más sobria: casi nada de color, solo el acento en el rótulo y el subrayado. */
+  .nc { position: relative; display: flex; flex-direction: column; container-type: inline-size; border: 1px solid rgba(244, 239, 230, 0.2); border-radius: 3px; transition: transform 320ms var(--ease-out), border-color 240ms var(--ease-out); }
+  .nc:not(.in) { opacity: 0; }
+  .nc.in { animation: up 760ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms); }
+  @keyframes up { from { opacity: 0; transform: translateY(42px); } }
+  .pad { display: flex; flex-direction: column; flex: 1; padding: 5cqi 5cqi 6cqi; }
+
+  .meta { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 3.6cqi; font-size: clamp(0.62rem, 3.4cqi, 0.74rem); font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(244, 239, 230, 0.6); white-space: nowrap; }
+  .meta b { color: var(--c); font-weight: 800; }
+
+  /* Paspartú + foto */
+  .mat { background: #e9e3d5; padding: 5.4cqi; }
+  .nc.in .mat { animation: develop 900ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 80ms); }
+  @keyframes develop { from { clip-path: inset(50% 50% 50% 50%); } to { clip-path: inset(0 0 0 0); } }
+  .ph { position: relative; aspect-ratio: 4 / 3; overflow: hidden; outline: 1px solid rgba(13, 13, 13, 0.55); background: #0a0a0a; }
+  .ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 900ms var(--ease-out); }
+  .nc.in .ph img { animation: settle 1100ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 80ms); }
+  @keyframes settle { from { transform: scale(1.22); } }
+
+  .info { margin-top: 5cqi; }
+  .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.45rem, 10.4cqi, 2.3rem); line-height: 0.96; letter-spacing: 0.01em; }
+  .de { margin-top: 2cqi; font-size: clamp(0.8rem, 4.5cqi, 0.94rem); font-weight: 600; line-height: 1.4; color: rgba(255, 255, 255, 0.64); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 4.2em; }
+  .ft { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: 4.4cqi; }
+  .plate { display: flex; flex-direction: column; gap: 1.6cqi; padding: 2.2cqi 4cqi 1.6cqi; border: 1px solid rgba(244, 239, 230, 0.34); line-height: 1; }
+  .plate small { font-size: clamp(0.56rem, 2.8cqi, 0.66rem); font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(244, 239, 230, 0.55); }
+  .plate span { font-family: var(--f-head); font-size: clamp(1.7rem, 11.5cqi, 2.6rem); line-height: 0.9; color: var(--c); }
+  .go { position: relative; display: inline-flex; align-items: center; gap: 8px; padding-bottom: 5px; font-size: clamp(0.68rem, 3.6cqi, 0.8rem); font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper); white-space: nowrap; }
+  .go::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--c); transform: scaleX(0.28); transform-origin: left; transition: transform 380ms var(--ease-out); }
+  .go svg { transition: transform 240ms var(--ease-out); }
+
+  .hoy { position: absolute; z-index: 4; left: 50%; top: -13px; translate: -50% 0; display: flex; align-items: center; gap: 7px; padding: 4px 12px 2px; border: 1px solid var(--c); background: var(--ink); color: #fff; font-family: var(--f-head); font-size: 1.1rem; letter-spacing: 0.14em; line-height: 1; }
+  .hoy i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); animation: blink 1.2s ease-in-out infinite; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nc:hover { transform: translateY(-8px); border-color: rgba(244, 239, 230, 0.5); }
+    .nc:hover .ph img { transform: scale(1.06); }
+    .nc:hover .go::after { transform: scaleX(1); }
+    .nc:hover .go svg { transform: translateX(4px); }
+  }
+  .nc:active { transform: translateY(-3px) scale(0.985); }
+
+  @media (max-width: 1000px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 38px; } }
+  @media (max-width: 520px) { .cards { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nc.in, .nc.in .mat, .nc.in .ph img, .hoy i { animation: none; }
+    .nc, .ph img, .go::after, .go svg { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wall">
+  <div class="marquee tape t1" aria-hidden="true"><div class="marquee-track" id="m1"></div></div>
+
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2">
+      <span class="stroke" id="stroke" aria-label="Promos"></span>
+      <span class="hl">DE LA SEMANA</span>
+    </h2>
+    <a class="today" href="#cards"><span class="dot"></span><span id="todayT"></span></a>
+  </header>
+
+  <div class="stage"><div class="cards" id="cards"></div></div>
+
+  <div class="marquee tape t2 rev" aria-hidden="true"><div class="marquee-track" id="m2"></div></div>
+</main>
+
+<script src="_shared.js"></script>
+<script src="_wall.js"></script>
+<script>
+const ARROW = '<svg width="18" height="12" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 7h19M13 1l6 6-6 6"/></svg>';
+const cards = $("#cards");
+PROMOS.forEach((p, i) => {
+  const a = document.createElement("a");
+  a.className = "nc";
+  a.href = promoWa(p); a.target = "_blank"; a.rel = "noopener";
+  a.style.cssText = `--c:${p.c};--i:${i}`;
+  a.innerHTML = `
+    ${i === TODAY_I ? '<span class="hoy"><i></i>HOY</span>' : ""}
+    <div class="pad">
+      <div class="meta"><span>Nº ${pad(i + 1)} · <b>${p.day}</b></span><span>${p.badge}</span></div>
+      <div class="mat"><div class="ph"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false"></div></div>
+      <div class="info">
+        <h3 class="ti">${p.title}</h3>
+        <p class="de">${p.desc}</p>
+        <div class="ft"><div class="plate"><small>Precio</small><span>${p.price}</span></div><span class="go">Pedir ${ARROW}</span></div>
+      </div>
+    </div>`;
+  cards.appendChild(a);
+});
+revealOnView(".nc", 0.18);
+</script>
+</body>
+</html>

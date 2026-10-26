@@ -73,9 +73,18 @@ const IDEAS = [
     desc: "Cada promo es un cupón troquelado con código de barras. Se «imprimen» uno a uno desde una impresora, se inclinan en 3D con brillo siguiendo el mouse y, al tocarlos, el talón se rasga y sale volando mientras se abre WhatsApp. El cupón de hoy insinúa el rasgado.",
     react: "Entrada con motion + clipPath (inset) y delay por índice · tilt con useMotionValue + useSpring (solo pointer: fine) · rasgado = estado local `torn` con variants (talón: x, y, rotate, opacity) y un timeout que lo devuelve · el enlace sigue siendo un <a href='wa.me/…'> real." },
   /* Segunda ronda: tarjetas nuevas para la idea 1 (mismo encabezado y cintas, sin look de papel) */
-  { sep: true, file: "promos-4-vitrina-neon.html", name: "Vitrina de neón · foto",
-    desc: "Tarjetas altas con la foto a sangre y un marco de neón del color de cada promo. El nombre del día va en contorno y se rellena al pasar el mouse, el neón se enciende a tirones al entrar y parpadea de vez en cuando. Al pasar: la tarjeta sube, la foto se acerca y un destello cruza.",
-    react: "motion.a con whileInView y delay por índice · foto destapada con clipPath inset · neón = capa con keyframes de opacidad escalonados (steps) · destello con un gradiente que cruza con x · el color de cada promo como variable CSS (--c) y color-mix para el brillo. En móvil: 1–2 columnas." },
+  { sep: true, file: "promos-4-vitrina.html", name: "Vitrina limpia · sin neón",
+    desc: "La vitrina sin neón: tarjeta oscura con borde neutro y la foto libre, sin nada encima. El día y el sello van arriba, el texto abajo, y el color de la promo solo aparece en el día, el precio y el botón. Al pasar: la tarjeta sube, el borde toma el color y un destello cruza la foto.",
+    react: "motion.a con whileInView y delay por índice · foto destapada con clipPath inset · borde que cambia de color con una transición (sin sombras animadas) · el color de cada promo como variable CSS (--c). En móvil: 1–2 columnas." },
+  { file: "promos-4b-vitrina-etiqueta.html", name: "Etiqueta de precio · cristal",
+    desc: "Una vitrina de cristal: marco doble como la puerta, un destello fijo sobre el vidrio y un estante bajo el producto. El precio es una etiqueta colgada que cae al entrar y se balancea al pasar el mouse.",
+    react: "Etiqueta con clipPath polygon y un agujero (pseudo-elemento) · caída con variants y balanceo con animate({ rotate: [−4, 11, −8, 3, −4] }) con origen en el agujero · estante y marco son solo bordes y degradados." },
+  { file: "promos-4c-vitrina-foco.html", name: "Con foco · centrada",
+    desc: "Una luz cae desde arriba sobre el producto con un degradado suave del color de la promo (sin brillos). Todo va centrado, como un objeto expuesto: el día entre dos líneas, la foto, el precio con su sello y el botón a todo el ancho.",
+    react: "Fondo con radial-gradient + cono con clipPath polygon que se «enciende» (opacidad) al entrar y sube al pasar el mouse · color-mix para mezclar el color de la promo con el fondo · solo transform y opacity en las animaciones." },
+  { file: "promos-4d-vitrina-museo.html", name: "De museo · sobria",
+    desc: "El plato como obra enmarcada: paspartú crema, rótulo en versalitas («Nº 01 · LUNES»), placa con el precio y un botón de texto con subrayado que se dibuja. La más sobria: casi nada de color y mucho espacio.",
+    react: "Paspartú con clipPath inset desde el centro («revelado») y la foto asentándose con scale · subrayado con scaleX y origen izquierdo · rótulo con letter-spacing y text-transform. Ideal si quieres que el producto sea lo único con color." },
   { file: "promos-5-persianas.html", name: "Persianas · acordeón",
     desc: "Cuatro franjas de color en una sola fila (todo cabe en una pantalla). Al pasar el mouse o tocar, una se abre con la foto grande, el precio y el botón mientras las otras se cierran y quedan como un lomo con el día en vertical. Pasa sola cada 5 s con una barra de tiempo.",
     react: "Estado `active` + grid-template-columns animado con variables (la única animación de layout, justificada: 4 elementos y comportamiento de acordeón) · panel con ancho fijo y opacidad/transform con retardo · sello que se estampa al abrir · autoplay con onAnimationEnd de la barra · flechas del teclado y foco. En móvil: franjas apiladas." },
@@ -91,7 +100,7 @@ const NOTES = [
 ];
 
 const frame = $("#frame"), capT = $("#capT"), capD = $("#capD"), notes = $("#notes"), more = $("#more"), capB = $("#capB");
-const LABELS = ["1", "1b", "2", "3", "4", "5", "6"];   // 1b es la versión calmada de la 1
+const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
 const tabs = IDEAS.map((it, i) => {
   const b = document.createElement("button");
   b.className = "tab"; b.innerHTML = `<b>${LABELS[i]}</b>${it.name}`;

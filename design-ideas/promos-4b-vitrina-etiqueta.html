@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promos · Idea 4b — Vitrina con etiqueta</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_wall.css">
+<style>
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.2vw, 32px); align-items: start; }
+
+  /* Vitrina de cristal: marco doble (la puerta), un destello fijo sobre el vidrio, un estante bajo el producto
+     y el precio como etiqueta colgada. */
+  .nc { position: relative; display: flex; flex-direction: column; container-type: inline-size; background: #161616; border: 1px solid rgba(244, 239, 230, 0.13); border-radius: 12px; transition: transform 320ms var(--ease-out); }
+  .nc:not(.in) { opacity: 0; }
+  .nc.in { animation: up 760ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms); }
+  @keyframes up { from { opacity: 0; transform: translateY(42px); } }
+  .nc::after { content: ""; position: absolute; inset: 7px; z-index: 2; pointer-events: none; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 7px; }
+  .pad { display: flex; flex-direction: column; flex: 1; padding: 7cqi 7cqi 6.5cqi; }
+
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4cqi; }
+  .day { display: flex; overflow: hidden; padding: 0.16em 0 0.02em; margin-top: -0.16em; font-family: var(--f-head); font-weight: 400; font-size: clamp(1.8rem, 12.5cqi, 2.9rem); line-height: 0.9; letter-spacing: 0.02em; color: var(--paper); }
+  .day i { display: inline-block; font-style: normal; }
+  .nc.in .day i { animation: rise 640ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + var(--k) * 34ms + 300ms); }
+  .tag { flex: none; padding: 1.4cqi 3.4cqi 0.4cqi; border: 1.5px solid var(--c); border-radius: 5px; color: var(--c); font-family: var(--f-head); font-size: clamp(1rem, 7.4cqi, 1.5rem); line-height: 1; letter-spacing: 0.06em; }
+
+  /* Foto + estante */
+  .ph { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 6px 6px 0 0; background: #0a0a0a; }
+  .ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 900ms var(--ease-out); }
+  .nc.in .ph { animation: reveal 900ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 60ms); }
+  @keyframes reveal { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+  .glass { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 18%, rgba(255, 255, 255, 0.11) 30%, rgba(255, 255, 255, 0.03) 44%, transparent 56%); }
+  .shelf { height: 7px; background: linear-gradient(180deg, rgba(244, 239, 230, 0.34), rgba(244, 239, 230, 0.06)); border-radius: 0 0 4px 4px; box-shadow: 0 10px 14px -8px rgba(0, 0, 0, 0.7); }
+
+  .info { margin-top: 4.4cqi; }
+  .ti { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.4rem, 10cqi, 2.2rem); line-height: 0.96; letter-spacing: 0.01em; }
+  .de { margin-top: 2cqi; font-size: clamp(0.78rem, 4.4cqi, 0.92rem); font-weight: 600; line-height: 1.4; color: rgba(255, 255, 255, 0.64); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 4.2em; }
+  .ft { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; margin-top: 4.4cqi; }
+
+  /* Etiqueta colgada: gira desde el agujero */
+  .pt { position: relative; display: inline-block; padding: 1.8cqi 4.6cqi 0.4cqi 10cqi; background: var(--c); color: var(--ink); font-family: var(--f-head); font-size: clamp(1.7rem, 12cqi, 2.6rem); line-height: 0.95; clip-path: polygon(7cqi 0, 100% 0, 100% 100%, 7cqi 100%, 0 50%); transform-origin: 3.6cqi 50%; transform: rotate(-4deg); }
+  .pt::before { content: ""; position: absolute; left: 2.6cqi; top: 50%; width: 2.3cqi; height: 2.3cqi; margin-top: -1.15cqi; border-radius: 50%; background: #161616; }
+  .nc.in .pt { animation: drop 800ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 100ms + 700ms); }
+  @keyframes drop { from { opacity: 0; transform: translateY(-34px) rotate(26deg); } 60% { opacity: 1; } }
+  @keyframes swing { 0% { transform: rotate(-4deg); } 22% { transform: rotate(11deg); } 46% { transform: rotate(-8deg); } 70% { transform: rotate(3deg); } 100% { transform: rotate(-4deg); } }
+
+  .go { display: inline-flex; align-items: center; gap: 8px; padding: 0.5em 0.9em 0.4em; border: 1.5px solid rgba(244, 239, 230, 0.55); border-radius: 6px; color: var(--paper); font-family: var(--f-head); font-size: clamp(1rem, 6cqi, 1.28rem); letter-spacing: 0.1em; line-height: 1; transition: background-color 220ms var(--ease-out), color 220ms var(--ease-out), border-color 220ms var(--ease-out); }
+  .go svg { transition: transform 240ms var(--ease-out); }
+
+  .hoy { position: absolute; z-index: 4; left: 50%; top: -14px; translate: -50% 0; display: flex; align-items: center; gap: 7px; padding: 5px 12px 3px; border: 2px solid var(--c); border-radius: 999px; background: var(--ink); color: #fff; font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.12em; line-height: 1; }
+  .hoy i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); animation: blink 1.2s ease-in-out infinite; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nc:hover { transform: translateY(-8px); }
+    .nc:hover .ph img { transform: scale(1.07); }
+    .nc:hover .pt { animation: swing 1100ms var(--ease-out); }
+    .nc:hover .go { background: var(--c); border-color: var(--c); color: var(--ink); }
+    .nc:hover .go svg { transform: translateX(4px); }
+  }
+  .nc:active { transform: translateY(-3px) scale(0.985); }
+
+  @media (max-width: 1000px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 38px; } }
+  @media (max-width: 520px) { .cards { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nc.in, .nc.in .day i, .nc.in .ph, .nc.in .pt, .hoy i { animation: none; }
+    .nc, .ph img, .go, .go svg { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wall">
+  <div class="marquee tape t1" aria-hidden="true"><div class="marquee-track" id="m1"></div></div>
+
+  <header class="head">
+    <span class="eyebrow">Cada día una excusa para comer</span>
+    <h2 class="h2">
+      <span class="stroke" id="stroke" aria-label="Promos"></span>
+      <span class="hl">DE LA SEMANA</span>
+    </h2>
+    <a class="today" href="#cards"><span class="dot"></span><span id="todayT"></span></a>
+  </header>
+
+  <div class="stage"><div class="cards" id="cards"></div></div>
+
+  <div class="marquee tape t2 rev" aria-hidden="true"><div class="marquee-track" id="m2"></div></div>
+</main>
+
+<script src="_shared.js"></script>
+<script src="_wall.js"></script>
+<script>
+const ARROW = '<svg width="20" height="13" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 7h19M13 1l6 6-6 6"/></svg>';
+const cards = $("#cards");
+PROMOS.forEach((p, i) => {
+  const a = document.createElement("a");
+  a.className = "nc";
+  a.href = promoWa(p); a.target = "_blank"; a.rel = "noopener";
+  a.style.cssText = `--c:${p.c};--i:${i}`;
+  a.innerHTML = `
+    ${i === TODAY_I ? '<span class="hoy"><i></i>HOY</span>' : ""}
+    <div class="pad">
+      <div class="top">
+        <h3 class="day" aria-label="${p.day}">${[...p.day.toUpperCase()].map((ch, k) => `<i style="--k:${k}" aria-hidden="true">${ch}</i>`).join("")}</h3>
+        <span class="tag">${p.badge}</span>
+      </div>
+      <div class="ph"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false"><span class="glass"></span></div>
+      <div class="shelf"></div>
+      <div class="info">
+        <h4 class="ti">${p.title}</h4>
+        <p class="de">${p.desc}</p>
+        <div class="ft"><span class="pt">${p.price}</span><span class="go">PEDIR ${ARROW}</span></div>
+      </div>
+    </div>`;
+  cards.appendChild(a);
+});
+revealOnView(".nc", 0.18);
+</script>
+</body>
+</html>

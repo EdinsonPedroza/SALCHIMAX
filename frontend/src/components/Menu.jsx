@@ -89,35 +89,9 @@ const menuData = {
   ],
 };
 
-// Tamaños: el primer plato es "destacado" (2 columnas × 1 fila, foto a un lado y texto al otro).
-// Si la última fila queda incompleta, el último plato se ensancha para cerrarla.
-// Clases completas (no armadas con template) para que Tailwind las detecte.
-const CARD_SPAN = {
-  normal: "",
-  big: "sm:col-span-2 lg:flex-row",
-  wide2: "lg:col-span-2 lg:flex-row",
-  wide3: "lg:col-span-3 lg:flex-row",
-};
-// Fotos con altura fija (la original, h-44): ni las pequeñas ni las destacadas crecen con el ancho.
-const PHOTO_BOX = {
-  normal: "h-44 flex-shrink-0",
-  big: "h-44 sm:h-52 lg:h-auto lg:w-1/2 lg:min-h-[240px] flex-shrink-0",
-  wide2: "h-44 lg:h-auto lg:w-1/2 lg:min-h-[200px] flex-shrink-0",
-  wide3: "h-44 lg:h-auto lg:w-2/5 lg:min-h-[200px] flex-shrink-0",
-};
-
-// Rejilla de 3 columnas en escritorio: el destacado cuenta 2 unidades.
-function sizeOf(i, total) {
-  if (i === 0) return "big";
-  const left = (3 - ((total + 1) % 3)) % 3;
-  if (i === total - 1 && left === 1) return "wide2";
-  if (i === total - 1 && left === 2) return "wide3";
-  return "normal";
-}
-
 // memo + actions-only context: adding one item used to re-render all 20 cards
 // (and their Framer Motion wrappers) through the cart context.
-const ProductCard = memo(function ProductCard({ item, index, size = "normal" }) {
+const ProductCard = memo(function ProductCard({ item, index }) {
   const { addItem } = useCartActions();
   const [added, setAdded] = useState(false);
   const [selectedPortion, setSelectedPortion] = useState(null);
@@ -155,26 +129,26 @@ const ProductCard = memo(function ProductCard({ item, index, size = "normal" }) 
         ease: [0.16, 1, 0.3, 1],
       }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-      className={`food-card overflow-hidden group flex flex-col ${CARD_SPAN[size]}`}
+      className="food-card overflow-hidden group flex flex-col"
     >
       {/* Image */}
-      <div className={`media-fade overflow-hidden relative ${PHOTO_BOX[size]}`}>
+      <div className="media-fade overflow-hidden h-44 relative flex-shrink-0">
         <img
           src={item.img}
           alt={item.name}
-          className={`gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${size !== "normal" ? "lg:absolute lg:inset-0" : ""}`}
+          className="gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           loading="lazy"
           decoding="async"
         />
       </div>
 
       {/* Content */}
-      <div className={`p-4 flex flex-col ${size !== "normal" ? "flex-1 lg:justify-center" : "flex-1"}`}>
+      <div className="p-4 flex flex-col flex-1">
         <div className="flex justify-between items-start gap-2 mb-1.5">
-          <h3 className={`font-heading text-white tracking-wide leading-tight ${size !== "normal" ? "text-xl lg:text-2xl" : "text-lg"}`}>{item.name}</h3>
-          {!item.prices && !item.price2 && <span className={`price-tag flex-shrink-0 ${size !== "normal" ? "text-xl" : "text-base"}`}>{item.price}</span>}
+          <h3 className="font-heading text-lg text-white tracking-wide leading-tight">{item.name}</h3>
+          {!item.prices && !item.price2 && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
         </div>
-        <p className={`font-body text-gray-400 leading-relaxed ${size !== "normal" ? "text-xs lg:text-sm lg:mb-2" : "text-xs flex-1"}`}>{item.desc}</p>
+        <p className="font-body text-xs text-gray-400 leading-relaxed flex-1">{item.desc}</p>
 
         {/* Dual pricing for 1 / 2 persons — clickable selection buttons */}
         {item.price2 && (
@@ -371,10 +345,10 @@ export default function Menu() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             data-testid={`menu-grid-${activeTab}`}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
           >
             {menuData[activeTab].map((item, i) => (
-              <ProductCard key={i} item={item} index={i} size={sizeOf(i, menuData[activeTab].length)} />
+              <ProductCard key={i} item={item} index={i} />
             ))}
           </motion.div>
         </AnimatePresence>

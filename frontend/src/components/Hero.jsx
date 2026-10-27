@@ -210,7 +210,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16 md:pt-32 md:pb-8">
         {/* Logo mobile */}
         <div className="flex justify-center mb-6 md:hidden">
           <motion.img

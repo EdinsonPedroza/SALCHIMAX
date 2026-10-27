@@ -753,11 +753,11 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 4px 7px;
+  gap: 5px;
+  padding: 6px 4px 5px;
   border-radius: 9px;
   color: rgba(255, 255, 255, 0.55);
-  font-size: 0.64rem;
+  font-size: 0.6rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -766,13 +766,13 @@ html {
 }
 .menu-seg__opt b {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.12rem;
+  font-size: 1.02rem;
   font-weight: 400;
   letter-spacing: 0.03em;
   line-height: 1;
 }
-.menu-seg--stack .menu-seg__opt { flex-direction: column; gap: 1px; padding: 6px 2px 5px; }
-.menu-seg--stack .menu-seg__opt b { font-size: 1.1rem; }
+.menu-seg--stack .menu-seg__opt { flex-direction: column; gap: 1px; padding: 5px 2px 4px; }
+.menu-seg--stack .menu-seg__opt b { font-size: 1.02rem; }
 .menu-seg__opt[aria-checked="true"] { color: #fff; }
 .menu-seg__opt[aria-checked="true"] b { color: #FF6600; }
 

@@ -169,7 +169,7 @@ export default function WhyUs() {
       ref={sectionRef}
       id="why-us"
       data-testid="why-us-section"
-      className={`py-12 md:py-16 bg-[#121212] relative overflow-hidden ${
+      className={`py-8 md:py-10 bg-[#121212] relative overflow-hidden ${
         inView ? "" : "anim-paused"
       }`}
       style={{ perspective: "1200px" }}

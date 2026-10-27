@@ -148,7 +148,7 @@ export default function Gallery() {
     <section
       id="gallery"
       data-testid="gallery-section"
-      className="py-12 md:py-16 bg-[#0D0D0D] relative overflow-hidden"
+      className="py-8 md:py-10 bg-[#0D0D0D] relative overflow-hidden"
       style={{ perspective: "1000px" }}
     >
       {/* Ambient side glows */}

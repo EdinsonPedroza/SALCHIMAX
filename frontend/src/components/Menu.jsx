@@ -231,7 +231,7 @@ export default function Menu() {
   const { totalItems, setIsOpen } = useCart();
 
   return (
-    <section id="menu" data-testid="menu-section" className="py-12 md:py-16 bg-[#0D0D0D]">
+    <section id="menu" data-testid="menu-section" className="py-8 md:py-10 bg-[#0D0D0D]">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header */}
         <motion.div

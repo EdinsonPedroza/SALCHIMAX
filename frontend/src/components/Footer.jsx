@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <footer id="footer" data-testid="footer" className="bg-[#0D0D0D] border-t border-white/5">
       {/* Social media section */}
-      <div className="bg-[#121212] border-b border-white/5 py-10">
+      <div className="bg-[#121212] border-b border-white/5 py-8">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0 }}

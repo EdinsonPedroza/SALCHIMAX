@@ -142,7 +142,7 @@ export default function Promos() {
       id="promos"
       data-testid="promos-section"
       aria-labelledby="promos-title"
-      className={`relative overflow-hidden bg-[#0D0D0D] px-[clamp(16px,4vw,56px)] pb-[clamp(32px,3.5vw,48px)] pt-[clamp(32px,3.5vw,48px)] ${
+      className={`relative overflow-hidden bg-[#0D0D0D] px-[clamp(16px,4vw,56px)] pb-[clamp(16px,2vw,24px)] pt-[clamp(24px,2.5vw,32px)] ${
         inView ? "" : "anim-paused"
       }`}
     >

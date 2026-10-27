@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menú · Idea 6 — Escaparate</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_menu2.css">
+<style>
+  .m6-nav { margin-bottom: clamp(18px, 2.4vw, 26px); }
+  .m6 { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+
+  /* Escaparate: una sola foto grande a la vez, con su ficha debajo */
+  .m6-stage { position: sticky; top: 24px; max-width: 540px; }
+  .m6-ph { position: relative; aspect-ratio: 3 / 2; border-radius: 16px; overflow: hidden; background: #0a0a0a; }
+  .m6-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity 340ms var(--ease-out), transform 700ms var(--ease-out); }
+  .m6-ph img.on { opacity: 1; transform: none; }
+  .m6-count { position: absolute; left: 12px; bottom: 12px; padding: 5px 11px 3px; border-radius: 999px; background: rgba(13, 13, 13, 0.82); font-family: var(--f-head); font-size: 1rem; letter-spacing: 0.12em; line-height: 1; }
+  .m6-count b { font-weight: 400; color: var(--orange); }
+
+  .m6-cap { padding-top: 22px; transition: opacity 150ms ease-out; }
+  .m6-cap.out { opacity: 0; }
+  .m6-cap h3 { font-family: var(--f-head); font-weight: 400; font-size: clamp(2.2rem, 3.4vw, 3rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .m6-cap p { margin-top: 10px; font-size: 0.9rem; font-weight: 600; line-height: 1.5; color: rgba(255, 255, 255, 0.6); min-height: 4.5em; }
+  .m6-cap .pseg { margin-top: 14px; }
+  .m6-foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 18px; }
+  .m6-pr { display: flex; flex-direction: column; gap: 5px; }
+  .m6-pr small { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.42); }
+  .m6-pr b { font-family: var(--f-head); font-weight: 400; font-size: clamp(2.2rem, 3.2vw, 2.8rem); line-height: 0.9; color: var(--orange); }
+
+  /* Lista: filas finas con indicador lateral */
+  .m6-list { list-style: none; border: 1px solid var(--hair); border-radius: 16px; background: var(--card); overflow: hidden; }
+  .m6-list li + li { border-top: 1px solid var(--hair); }
+  .m6-row { position: relative; display: grid; grid-template-columns: 28px 56px minmax(0, 1fr) auto; align-items: center; gap: 14px; width: 100%; padding: 12px 18px 12px 16px; text-align: left; transition: background-color 200ms ease; }
+  .m6-row::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 0 3px 3px 0; background: var(--orange); transform: scaleY(0); transition: transform 260ms var(--ease-out); }
+  .m6-no { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.32); }
+  .m6-th { width: 56px; height: 56px; border-radius: 9px; object-fit: cover; background: #0a0a0a; }
+  .m6-rn { font-family: var(--f-head); font-size: 1.5rem; line-height: 1; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.78); transition: color 200ms ease; }
+  .m6-rp { font-family: var(--f-head); font-size: 1.35rem; line-height: 1; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.42); transition: color 200ms ease; }
+  .m6-rp small { margin-right: 5px; font-family: var(--f-body); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.8; }
+  .m6-row[aria-pressed="true"] { background: rgba(255, 102, 0, 0.07); }
+  .m6-row[aria-pressed="true"]::before { transform: scaleY(1); }
+  .m6-row[aria-pressed="true"] .m6-rn { color: #fff; }
+  .m6-row[aria-pressed="true"] .m6-rp { color: var(--orange); }
+  @media (hover: hover) and (pointer: fine) { .m6-row[aria-pressed="false"]:hover { background: rgba(255, 255, 255, 0.04); } .m6-row[aria-pressed="false"]:hover .m6-rn { color: #fff; } }
+  .m6-row:focus-visible { outline-offset: -3px; }
+
+  @media (max-width: 900px) {
+    .m6 { grid-template-columns: 1fr; gap: 22px; }
+    .m6-stage { position: static; max-width: none; }
+    .m6-ph { aspect-ratio: 16 / 10; }
+    .m6-cap p { min-height: 0; }
+  }
+  @media (max-width: 480px) {
+    .m6-row { grid-template-columns: 52px minmax(0, 1fr) auto; gap: 12px; padding: 10px 14px; }
+    .m6-no { display: none; }
+    .m6-th { width: 52px; height: 52px; }
+    .m6-rn { font-size: 1.3rem; }
+    .m6-rp { font-size: 1.2rem; }
+    .m6-rp small { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .m6-ph img, .m6-cap, .m6-row, .m6-row::before, .m6-rn, .m6-rp { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="m2"><div class="m2-in">
+  <header class="m2-head">
+    <span class="m2-eyebrow">Lo que más te gusta</span>
+    <h2 class="m2-title">NUESTRO MENÚ</h2>
+    <div class="m2-bar"></div>
+  </header>
+  <div class="m6-nav" id="nav"></div>
+  <div class="m6 m2-swap" id="wrap" role="tabpanel">
+    <section class="m6-stage" aria-label="Plato seleccionado" aria-live="polite">
+      <div class="m6-ph" id="ph"><span class="m6-count" id="count"></span></div>
+      <div class="m6-cap" id="cap"></div>
+    </section>
+    <ul class="m6-list" id="list"></ul>
+  </div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_menu.js"></script>
+<script src="_menu2.js"></script>
+<script>
+mountCart();
+const wrap = $("#wrap"), ph = $("#ph"), cap = $("#cap"), list = $("#list"), count = $("#count");
+let cat = "salchipapas", cur = 0, imgs = [], rows = [], portionSel = [];
+
+function build() {
+  const items = MENU[cat];
+  portionSel = items.map(() => 0);
+  ph.querySelectorAll("img").forEach((i) => i.remove());
+  imgs = items.map((it, i) => { const im = document.createElement("img"); im.src = it.img; im.alt = ""; im.draggable = false; if (i) im.loading = "lazy"; ph.insertBefore(im, count); return im; });
+  list.innerHTML = "";
+  rows = items.map((it, i) => {
+    const opts = portions(it);
+    const li = document.createElement("li");
+    li.innerHTML = `<button class="m6-row" type="button" aria-pressed="false"><span class="m6-no">${pad(i + 1)}</span><img class="m6-th" src="${it.img}" alt="" loading="lazy" draggable="false"><span class="m6-rn">${esc(it.name)}</span><span class="m6-rp">${opts ? "<small>desde</small>" : ""}${it.price}</span></button>`;
+    const b = $(".m6-row", li);
+    b.addEventListener("click", () => select(i, true));
+    list.appendChild(li);
+    return b;
+  });
+  cur = -1; select(0, false, true);
+}
+
+function caption(first) {
+  const it = MENU[cat][cur], opts = portions(it), k = portionSel[cur];
+  const paint = () => {
+    cap.innerHTML = `
+      <h3>${esc(it.name)}</h3>
+      <p>${esc(it.desc)}</p>
+      ${opts ? `<div class="pseg" role="radiogroup" aria-label="Porción" style="--n:${opts.length};--k:${k}"><i class="pseg-t"></i>${opts.map((o, j) => `<button class="pseg-o" role="radio" aria-checked="${j === k}" tabindex="${j === k ? 0 : -1}" data-k="${j}"><span>${o.label}</span><b>${o.price}</b></button>`).join("")}</div>` : ""}
+      <div class="m6-foot">
+        <div class="m6-pr"><small>${opts ? opts[k].label : "Precio"}</small><b>${opts ? opts[k].price : it.price}</b></div>
+        <button class="addbtn" type="button"><span class="a">${ICON.plus} AGREGAR AL PEDIDO</span><span class="b">${ICON.check} AGREGADO</span></button>
+      </div>`;
+    if (opts) {
+      const group = $(".pseg", cap), tag = $(".m6-pr small", cap), val = $(".m6-pr b", cap);
+      $$(".pseg-o", cap).forEach((b) => b.addEventListener("click", () => {
+        const j = +b.dataset.k; portionSel[cur] = j; group.style.setProperty("--k", j);
+        $$(".pseg-o", cap).forEach((x) => { const on = x === b; x.setAttribute("aria-checked", String(on)); x.tabIndex = on ? 0 : -1; });
+        tag.textContent = opts[j].label; val.textContent = opts[j].price; replay(val, "tick");
+      }));
+      radioKeys(group, ".pseg-o");
+    }
+    const add = $(".addbtn", cap);
+    add.addEventListener("click", () => { cartAdd(); flashDone(add); });
+  };
+  if (first || REDUCED) { paint(); return; }
+  clearTimeout(cap._t); cap.classList.add("out");
+  cap._t = setTimeout(() => { paint(); requestAnimationFrame(() => cap.classList.remove("out")); }, 150);
+}
+
+function select(i, user, first) {
+  if (i === cur) return;
+  cur = i;
+  imgs.forEach((im, k) => im.classList.toggle("on", k === i));
+  rows.forEach((b, k) => { b.setAttribute("aria-pressed", String(k === i)); b.tabIndex = k === i ? 0 : -1; });
+  count.innerHTML = `<b>${pad(i + 1)}</b> / ${pad(MENU[cat].length)}`;
+  caption(first);
+  // en pantallas angostas la ficha queda arriba: si no se ve, se acerca
+  if (user && innerWidth <= 900) {
+    const r = $(".m6-stage").getBoundingClientRect();
+    if (r.top < 0) scrollTo({ top: scrollY + r.top - 12, behavior: REDUCED ? "auto" : "smooth" });
+  }
+}
+list.addEventListener("keydown", (e) => {
+  const to = e.key === "ArrowDown" ? cur + 1 : e.key === "ArrowUp" ? cur - 1 : e.key === "Home" ? 0 : e.key === "End" ? rows.length - 1 : null;
+  if (to === null || to < 0 || to >= rows.length) return;
+  e.preventDefault(); rows[to].focus(); select(to, true);
+});
+
+clipTabs($("#nav"), MENU_CATS, cat, (id) => { cat = id; swap(wrap, build); });
+build();
+</script>
+</body>
+</html>

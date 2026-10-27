@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menú · Idea 5 — Domicilio</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_menu2.css">
+<style>
+  .m5 { padding-bottom: clamp(112px, 12vw, 140px); }
+
+  /* Categorías: barra pegajosa con chips que se desplazan en horizontal */
+  .m5-navwrap { position: sticky; top: 0; z-index: 20; margin-inline: calc(50% - 50vw); padding: 12px calc(50vw - 50%); background: rgba(13, 13, 13, 0.96); border-bottom: 1px solid var(--hair); }
+  .m5-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .m5-chips::-webkit-scrollbar { display: none; }
+  .m5-chip { flex: none; padding: 9px 16px 7px; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; font-family: var(--f-head); font-size: 1.1rem; letter-spacing: 0.1em; line-height: 1; color: rgba(255, 255, 255, 0.62); white-space: nowrap; transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out); }
+  .m5-chip small { margin-left: 7px; font-family: var(--f-body); font-size: 0.64rem; font-weight: 800; opacity: 0.7; }
+  .m5-chip:active { transform: scale(0.97); }
+  .m5-chip[aria-selected="true"] { background: var(--orange); border-color: var(--orange); color: var(--ink); }
+  @media (hover: hover) and (pointer: fine) { .m5-chip[aria-selected="false"]:hover { color: #fff; border-color: rgba(255, 255, 255, 0.34); } }
+
+  .m5-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+  @media (max-width: 900px) { .m5-grid { grid-template-columns: 1fr; } }
+
+  /* Tarjeta horizontal: foto cuadrada a la izquierda, datos y control a la derecha */
+  .c5 { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 16px; padding: 10px; border: 1px solid var(--hair); border-radius: 14px; background: var(--card); transition: border-color 220ms var(--ease-out); }
+  .c5-ph { position: relative; align-self: start; width: 132px; height: 132px; border-radius: 9px; overflow: hidden; background: #0a0a0a; }
+  .c5-ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 700ms var(--ease-out); }
+  .c5-info { display: flex; flex-direction: column; min-width: 0; padding: 2px 4px 0 0; }
+  .c5-name { font-family: var(--f-head); font-weight: 400; font-size: 1.5rem; line-height: 1; letter-spacing: 0.02em; }
+  .c5-desc { margin-top: 6px; font-size: 0.78rem; font-weight: 600; line-height: 1.42; color: rgba(255, 255, 255, 0.55); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .c5-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .c5-pc { padding: 5px 10px 4px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 999px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.6); transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease; }
+  .c5-pc[aria-checked="true"] { border-color: var(--orange); background: rgba(255, 102, 0, 0.14); color: #fff; }
+  .c5-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; }
+  .c5-price { font-family: var(--f-head); font-size: 1.7rem; line-height: 0.9; color: var(--orange); }
+
+  /* "Agregar" se convierte en contador (− 1 +) en el mismo sitio: dos capas con fundido, sin saltos de tamaño */
+  .c5-ctl { position: relative; flex: none; width: 112px; height: 40px; }
+  .c5-add, .c5-step { position: absolute; inset: 0; border-radius: 999px; transition: opacity 180ms var(--ease-out), transform 200ms var(--ease-out), visibility 0s linear 180ms; }
+  .c5-add { padding-top: 2px; border: 1.5px solid var(--orange); background: rgba(255, 102, 0, 0.08); color: var(--orange); font-family: var(--f-head); font-size: 1.05rem; letter-spacing: 0.12em; }
+  .c5-add:active { transform: scale(0.96); }
+  .c5-step { display: flex; align-items: center; justify-content: space-between; background: var(--orange); color: var(--ink); opacity: 0; visibility: hidden; transform: scale(0.94); }
+  .c5-step button { display: grid; place-items: center; width: 38px; height: 100%; border-radius: 999px; transition: transform 140ms var(--ease-out); }
+  .c5-step button:active { transform: scale(0.86); }
+  .c5-q { min-width: 1.2em; padding-top: 2px; font-family: var(--f-head); font-weight: 400; font-size: 1.35rem; line-height: 1; text-align: center; }
+  .c5-q.bump { animation: m5bump 220ms var(--ease-out); }
+  @keyframes m5bump { 40% { transform: scale(1.25); } }
+  .c5-ctl.has .c5-step { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .c5-ctl.has .c5-add { opacity: 0; visibility: hidden; transform: scale(0.94); }
+
+  /* Barra de pedido: aparece con fundido cuando hay algo agregado */
+  .m5-bar { position: fixed; left: 50%; bottom: 18px; z-index: 60; display: flex; align-items: center; justify-content: space-between; gap: 14px; width: min(580px, calc(100% - 32px)); padding: 10px 10px 10px 18px; border: 1px solid rgba(255, 102, 0, 0.55); border-radius: 16px; background: #171717; box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55); opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(-50%) scale(0.97); transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out), visibility 0s linear 220ms; }
+  .m5-bar.on { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%); transition-delay: 0s; }
+  .m5-bar-l { display: flex; flex-direction: column; gap: 3px; }
+  .m5-bar-l b { font-family: var(--f-head); font-weight: 400; font-size: 1.2rem; letter-spacing: 0.1em; line-height: 1; }
+  .m5-bar-l span { font-size: 0.72rem; font-weight: 700; color: rgba(255, 255, 255, 0.55); }
+  .m5-bar-r { display: flex; align-items: center; gap: 12px; padding: 11px 16px 9px 18px; border-radius: 11px; background: var(--orange); color: var(--ink); font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.1em; line-height: 1; transition: transform 160ms var(--ease-out), background-color 180ms ease; }
+  .m5-bar-r b { font-weight: 400; font-size: 1.3rem; }
+  .m5-bar-r:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) {
+    .c5:hover { border-color: rgba(255, 102, 0, 0.35); }
+    .c5:hover .c5-ph img { transform: scale(1.07); }
+    .m5-bar-r:hover { background: var(--orange-2); }
+  }
+  @media (max-width: 520px) {
+    .c5 { grid-template-columns: 108px minmax(0, 1fr); gap: 12px; }
+    .c5-ph { width: 108px; height: 108px; }
+    .c5-name { font-size: 1.35rem; }
+    .c5-desc { -webkit-line-clamp: 2; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .c5, .c5-ph img, .c5-add, .c5-step, .m5-bar, .m5-chip { transition: none; }
+    .c5-q.bump { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="m2 m5"><div class="m2-in">
+  <header class="m2-head">
+    <span class="m2-eyebrow">Lo que más te gusta</span>
+    <h2 class="m2-title">NUESTRO MENÚ</h2>
+    <div class="m2-bar"></div>
+  </header>
+  <div class="m5-navwrap"><div class="m5-chips" id="chips" role="tablist" aria-label="Categorías"></div></div>
+  <div class="m5-grid m2-swap" id="grid" role="tabpanel"></div>
+</div></main>
+
+<div class="m5-bar" id="bar" role="status" aria-live="polite">
+  <div class="m5-bar-l"><b>TU PEDIDO</b><span id="barN">0 productos</span></div>
+  <button class="m5-bar-r" type="button" title="En la landing abre el carrito"><span>VER PEDIDO</span><b id="barT">$0</b></button>
+</div>
+
+<script src="_shared.js"></script>
+<script src="_menu.js"></script>
+<script src="_menu2.js"></script>
+<script>
+const grid = $("#grid"), chips = $("#chips"), bar = $("#bar");
+let cat = "salchipapas";
+
+/* Pedido de prueba: clave = categoría | plato | porción */
+const order = new Map();
+const keyOf = (c, item, label) => `${c}|${item.name}|${label}`;
+let shown = 0;
+function tween(el, from, to) {
+  cancelAnimationFrame(el._r);
+  if (REDUCED || from === to) { el.textContent = money(to); return; }
+  const t0 = performance.now(), d = 320;
+  const f = (now) => { const p = Math.min(1, (now - t0) / d), e = 1 - Math.pow(1 - p, 3); el.textContent = money(from + (to - from) * e); if (p < 1) el._r = requestAnimationFrame(f); };
+  el._r = requestAnimationFrame(f);
+}
+function syncBar() {
+  let n = 0, t = 0; order.forEach((v) => { n += v.n; t += v.n * v.price; });
+  bar.classList.toggle("on", n > 0);
+  $("#barN").textContent = n === 1 ? "1 producto" : `${n} productos`;
+  tween($("#barT"), shown, t); shown = t;
+}
+
+MENU_CATS.forEach((c, i) => {
+  const b = document.createElement("button");
+  b.className = "m5-chip"; b.setAttribute("role", "tab");
+  b.setAttribute("aria-selected", String(c.id === cat));
+  b.innerHTML = `${c.label.toUpperCase()}<small>${MENU[c.id].length}</small>`;
+  b.addEventListener("click", () => {
+    if (c.id === cat) return;
+    cat = c.id;
+    $$(".m5-chip", chips).forEach((x) => x.setAttribute("aria-selected", String(x === b)));
+    chips.scrollTo({ left: b.offsetLeft - (chips.clientWidth - b.offsetWidth) / 2, behavior: REDUCED ? "auto" : "smooth" });
+    swap(grid, render);
+  });
+  chips.appendChild(b);
+});
+
+function render() {
+  grid.innerHTML = "";
+  MENU[cat].forEach((item, i) => {
+    const opts = portions(item);
+    let k = 0;
+    const key = () => keyOf(cat, item, opts ? opts[k].label : "");
+    const priceStr = () => (opts ? opts[k].price : item.price);
+    const el = document.createElement("article");
+    el.className = "c5 m2-fi"; el.style.setProperty("--i", i % 4);
+    el.innerHTML = `
+      <div class="c5-ph"><img src="${item.img}" alt="${esc(item.name)}" loading="lazy" draggable="false"></div>
+      <div class="c5-info">
+        <h3 class="c5-name">${esc(item.name)}</h3>
+        <p class="c5-desc" title="${esc(item.desc)}">${esc(item.desc)}</p>
+        ${opts ? `<div class="c5-chips" role="radiogroup" aria-label="Porción de ${esc(item.name)}">${opts.map((o, j) => `<button class="c5-pc" role="radio" aria-checked="${j === 0}" tabindex="${j === 0 ? 0 : -1}" data-k="${j}">${o.label} · ${o.price}</button>`).join("")}</div>` : ""}
+        <div class="c5-foot">
+          <span class="c5-price">${priceStr()}</span>
+          <div class="c5-ctl">
+            <button class="c5-add" type="button" aria-label="Agregar ${esc(item.name)}">AGREGAR</button>
+            <div class="c5-step" role="group" aria-label="Cantidad de ${esc(item.name)}">
+              <button type="button" class="c5-m" aria-label="Quitar uno">${ICON.minus}</button>
+              <b class="c5-q" aria-live="polite">1</b>
+              <button type="button" class="c5-p" aria-label="Agregar uno">${ICON.plus}</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    const ctl = $(".c5-ctl", el), q = $(".c5-q", el), price = $(".c5-price", el);
+    const qtyNow = () => (order.get(key()) || { n: 0 }).n;
+    const paint = (bump) => {
+      const n = qtyNow();
+      ctl.classList.toggle("has", n > 0);
+      if (n > 0) { q.textContent = n; if (bump) replay(q, "bump"); }
+      price.textContent = priceStr();
+    };
+    const setQty = (n) => {
+      if (n <= 0) order.delete(key());
+      else order.set(key(), { n, price: priceNum(priceStr()) });
+      paint(true); syncBar();
+    };
+    $(".c5-add", el).addEventListener("click", () => setQty(1));
+    $(".c5-p", el).addEventListener("click", () => setQty(qtyNow() + 1));
+    $(".c5-m", el).addEventListener("click", () => setQty(qtyNow() - 1));
+    if (opts) {
+      const group = $(".c5-chips", el);
+      $$(".c5-pc", el).forEach((b) => b.addEventListener("click", () => {
+        k = +b.dataset.k;
+        $$(".c5-pc", el).forEach((x) => { const on = x === b; x.setAttribute("aria-checked", String(on)); x.tabIndex = on ? 0 : -1; });
+        paint(false);
+      }));
+      radioKeys(group, ".c5-pc");
+    }
+    paint(false);
+    grid.appendChild(el);
+  });
+}
+render();
+</script>
+</body>
+</html>

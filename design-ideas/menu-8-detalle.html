@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menú · Idea 8 — Detalle compartido</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_menu2.css">
+<style>
+  .m8-nav { margin-bottom: clamp(18px, 2.4vw, 26px); }
+  .m8-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 1100px) { .m8-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 760px) { .m8-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+
+  /* Tarjeta compacta: foto + nombre + precio. Todo el detalle vive en la ficha. */
+  .c8 { display: flex; flex-direction: column; gap: 12px; padding: 8px 8px 14px; border: 1px solid var(--hair); border-radius: 14px; background: var(--card); text-align: left; transition: border-color 220ms var(--ease-out), transform 160ms var(--ease-out); }
+  .c8:active { transform: scale(0.98); }
+  .c8-ph { position: relative; height: 150px; border-radius: 9px; overflow: hidden; background: #0a0a0a; }
+  .c8-ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 700ms var(--ease-out); }
+  .c8.lifted .c8-ph img { visibility: hidden; }
+  .c8-plus { position: absolute; right: 8px; bottom: 8px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(13, 13, 13, 0.86); color: #fff; transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out), transform 260ms var(--ease-out); }
+  .c8-name { padding: 0 6px; font-family: var(--f-head); font-weight: 400; font-size: 1.5rem; line-height: 1; letter-spacing: 0.02em; }
+  .c8-meta { display: flex; align-items: baseline; gap: 6px; padding: 0 6px; }
+  .c8-meta small { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.42); }
+  .c8-meta b { font-family: var(--f-head); font-weight: 400; font-size: 1.45rem; line-height: 1; color: var(--orange); }
+  @media (hover: hover) and (pointer: fine) {
+    .c8:hover { border-color: rgba(255, 102, 0, 0.45); }
+    .c8:hover .c8-ph img { transform: scale(1.07); }
+    .c8:hover .c8-plus { background: var(--orange); color: var(--ink); transform: rotate(90deg); }
+  }
+
+  /* ── Ficha (escritorio: diálogo centrado · móvil: hoja inferior) ── */
+  .d8 { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 24px; }
+  .d8[hidden] { display: none; }
+  .d8-bd { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.7); opacity: 0; transition: opacity 240ms var(--ease-out); }
+  .d8.open .d8-bd { opacity: 1; }
+  .d8-panel { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); width: min(940px, 100%); max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px); border-radius: 20px; }
+  /* El fondo va en su propia capa: así la foto (que vuela desde la tarjeta) nunca se desvanece con el panel */
+  .d8-bg { position: absolute; inset: 0; border-radius: inherit; background: #151515; border: 1px solid rgba(255, 255, 255, 0.1); }
+  .d8-ph { position: relative; min-height: 420px; border-radius: 20px 0 0 20px; overflow: hidden; background: #0a0a0a; transform-origin: 0 0; }
+  .d8-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .d8-body { position: relative; display: flex; flex-direction: column; padding: 38px 34px 30px; overflow-y: auto; }
+  .d8-x { position: absolute; top: 12px; right: 12px; z-index: 3; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(13, 13, 13, 0.82); color: #fff; transition: transform 160ms var(--ease-out), background-color 180ms ease; }
+  .d8-x:active { transform: scale(0.92); }
+  @media (hover: hover) and (pointer: fine) { .d8-x:hover { background: rgba(255, 255, 255, 0.16); } }
+  .d8-eb { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); }
+  .d8-t { margin-top: 10px; font-family: var(--f-head); font-weight: 400; font-size: clamp(2.4rem, 4vw, 3.3rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .d8-d { margin-top: 12px; font-size: 0.92rem; font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.62); }
+  .d8-body .pseg { margin-top: 20px; }
+  .d8-pr { display: flex; align-items: baseline; gap: 10px; margin-top: auto; padding-top: 22px; }
+  .d8-pr b { font-family: var(--f-head); font-weight: 400; font-size: 2.8rem; line-height: 0.9; color: var(--orange); }
+  .d8-pr small { font-size: 0.64rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.42); }
+  .d8-buy { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .d8-add { flex: 1; min-width: 0; }
+  .d8-add > span { justify-content: center; }
+
+  @media (max-width: 720px) {
+    .d8 { align-items: end; padding: 0; }
+    .d8-panel { display: flex; flex-direction: column; width: 100%; max-height: 92dvh; overflow: hidden; border-radius: 22px 22px 0 0; transform: translateY(100%); transition: transform 300ms var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)); }
+    .d8.open .d8-panel { transform: none; transition-duration: 460ms; }
+    .d8-bg { border-radius: 22px 22px 0 0; }
+    .d8-ph { flex: none; height: 210px; min-height: 0; border-radius: 0; }
+    .d8-body { flex: 1; padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); }
+    .d8-t { font-size: 2.3rem; }
+    .d8-pr { padding-top: 16px; }
+    /* tirador visual de la hoja */
+    .d8-ph::after { content: ""; position: absolute; left: 50%; top: 8px; width: 38px; height: 4px; margin-left: -19px; border-radius: 2px; background: rgba(255, 255, 255, 0.55); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .c8, .c8-ph img, .c8-plus, .d8-bd, .d8-panel, .d8-x { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="m2" id="page"><div class="m2-in">
+  <header class="m2-head">
+    <span class="m2-eyebrow">Lo que más te gusta</span>
+    <h2 class="m2-title">NUESTRO MENÚ</h2>
+    <div class="m2-bar"></div>
+  </header>
+  <div class="m8-nav" id="nav"></div>
+  <div class="m8-grid m2-swap" id="grid" role="tabpanel"></div>
+</div></main>
+
+<div class="d8" id="d8" hidden>
+  <div class="d8-bd" id="bd"></div>
+  <div class="d8-panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="d8t">
+    <div class="d8-bg" id="bg"></div>
+    <button class="d8-x" id="x" type="button" aria-label="Cerrar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="d8-ph" id="dph"><img id="dimg" alt="" draggable="false"></div>
+    <div class="d8-body" id="dbody"></div>
+  </div>
+</div>
+
+<script src="_shared.js"></script>
+<script src="_menu.js"></script>
+<script src="_menu2.js"></script>
+<script>
+mountCart();
+const grid = $("#grid"), page = $("#page"), d8 = $("#d8"), panel = $("#panel"), bg = $("#bg"), dph = $("#dph"), dimg = $("#dimg"), dbody = $("#dbody"), xbtn = $("#x");
+const DRAWER = "cubic-bezier(0.32, 0.72, 0, 1)";
+let cat = "salchipapas", cur = null, busy = false;
+
+/* ── Cuadrícula ─────────────────────────────────────────────────── */
+function render() {
+  grid.innerHTML = "";
+  MENU[cat].forEach((item, i) => {
+    const opts = portions(item);
+    const b = document.createElement("button");
+    b.className = "c8 m2-fi"; b.type = "button"; b.style.setProperty("--i", i % 8);
+    b.setAttribute("aria-haspopup", "dialog");
+    b.innerHTML = `<span class="c8-ph"><img src="${item.img}" alt="" loading="lazy" draggable="false"><span class="c8-plus">${ICON.plus}</span></span><span class="c8-name">${esc(item.name)}</span><span class="c8-meta">${opts ? "<small>desde</small>" : ""}<b>${item.price}</b></span>`;
+    b.setAttribute("aria-label", `${item.name}, ${opts ? "desde " : ""}${item.price}. Ver detalle`);
+    b.addEventListener("click", () => openDetail(item, b));
+    grid.appendChild(b);
+  });
+}
+
+/* ── Ficha ──────────────────────────────────────────────────────── */
+const sheet = () => matchMedia("(max-width: 720px)").matches;
+
+function fill(item) {
+  const opts = portions(item);
+  cur.k = 0; cur.q = 1; cur.opts = opts;
+  dimg.src = item.img; dimg.alt = item.name;
+  dbody.innerHTML = `
+    <span class="d8-eb">${esc(MENU_CATS.find((c) => c.id === cat).label)}</span>
+    <h3 class="d8-t" id="d8t">${esc(item.name)}</h3>
+    <p class="d8-d">${esc(item.desc)}</p>
+    ${opts ? `<div class="pseg" role="radiogroup" aria-label="Porción" style="--n:${opts.length};--k:0"><i class="pseg-t"></i>${opts.map((o, j) => `<button class="pseg-o" type="button" role="radio" aria-checked="${j === 0}" tabindex="${j === 0 ? 0 : -1}" data-k="${j}"><span>${o.label}</span><b>${o.price}</b></button>`).join("")}</div>` : ""}
+    <div class="d8-pr"><b id="d8p">${opts ? opts[0].price : item.price}</b><small id="d8s">${opts ? opts[0].label : "Precio"}</small></div>
+    <div class="d8-buy">
+      <div class="qty" role="group" aria-label="Cantidad"><button type="button" id="qm" aria-label="Quitar uno" disabled>${ICON.minus}</button><output id="qv" aria-live="polite">1</output><button type="button" id="qp" aria-label="Agregar uno">${ICON.plus}</button></div>
+      <button class="addbtn d8-add" id="add" type="button"><span class="a" id="addA"></span><span class="b">${ICON.check} AGREGADO</span></button>
+    </div>`;
+  const unit = () => priceNum(opts ? opts[cur.k].price : item.price);
+  const paint = () => { $("#addA").textContent = `AGREGAR · ${money(unit() * cur.q)}`; };
+  paint();
+  if (opts) {
+    const group = $(".pseg", dbody);
+    $$(".pseg-o", dbody).forEach((b) => b.addEventListener("click", () => {
+      cur.k = +b.dataset.k; group.style.setProperty("--k", cur.k);
+      $$(".pseg-o", dbody).forEach((x) => { const on = x === b; x.setAttribute("aria-checked", String(on)); x.tabIndex = on ? 0 : -1; });
+      $("#d8p").textContent = opts[cur.k].price; $("#d8s").textContent = opts[cur.k].label; replay($("#d8p"), "tick"); paint();
+    }));
+    radioKeys(group, ".pseg-o");
+  }
+  const setQ = (n) => { cur.q = clamp(n, 1, 20); $("#qv").textContent = cur.q; replay($("#qv"), "bump"); $("#qm").disabled = cur.q <= 1; $("#qp").disabled = cur.q >= 20; paint(); };
+  $("#qm").addEventListener("click", () => setQ(cur.q - 1));
+  $("#qp").addEventListener("click", () => setQ(cur.q + 1));
+  $("#add").addEventListener("click", () => {
+    for (let n = 0; n < cur.q; n++) cartAdd();
+    flashDone($("#add"), 900);
+    setTimeout(() => { if (cur) closeDetail(); }, 750);
+  });
+}
+
+/* Vectores para llevar la foto de la ficha a la posición y tamaño de la foto de la tarjeta.
+   Escala uniforme (ancho) + recorte vertical centrado: sin deformar la imagen. */
+function flip(card) {
+  const C = $(".c8-ph", card).getBoundingClientRect(), D = dph.getBoundingClientRect();
+  const s = C.width / D.width;
+  const v = Math.max(0, (D.height - C.height / s) / 2);
+  return {
+    from: { transform: `translate(${C.left - D.left}px, ${C.top - (D.top + v * s)}px) scale(${s})`, clipPath: `inset(${v}px 0px ${v}px 0px round ${10 / s}px)` },
+    to: { transform: "none", clipPath: "inset(0px 0px 0px 0px round 0px)" },
+    cx: C.left + C.width / 2, cy: C.top + C.height / 2,
+  };
+}
+
+function openDetail(item, card) {
+  if (busy || cur) return;
+  cur = { item, card, last: document.activeElement };
+  fill(item);
+  d8.hidden = false;
+  page.inert = true;
+  document.documentElement.style.overflow = "hidden";
+  const anim = !sheet() && !REDUCED;
+  let f;
+  if (anim) {
+    f = flip(card);
+    card.classList.add("lifted");
+    const B = bg.getBoundingClientRect();
+    bg.style.transformOrigin = `${f.cx - B.left}px ${f.cy - B.top}px`;
+  }
+  requestAnimationFrame(() => {
+    d8.classList.add("open");
+    if (anim) {
+      dph.animate([f.from, f.to], { duration: 420, easing: DRAWER });
+      bg.animate([{ opacity: 0, transform: "scale(0.96)" }, { opacity: 1, transform: "none" }], { duration: 280, easing: EASE_OUT });
+      [dbody, xbtn].forEach((el) => el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, delay: 140, easing: "ease-out", fill: "backwards" }));
+    }
+    xbtn.focus({ preventScroll: true });
+  });
+}
+
+function finish() {
+  const { card, last } = cur;
+  d8.hidden = true; d8.classList.remove("open");
+  page.inert = false; document.documentElement.style.overflow = "";
+  card.classList.remove("lifted");
+  [dph, bg, dbody, xbtn].forEach((el) => el.getAnimations().forEach((a) => a.cancel()));
+  cur = null; busy = false;
+  if (last && last.focus) last.focus({ preventScroll: true });
+}
+
+function closeDetail() {
+  if (!cur || busy) return;
+  busy = true;
+  const card = cur.card;
+  d8.classList.remove("open");
+  if (!sheet() && !REDUCED) {
+    const f = flip(card);
+    const run = (el, frames, o) => el.animate(frames, { fill: "forwards", ...o }).finished;
+    Promise.all([
+      run(dph, [f.to, f.from], { duration: 320, easing: DRAWER }),
+      run(bg, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "scale(0.96)" }], { duration: 240, easing: EASE_OUT }),
+      run(dbody, [{ opacity: 1 }, { opacity: 0 }], { duration: 120, easing: "ease-out" }),
+      run(xbtn, [{ opacity: 1 }, { opacity: 0 }], { duration: 120, easing: "ease-out" }),
+    ]).then(finish, finish);
+  } else setTimeout(finish, sheet() && !REDUCED ? 310 : 0);
+}
+
+d8.addEventListener("click", (e) => { if (e.target === $("#bd") || e.target === d8) closeDetail(); });
+xbtn.addEventListener("click", closeDetail);
+addEventListener("keydown", (e) => {
+  if (!cur) return;
+  if (e.key === "Escape") { e.preventDefault(); closeDetail(); }
+  if (e.key === "Tab") {
+    const f = $$("button:not([disabled])", panel).filter((b) => b.offsetParent !== null);
+    if (!f.length) return;
+    const a = document.activeElement, first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+    else if (!panel.contains(a)) { e.preventDefault(); first.focus(); }
+  }
+});
+
+clipTabs($("#nav"), MENU_CATS, cat, (id) => { cat = id; swap(grid, render); });
+render();
+</script>
+</body>
+</html>

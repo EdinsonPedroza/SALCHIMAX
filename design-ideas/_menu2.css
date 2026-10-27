@@ -1,0 +1,85 @@
+/* Ronda 2 del menú — base compartida.
+   Usa el encabezado REAL de la landing (sin grano ni cintas) para que las ideas
+   se comparen tal como se verían en el sitio. */
+:root { --orange-2: #ff8533; --card: #141414; --hair: rgba(255, 255, 255, 0.08); }
+
+.m2 { padding: clamp(36px, 4.5vw, 64px) clamp(16px, 4vw, 40px) clamp(56px, 6vw, 88px); }
+.m2-in { max-width: 1280px; margin: 0 auto; }
+.m2-head { margin-bottom: clamp(22px, 3vw, 34px); }
+.m2-eyebrow { display: block; margin-bottom: 12px; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); }
+.m2-title { margin-bottom: 12px; font-family: var(--f-head); font-weight: 400; font-size: clamp(3rem, 5vw, 3.75rem); line-height: 1; color: #fff; }
+.m2-bar { width: 64px; height: 4px; background: var(--orange); }
+
+/* Entrada: solo opacidad (sin deslizamientos) con escalonado corto */
+@keyframes m2fade { from { opacity: 0; } }
+.m2-fi { animation: m2fade 420ms var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 45ms); }
+/* Cambio de categoría: fundido corto de salida y entrada */
+.m2-swap { transition: opacity 150ms ease-out; }
+.m2-swap.out { opacity: 0; }
+
+/* Pastilla de "pedido" (solo para probar el feedback de agregar) */
+.cartpill { position: fixed; z-index: 70; top: 12px; right: 12px; display: flex; align-items: center; gap: 8px; padding: 8px 14px 7px; background: #171717; border: 1px solid rgba(255, 102, 0, 0.6); border-radius: 999px; color: #fff; font-family: var(--f-head); font-size: 1.1rem; letter-spacing: 0.1em; line-height: 1; }
+.cartpill svg { color: var(--orange); }
+.cartpill b { font-weight: 400; color: var(--orange); }
+.cartpill.pop { animation: m2pop 320ms var(--ease-out); }
+@keyframes m2pop { 40% { transform: scale(1.12); } }
+
+/* Iconos dentro de botones */
+.ic { display: inline-grid; place-items: center; }
+
+/* Pestañas con indicador por recorte (clip-path): la copia "activa" se recorta sobre la pestaña elegida,
+   así fondo y texto cambian en perfecta sincronía. */
+.seg { display: inline-block; max-width: 100%; overflow-x: auto; scrollbar-width: none; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; }
+.seg::-webkit-scrollbar { display: none; }
+.seg-track { position: relative; display: inline-flex; gap: 2px; padding: 4px; }
+.seg-b, .seg-fill span { display: block; padding: 9px 18px 7px; font-family: var(--f-head); font-size: 1.1rem; letter-spacing: 0.1em; line-height: 1; white-space: nowrap; }
+.seg-b { position: relative; border-radius: 999px; color: rgba(255, 255, 255, 0.62); transition: color 180ms var(--ease-out); }
+.seg-b small, .seg-fill small { margin-left: 7px; font-family: var(--f-body); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; opacity: 0.7; }
+@media (hover: hover) and (pointer: fine) { .seg-b:hover { color: #fff; } }
+.seg-fill { position: absolute; inset: 0; z-index: 1; display: flex; gap: 2px; padding: 4px; background: var(--orange); color: var(--ink); pointer-events: none; clip-path: inset(4px 100% 4px 0 round 999px); transition: clip-path 360ms var(--ease-io); }
+
+@media (prefers-reduced-motion: reduce) {
+  .m2-fi { animation: none; }
+  .m2-swap, .seg-fill, .seg-b { transition: none; }
+  .cartpill.pop { animation: none; }
+}
+
+/* ── Piezas reutilizables ─────────────────────────────────────────── */
+
+/* Porción: control segmentado con "pulgar" que se desliza (solo transform) */
+.pseg { --n: 2; --k: 0; position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); padding: 3px; border: 1px solid var(--hair); border-radius: 12px; background: #0e0e0e; }
+.pseg-t { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / var(--n)); border-radius: 9px; background: rgba(255, 102, 0, 0.16); box-shadow: inset 0 0 0 1px rgba(255, 102, 0, 0.7); transform: translateX(calc(var(--k) * 100%)); transition: transform 300ms var(--ease-io); }
+.pseg-o { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px 7px; border-radius: 9px; color: rgba(255, 255, 255, 0.55); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; transition: color 180ms var(--ease-out); }
+.pseg-o b { font-family: var(--f-head); font-weight: 400; font-size: 1.25rem; letter-spacing: 0.03em; line-height: 1; }
+.pseg-o[aria-checked="true"] { color: #fff; }
+.pseg-o[aria-checked="true"] b { color: var(--orange); }
+
+/* Botón principal "Agregar": las dos etiquetas comparten celda (el ancho es el de la más larga)
+   y se cruzan con fundido + desenfoque suave para que no se vean dos textos superpuestos. */
+.addbtn { position: relative; display: inline-grid; place-items: center; height: 46px; padding: 0 22px; border-radius: 999px; background: var(--orange); color: var(--ink); font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.12em; line-height: 1; transition: transform 160ms var(--ease-out), background-color 200ms var(--ease-out), color 200ms var(--ease-out); }
+.addbtn > span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 8px; padding-top: 2px; white-space: nowrap; transition: opacity 200ms ease, filter 200ms ease; }
+.addbtn .b { opacity: 0; filter: blur(2px); }
+.addbtn.done { background: #1f9d55; color: #fff; }
+.addbtn.done .a { opacity: 0; filter: blur(2px); }
+.addbtn.done .b { opacity: 1; filter: none; }
+.addbtn:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .addbtn:not(.done):hover { background: var(--orange-2); } }
+
+/* Cantidad */
+.qty { display: inline-flex; align-items: center; height: 46px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 999px; }
+.qty button { display: grid; place-items: center; width: 44px; height: 100%; border-radius: 999px; color: #fff; transition: transform 140ms var(--ease-out), background-color 180ms ease; }
+.qty button:active { transform: scale(0.88); }
+.qty button[disabled] { opacity: 0.3; }
+.qty output { min-width: 1.6em; padding-top: 2px; font-family: var(--f-head); font-size: 1.35rem; line-height: 1; text-align: center; }
+@media (hover: hover) and (pointer: fine) { .qty button:not([disabled]):hover { background: rgba(255, 255, 255, 0.08); } }
+.bump { animation: m2bump 220ms var(--ease-out); }
+@keyframes m2bump { 40% { transform: scale(1.22); } }
+
+/* Cruce de precio / texto al cambiar de valor (sin desplazar) */
+.tick { animation: m2tick 220ms var(--ease-out); }
+@keyframes m2tick { from { opacity: 0; transform: scale(0.94); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pseg-t, .pseg-o, .addbtn, .addbtn > span, .qty button { transition: none; }
+  .bump, .tick { animation: none; }
+}

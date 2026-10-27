@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ideas de diseño — Promos de la semana</title>
+<title>Ideas de diseño — Promos y Menú</title>
 <link rel="stylesheet" href="_shared.css">
 <style>
   body { height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
@@ -42,7 +42,7 @@
 </head>
 <body>
 <header class="top">
-  <div class="brand"><img src="../frontend/public/logo.jpeg" alt="SalchiMax"><div>SALCHIMAX<small>Ideas · Promos de la semana</small></div></div>
+  <div class="brand"><img src="../frontend/public/logo.jpeg" alt="SalchiMax"><div>SALCHIMAX<small>Ideas · Promos y Menú</small></div></div>
   <span class="sep"></span>
   <nav class="grp" id="tabs" aria-label="Ideas"></nav>
 </header>
@@ -101,6 +101,22 @@ const IDEAS = [
   { file: "menu-3-carrusel.html", name: "Carrusel cinematográfico",
     desc: "Las categorías son lomos verticales de color. Los platos corren en horizontal con snap: el del centro se agranda y se aclara, y el nombre gigante en contorno va detrás con paralaje (más lento que la foto). Flechas, teclado, arrastre con mouse y contador 02 / 08 con barra de progreso.",
     react: "scroll-snap-type: x mandatory + un solo listener de scroll con requestAnimationFrame que escribe transform/opacity (sin layout) · paralaje con translate3d por plato · arrastre con pointer events solo para mouse · flechas con scrollIntoView · carrusel accesible con aria-roledescription." },
+  /* Menú · ronda 2: cinco ideas sobrias (nada de neón ni saturación) con el encabezado real de la landing */
+  { sep: true, file: "menu-4-spotlight.html", name: "Spotlight · cuadrícula",
+    desc: "La cuadrícula actual, afinada: borde fino que se enciende con un resplandor que sigue al cursor, pestañas con un indicador que se desliza (fondo y texto cambian a la vez), porciones como control segmentado con pulgar deslizante y un botón «+» que se abre a «AGREGADO ✓».",
+    react: "Resplandor con dos capas (borde + halo) cuya opacidad cambia al pasar el mouse y variables --mx/--my escritas solo en tarjetas con mouse · pestañas con clip-path en una copia «activa» de la lista · pulgar con transform: translateX · botón con clip-path. Sin deslizamientos de entrada." },
+  { file: "menu-5-domicilio.html", name: "Domicilio · compacta",
+    desc: "Pensada para pedir rápido: tarjetas horizontales con foto cuadrada, chips de porción y el precio. «Agregar» se convierte en un contador − 1 + en el mismo sitio. Barra de pedido flotante con el total que cuenta hacia arriba. Categorías pegajosas arriba.",
+    react: "Mapa de pedido en el contexto actual (CartContext) · contador con dos capas que se cruzan (opacidad) sin cambiar de tamaño · total animado con un contador numérico (useSpring/useMotionValue) · barra con AnimatePresence · chips de categoría en una barra sticky." },
+  { file: "menu-6-escaparate.html", name: "Escaparate · foto + lista",
+    desc: "Una sola foto grande a la vez (con su ficha: descripción, porciones, precio y Agregar) y a su lado la lista de platos. Al elegir uno la foto se cruza y la ficha cambia con un fundido corto. Flechas ↑ ↓ para recorrer. En móvil la ficha va arriba.",
+    react: "Estado selectedIndex · imágenes apiladas con opacidad y transform (no se remontan) · ficha con AnimatePresence mode=wait y duración de 150 ms · indicador lateral con scaleY · lista accesible con aria-pressed y roving tabindex." },
+  { file: "menu-7-carta.html", name: "Carta · vista previa",
+    desc: "Una carta de restaurante: nombre ........ precio, descripción fina y una línea naranja que se dibuja bajo el plato señalado. La foto aparece flotando junto al cursor con un resorte y se inclina un poco según la velocidad. Sin mouse: miniaturas fijas.",
+    react: "Foto única con position: fixed y useSpring en x/y (solo con pointer: fine) · tilt con useVelocity · la posición se escribe con transform (sin layout) · línea con scaleX y origen izquierdo · en táctil se cambia por una miniatura en cada fila." },
+  { file: "menu-8-detalle.html", name: "Detalle compartido · sheet",
+    desc: "Cuadrícula compacta (foto, nombre y precio). Al tocar un plato, su foto vuela y crece hasta la ficha completa con porciones, cantidad y total; al cerrar vuelve a su sitio. En celular se abre como una hoja desde abajo. Esc, clic fuera y atrapa el foco.",
+    react: "layoutId compartido en Framer Motion (la foto) + AnimatePresence · hoja móvil con la curva del drawer y arrastre para cerrar (drag=\"y\") · Radix Dialog para foco y aria-modal · el resto de la página queda inert · total = precio × cantidad." },
 ];
 const NOTES = [
   ["Datos", "Las tres leen la misma lista que frontend/src/data/promos.js (día, título, descripción, precio, badge, foto, active). Cambiar una promo no requiere tocar el diseño."],
@@ -111,7 +127,7 @@ const NOTES = [
 ];
 
 const frame = $("#frame"), capT = $("#capT"), capD = $("#capD"), notes = $("#notes"), more = $("#more"), capB = $("#capB");
-const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6", "M1", "M2", "M3"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
+const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
 const tabs = IDEAS.map((it, i) => {
   const b = document.createElement("button");
   b.className = "tab"; b.innerHTML = `<b>${LABELS[i]}</b>${it.name}`;
@@ -125,7 +141,7 @@ function select(i) {
   const it = IDEAS[i];
   tabs.forEach((t, k) => { t.classList.toggle("on", k === i); t.setAttribute("aria-current", k === i ? "true" : "false"); });
   frame.src = it.file + location.search;
-  capT.textContent = `Promos · ${it.name}`;
+  capT.textContent = `${it.file.startsWith("menu-") ? "Menú" : "Promos"} · ${it.name}`;
   capD.textContent = it.desc;
   notes.innerHTML = `<li><b>En React + Framer Motion</b>${it.react}</li>` + NOTES.map(([t, d]) => `<li><b>${t}</b>${d}</li>`).join("");
   history.replaceState(null, "", location.search + "#" + (i + 1));

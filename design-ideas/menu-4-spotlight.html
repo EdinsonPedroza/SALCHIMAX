@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menú · Idea 4 — Spotlight</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_menu2.css">
+<style>
+  .m4-nav { margin-bottom: clamp(18px, 2.4vw, 26px); }
+  .m4-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  @media (max-width: 1180px) { .m4-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 860px) { .m4-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 540px) { .m4-grid { grid-template-columns: 1fr; } }
+
+  /* Tarjeta: borde fino + un resplandor que sigue al cursor (solo con mouse). Todo lo animado es opacidad. */
+  .c4 { --mx: 50%; --my: 50%; position: relative; isolation: isolate; display: flex; flex-direction: column; padding: 10px 10px 16px; border-radius: 16px; background: var(--card); }
+  .c4::before, .c4::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; }
+  .c4::before { background: rgba(255, 255, 255, 0.09); }
+  .c4::after { background: radial-gradient(260px circle at var(--mx) var(--my), var(--orange), rgba(255, 102, 0, 0) 70%); opacity: 0; transition: opacity 300ms var(--ease-out); }
+  .c4-glow { position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; background: radial-gradient(340px circle at var(--mx) var(--my), rgba(255, 102, 0, 0.075), transparent 70%); opacity: 0; transition: opacity 300ms var(--ease-out); }
+
+  .c4-ph { position: relative; height: 168px; border-radius: 7px; overflow: hidden; background: #0a0a0a; }
+  .c4-ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 800ms var(--ease-out); }
+
+  .c4-body { display: flex; flex: 1; flex-direction: column; padding: 14px 6px 0; }
+  .c4-name { font-family: var(--f-head); font-weight: 400; font-size: 1.6rem; line-height: 1; letter-spacing: 0.02em; }
+  .c4-desc { flex: 1; margin-top: 8px; font-size: 0.8rem; font-weight: 600; line-height: 1.45; color: rgba(255, 255, 255, 0.56); }
+
+  /* Porción: control segmentado con "pulgar" que se desliza (transform), sin repintar texto */
+  .p4 { --n: 2; --k: 0; position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); margin-top: 14px; padding: 3px; border: 1px solid var(--hair); border-radius: 12px; background: #0e0e0e; }
+  .p4-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / var(--n)); border-radius: 9px; background: rgba(255, 102, 0, 0.16); box-shadow: inset 0 0 0 1px rgba(255, 102, 0, 0.7); transform: translateX(calc(var(--k) * 100%)); transition: transform 300ms var(--ease-io); }
+  .p4-o { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px 6px; border-radius: 9px; color: rgba(255, 255, 255, 0.55); font-size: 0.64rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; transition: color 180ms var(--ease-out); }
+  .p4-o b { font-family: var(--f-head); font-weight: 400; font-size: 1.2rem; letter-spacing: 0.03em; line-height: 1; }
+  .p4-o[aria-checked="true"] { color: #fff; }
+  .p4-o[aria-checked="true"] b { color: var(--orange); }
+
+  .c4-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; }
+  .c4-price { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .c4-price small { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.42); }
+  .c4-price b { font-family: var(--f-head); font-weight: 400; font-size: 1.9rem; line-height: 0.9; color: var(--orange); }
+  .tick { animation: m4tick 220ms var(--ease-out); }
+  @keyframes m4tick { from { opacity: 0; transform: scale(0.94); } }
+
+  /* Agregar: círculo de 44px que se abre a píldora "AGREGADO ✓". Se anima solo el recorte (clip-path). */
+  .c4-add { position: relative; flex: none; display: flex; align-items: center; justify-content: flex-end; width: 142px; height: 44px; border-radius: 999px; background: var(--orange); color: var(--ink); transform-origin: right center; clip-path: inset(0 0 0 98px round 22px); transition: clip-path 360ms var(--ease-io), background-color 220ms var(--ease-out), color 220ms var(--ease-out), transform 160ms var(--ease-out); }
+  .c4-add .lbl { flex: 1; padding: 3px 0 0 18px; font-family: var(--f-head); font-size: 1.1rem; letter-spacing: 0.12em; line-height: 1; text-align: left; white-space: nowrap; }
+  .c4-add .ico { position: relative; flex: none; width: 44px; height: 44px; }
+  .c4-add .ico > span { position: absolute; inset: 0; display: grid; place-items: center; transition: opacity 200ms var(--ease-out), transform 300ms var(--ease-out); }
+  .c4-add .i-check { opacity: 0; transform: scale(0.5) rotate(-40deg); }
+  .c4-add:active { transform: scale(0.94); }
+  .c4-add.done { background: #1f9d55; color: #fff; clip-path: inset(0 0 0 0 round 22px); }
+  .c4-add.done .i-plus { opacity: 0; transform: scale(0.5) rotate(90deg); }
+  .c4-add.done .i-check { opacity: 1; transform: none; }
+  /* El recorte también recortaría el anillo de foco: se amplía solo en foco por teclado */
+  .c4-add:focus-visible { outline: 2px solid var(--yellow); outline-offset: 3px; clip-path: inset(-8px -8px -8px 88px round 28px); }
+  .c4-add.done:focus-visible { clip-path: inset(-8px -8px -8px -8px round 28px); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .c4:hover::after, .c4:hover .c4-glow { opacity: 1; }
+    .c4:hover .c4-ph img { transform: scale(1.06); }
+    .c4-add:not(.done):hover { background: var(--orange-2); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .c4::after, .c4-glow, .c4-ph img, .p4-thumb, .p4-o, .c4-add, .c4-add .ico > span { transition: none; }
+    .tick { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="m2"><div class="m2-in">
+  <header class="m2-head">
+    <span class="m2-eyebrow">Lo que más te gusta</span>
+    <h2 class="m2-title">NUESTRO MENÚ</h2>
+    <div class="m2-bar"></div>
+  </header>
+  <div class="m4-nav" id="nav"></div>
+  <div class="m4-grid m2-swap" id="grid" role="tabpanel"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_menu.js"></script>
+<script src="_menu2.js"></script>
+<script>
+mountCart();
+const grid = $("#grid");
+let cat = "salchipapas";
+
+function render() {
+  grid.innerHTML = "";
+  MENU[cat].forEach((item, i) => {
+    const opts = portions(item);
+    let k = 0;
+    const el = document.createElement("article");
+    el.className = "c4 m2-fi"; el.style.setProperty("--i", i);
+    el.innerHTML = `
+      <span class="c4-glow"></span>
+      <div class="c4-ph"><img src="${item.img}" alt="${esc(item.name)}" loading="lazy" draggable="false"></div>
+      <div class="c4-body">
+        <h3 class="c4-name">${esc(item.name)}</h3>
+        <p class="c4-desc">${esc(item.desc)}</p>
+        ${opts ? `<div class="p4" role="radiogroup" aria-label="Porción de ${esc(item.name)}" style="--n:${opts.length}">
+          <i class="p4-thumb"></i>
+          ${opts.map((o, j) => `<button class="p4-o" role="radio" aria-checked="${j === 0}" tabindex="${j === 0 ? 0 : -1}" data-k="${j}"><span>${o.label}</span><b>${o.price}</b></button>`).join("")}
+        </div>` : ""}
+        <div class="c4-foot">
+          <div class="c4-price"><small>${opts ? opts[0].label : "Precio"}</small><b>${opts ? opts[0].price : item.price}</b></div>
+          <button class="c4-add" aria-label="Agregar ${esc(item.name)} al pedido"><span class="lbl">AGREGADO</span><span class="ico"><span class="i-plus">${ICON.plus}</span><span class="i-check">${ICON.check}</span></span></button>
+        </div>
+      </div>`;
+
+    if (opts) {
+      const group = $(".p4", el), tag = $(".c4-price small", el), val = $(".c4-price b", el);
+      $$(".p4-o", el).forEach((b) => b.addEventListener("click", () => {
+        k = +b.dataset.k;
+        group.style.setProperty("--k", k);
+        $$(".p4-o", el).forEach((x) => { const on = x === b; x.setAttribute("aria-checked", String(on)); x.tabIndex = on ? 0 : -1; });
+        tag.textContent = opts[k].label; val.textContent = opts[k].price; replay(val, "tick");
+      }));
+      radioKeys(group, ".p4-o");
+    }
+
+    const add = $(".c4-add", el);
+    add.addEventListener("click", () => { cartAdd(); flashDone(add); });
+
+    // Resplandor que sigue al cursor: solo mouse, un cuadro por movimiento
+    if (FINE && !REDUCED) {
+      let raf = 0, ex = 0, ey = 0;
+      el.addEventListener("pointermove", (e) => {
+        ex = e.clientX; ey = e.clientY;
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const r = el.getBoundingClientRect();
+          el.style.setProperty("--mx", ex - r.left + "px"); el.style.setProperty("--my", ey - r.top + "px");
+        });
+      });
+    }
+    grid.appendChild(el);
+  });
+}
+
+clipTabs($("#nav"), MENU_CATS, cat, (id) => { cat = id; swap(grid, render); });
+render();
+</script>
+</body>
+</html>

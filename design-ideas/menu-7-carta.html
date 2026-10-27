@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menú · Idea 7 — Carta</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_menu2.css">
+<style>
+  .m7-nav { margin-bottom: clamp(10px, 1.6vw, 18px); }
+  .m7-list { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(32px, 5vw, 72px); }
+  @media (max-width: 900px) { .m7-list { grid-template-columns: 1fr; } }
+
+  /* Fila de carta: nº · nombre ........ precio, con la descripción debajo */
+  .r7 { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); padding: 20px 0 22px; border-bottom: 1px solid var(--hair); }
+  .r7-line { display: flex; align-items: baseline; gap: 12px; }
+  .r7-no { flex: none; width: 1.9em; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.3); transition: color 220ms ease; }
+  .r7-n { flex: 0 1 auto; min-width: 0; font-family: var(--f-head); font-weight: 400; font-size: clamp(1.7rem, 2.4vw, 2.1rem); line-height: 1; letter-spacing: 0.02em; transition: color 220ms ease; }
+  .r7-lead { flex: 1; min-width: 24px; align-self: end; margin-bottom: 0.32em; border-bottom: 2px dotted rgba(255, 255, 255, 0.2); }
+  .r7-p { flex: none; font-family: var(--f-head); font-size: clamp(1.7rem, 2.4vw, 2.1rem); line-height: 1; letter-spacing: 0.02em; color: var(--orange); }
+  .r7-p small { margin-right: 6px; font-family: var(--f-body); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+  .r7-d { margin: 8px 0 0 calc(1.9em + 12px); max-width: 52ch; font-size: 0.84rem; font-weight: 600; line-height: 1.5; color: rgba(255, 255, 255, 0.52); }
+  .r7-act { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; margin: 14px 0 0 calc(1.9em + 12px); }
+  .r7-pc { display: flex; flex-wrap: wrap; gap: 6px; }
+  .r7-pc button { padding: 5px 11px 4px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 999px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.58); transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease; }
+  .r7-pc button[aria-checked="true"] { border-color: var(--orange); background: rgba(255, 102, 0, 0.14); color: #fff; }
+  .r7-add { height: 36px; padding: 0 16px; font-size: 1rem; border-radius: 999px; background: transparent; border: 1.5px solid var(--orange); color: var(--orange); }
+  .r7-add.addbtn.done { border-color: #1f9d55; }
+  @media (hover: hover) and (pointer: fine) { .r7-add.addbtn:not(.done):hover { background: var(--orange); color: var(--ink); } }
+
+  /* Línea naranja que se dibuja bajo la fila (scaleX) al señalarla */
+  .r7-rule { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 460ms var(--ease-io); }
+  .r7:focus-within .r7-rule { transform: scaleX(1); }
+  .r7:focus-within .r7-no { color: var(--orange); }
+  .r7-th { display: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .r7:hover .r7-rule { transform: scaleX(1); }
+    .r7:hover .r7-no { color: var(--orange); }
+  }
+
+  /* Vista previa: una sola foto que sigue al cursor (posición y tilt los escribe el JS, solo transform) */
+  .pv { position: fixed; left: 0; top: 0; z-index: 50; width: 220px; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; pointer-events: none; background: #0a0a0a; box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55); opacity: 0; scale: 0.94; transition: opacity 180ms var(--ease-out), scale 240ms var(--ease-out); will-change: transform; }
+  .pv.on { opacity: 1; scale: 1; }
+  .pv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 160ms ease-out; }
+  .pv img.on { opacity: 1; }
+
+  /* Sin mouse (o pantalla angosta): no hay vista previa; cada fila muestra su miniatura */
+  @media (hover: none), (max-width: 760px) {
+    .pv { display: none; }
+    .r7 { grid-template-columns: 64px minmax(0, 1fr); column-gap: 14px; padding: 16px 0 18px; }
+    .r7-th { display: block; grid-row: 1 / span 3; width: 64px; height: 64px; border-radius: 10px; object-fit: cover; background: #0a0a0a; }
+    .r7-line, .r7-d, .r7-act { grid-column: 2; margin-left: 0; }
+    .r7-no { display: none; }
+    .r7-d { margin-top: 6px; }
+    .r7-n, .r7-p { font-size: 1.45rem; }
+    .r7-lead { min-width: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .r7-rule, .r7-no, .pv, .pv img, .r7-pc button { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="m2"><div class="m2-in">
+  <header class="m2-head">
+    <span class="m2-eyebrow">Lo que más te gusta</span>
+    <h2 class="m2-title">NUESTRO MENÚ</h2>
+    <div class="m2-bar"></div>
+  </header>
+  <div class="m7-nav" id="nav"></div>
+  <ul class="m7-list m2-swap" id="list" role="tabpanel"></ul>
+</div></main>
+<div class="pv" id="pv" aria-hidden="true"></div>
+
+<script src="_shared.js"></script>
+<script src="_menu.js"></script>
+<script src="_menu2.js"></script>
+<script>
+mountCart();
+const list = $("#list"), pv = $("#pv");
+let cat = "salchipapas", pimgs = [];
+
+function render() {
+  list.innerHTML = ""; pv.innerHTML = ""; pimgs = [];
+  MENU[cat].forEach((item, i) => {
+    const opts = portions(item); let k = 0;
+    const pim = document.createElement("img"); pim.src = item.img; pim.alt = ""; pim.draggable = false; pv.appendChild(pim); pimgs.push(pim);
+    const li = document.createElement("li");
+    li.className = "r7 m2-fi"; li.style.setProperty("--i", i % 6);
+    li.innerHTML = `
+      <img class="r7-th" src="${item.img}" alt="${esc(item.name)}" loading="lazy" draggable="false">
+      <div class="r7-line"><span class="r7-no">${pad(i + 1)}</span><h3 class="r7-n">${esc(item.name)}</h3><i class="r7-lead"></i><span class="r7-p">${opts ? "<small>desde</small>" : ""}<span class="v">${item.price}</span></span></div>
+      <p class="r7-d">${esc(item.desc)}</p>
+      <div class="r7-act">
+        ${opts ? `<div class="r7-pc" role="radiogroup" aria-label="Porción de ${esc(item.name)}">${opts.map((o, j) => `<button type="button" role="radio" aria-checked="${j === 0}" tabindex="${j === 0 ? 0 : -1}" data-k="${j}">${o.label} · ${o.price}</button>`).join("")}</div>` : "<span></span>"}
+        <button class="addbtn r7-add" type="button" aria-label="Agregar ${esc(item.name)} al pedido"><span class="a">AGREGAR</span><span class="b">${ICON.check} AGREGADO</span></button>
+      </div>
+      <i class="r7-rule"></i>`;
+    if (opts) {
+      const group = $(".r7-pc", li), val = $(".r7-p .v", li), small = $(".r7-p small", li);
+      $$(".r7-pc button", li).forEach((b) => b.addEventListener("click", () => {
+        k = +b.dataset.k;
+        $$(".r7-pc button", li).forEach((x) => { const on = x === b; x.setAttribute("aria-checked", String(on)); x.tabIndex = on ? 0 : -1; });
+        small.textContent = ""; val.textContent = opts[k].price; replay(val, "tick");
+      }));
+      radioKeys(group, ".r7-pc button");
+    }
+    const add = $(".r7-add", li);
+    add.addEventListener("click", () => { cartAdd(); flashDone(add); });
+
+    if (FINE) {
+      li.addEventListener("pointerenter", (e) => showPreview(i, e.clientX, e.clientY, false));
+      li.addEventListener("pointerleave", hidePreview);
+      li.addEventListener("focusin", () => { const r = li.getBoundingClientRect(); showPreview(i, r.right - 250, r.top + r.height * 0.45, true); });
+      li.addEventListener("focusout", hidePreview);
+    }
+    list.appendChild(li);
+  });
+}
+
+/* ── Vista previa con resorte ─────────────────────────────────────── */
+const W = 220, H = 165, GAP = 22;
+const SX = new Spring(0, { k: 220, c: 24 }), SY = new Spring(0, { k: 220, c: 24 });
+let pos = { x: 0, y: 0 }, visible = false, snap = false;
+function target() {
+  // Abajo a la derecha del cursor: así el nombre y el precio de la fila señalada quedan a la vista
+  let x = pos.x + GAP, y = pos.y + GAP;
+  if (x + W > innerWidth - 12) x = pos.x - GAP - W;          // sin sitio a la derecha → a la izquierda
+  if (y + H > innerHeight - 12) y = pos.y - GAP - H;         // sin sitio abajo → arriba
+  return [x, Math.max(12, y)];
+}
+function showPreview(i, x, y, jump) {
+  pos = { x, y };
+  pimgs.forEach((im, k) => im.classList.toggle("on", k === i));
+  const [tx, ty] = target();
+  if (!visible || jump || REDUCED) { SX.value = SX.target = tx; SY.value = SY.target = ty; SX.vel = SY.vel = 0; snap = true; }
+  visible = true; pv.classList.add("on");
+}
+function hidePreview() { visible = false; pv.classList.remove("on"); }
+if (FINE) {
+  addEventListener("pointermove", (e) => { if (!visible) return; pos.x = e.clientX; pos.y = e.clientY; });
+  if (!REDUCED) {
+    loop((dt) => {
+      if (!visible && !pv.classList.contains("on")) return;
+      const [tx, ty] = target();
+      SX.target = tx; SY.target = ty;
+      const x = SX.step(dt), y = SY.step(dt);
+      const tilt = clamp(SX.vel / 140, -5, 5);                  // se inclina un poco según la velocidad horizontal
+      pv.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${tilt.toFixed(2)}deg)`;
+    });
+  } else {
+    addEventListener("pointermove", () => { if (!visible) return; const [tx, ty] = target(); pv.style.transform = `translate3d(${tx}px, ${ty}px, 0)`; });
+  }
+}
+
+clipTabs($("#nav"), MENU_CATS, cat, (id) => { cat = id; hidePreview(); swap(list, render); });
+render();
+</script>
+</body>
+</html>

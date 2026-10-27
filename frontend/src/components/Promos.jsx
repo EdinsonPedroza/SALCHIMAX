@@ -26,17 +26,6 @@ function promoWaLink(promo) {
   return `${WA_LINK}?text=${text}`;
 }
 
-// Qué promo toca hoy; si hoy no hay, cuál es la siguiente y en cuántos días.
-function findToday(list, dow) {
-  const hoy = list.findIndex((p) => p.dows.includes(dow));
-  if (hoy >= 0) return { kind: "today", index: hoy };
-  for (let n = 1; n <= 7; n += 1) {
-    const next = list.findIndex((p) => p.dows.includes((dow + n) % 7));
-    if (next >= 0) return { kind: n === 1 ? "tomorrow" : "later", index: next, in: n };
-  }
-  return null;
-}
-
 function PromoCard({ promo, index, isToday }) {
   const delay = index * 0.1;
   // Entrada sin deslizamientos: cada tarjeta aparece con un fundido escalonado y
@@ -56,7 +45,7 @@ function PromoCard({ promo, index, isToday }) {
       target="_blank"
       rel="noopener noreferrer"
       data-testid={`promo-card-${promo.day.toLowerCase()}`}
-      className="promo-card"
+      className={`promo-card${isToday ? " is-today" : ""}`}
       style={{ "--c": promo.accent }}
       variants={card}
       initial="hidden"
@@ -66,8 +55,8 @@ function PromoCard({ promo, index, isToday }) {
       whileTap={{ scale: 0.985 }}
     >
       {isToday && (
-        <span className="absolute left-1/2 -top-[14px] z-10 flex -translate-x-1/2 items-center gap-[7px] rounded-full border-2 border-[var(--c)] bg-[#0D0D0D] px-3 pb-[3px] pt-[5px] font-heading text-[1.15rem] leading-none tracking-[0.12em] text-white">
-          <i className="promo-blink h-2 w-2 rounded-full bg-[var(--c)]" />
+        <span className="absolute left-1/2 -top-[15px] z-10 flex -translate-x-1/2 items-center gap-[7px] rounded-full bg-[var(--c)] px-3.5 pb-[3px] pt-[5px] font-heading text-[1.2rem] leading-none tracking-[0.12em] text-[#0D0D0D] shadow-[0_6px_18px_-4px_rgba(0,0,0,0.6)]">
+          <i className="promo-blink h-2 w-2 rounded-full bg-[#0D0D0D]" />
           HOY
         </span>
       )}
@@ -122,19 +111,10 @@ export default function Promos() {
         .map((p, i) => ({ ...p, dows: dowsOf(p.day), accent: p.color || PALETTE[i % PALETTE.length] })),
     []
   );
-  const today = useMemo(() => findToday(list, dow), [list, dow]);
+  // Índice de la promo que toca hoy (-1 si hoy no hay): solo marca su tarjeta con "HOY"
+  const todayIndex = useMemo(() => list.findIndex((p) => p.dows.includes(dow)), [list, dow]);
 
   if (list.length === 0) return null;
-
-  const pill =
-    today &&
-    (today.kind === "today"
-      ? { lead: `HOY ES ${DAY_NAMES[dow].toUpperCase()} · `, strong: list[today.index].title.toUpperCase(), tail: " ¡APROVECHA!" }
-      : {
-          lead: `HOY ES ${DAY_NAMES[dow].toUpperCase()} · ${today.kind === "tomorrow" ? "MAÑANA" : `EN ${today.in} DÍAS`}: `,
-          strong: list[today.index].title.toUpperCase(),
-          tail: "",
-        });
 
   return (
     <section
@@ -181,25 +161,6 @@ export default function Promos() {
               DE LA SEMANA
             </motion.span>
           </h2>
-
-          {pill && (
-            <motion.a
-              href="#promos-grid"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: EASE, delay: 0.5 }}
-              data-testid="promos-today"
-              className="mt-[clamp(18px,2.4vw,28px)] inline-flex items-center gap-3 border-2 border-white px-4 py-2.5 font-body text-[0.95rem] font-extrabold tracking-[0.04em] text-white"
-            >
-              <span className="promo-blink h-2.5 w-2.5 flex-none rounded-full bg-[#FF003C]" />
-              <span>
-                {pill.lead}
-                <b className="font-extrabold text-[#FFCC00]">{pill.strong}</b>
-                {pill.tail}
-              </span>
-            </motion.a>
-          )}
         </header>
 
         {/* Vitrina */}
@@ -213,7 +174,7 @@ export default function Promos() {
               key={promo.day + promo.title}
               promo={promo}
               index={i}
-              isToday={today?.kind === "today" && today.index === i}
+              isToday={i === todayIndex}
             />
           ))}
         </div>

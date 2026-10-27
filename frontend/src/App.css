@@ -629,6 +629,17 @@ html {
 }
 .promo-card__go svg { transition: transform 240ms cubic-bezier(0.23, 1, 0.32, 1); }
 
+/* Promo de hoy: borde y brillo del color de la promo, un leve realce y fondo teñido.
+   `translate` es independiente de `transform`, así no choca con el movimiento de Framer. */
+.promo-card.is-today {
+  translate: 0 -6px;
+  border-color: var(--c);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 11%, #151515) 0%, #151515 62%);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent),
+    0 18px 44px -14px color-mix(in srgb, var(--c) 50%, transparent);
+}
+
 /* Hover solo con mouse: en táctil el hover "se queda pegado" al tocar */
 @media (hover: hover) and (pointer: fine) {
   .promo-card:hover { border-color: var(--c); }

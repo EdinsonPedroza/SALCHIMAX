@@ -1,5 +1,5 @@
-import { memo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ShoppingBag, MessageCircle, Plus, Check } from "lucide-react";
 import { useCart, useCartActions } from "../context/CartContext";
 
@@ -89,38 +89,93 @@ const menuData = {
   ],
 };
 
+// 1 / 2 personas (price2) o varios tamaños (prices); null si el plato tiene un solo precio.
+function getPortions(item) {
+  if (Array.isArray(item.prices) && item.prices.length > 0) {
+    return item.prices.map((tier) => ({ label: tier.persons, price: tier.price }));
+  }
+  if (item.price2) {
+    return [
+      { label: "1 persona", price: item.price },
+      { label: "2 personas", price: item.price2 },
+    ];
+  }
+  return null;
+}
+
 // memo + actions-only context: adding one item used to re-render all 20 cards
 // (and their Framer Motion wrappers) through the cart context.
 const ProductCard = memo(function ProductCard({ item, index }) {
   const { addItem } = useCartActions();
+  const reduceMotion = useReducedMotion();
+  const portions = useMemo(() => getPortions(item), [item]);
+  const [selected, setSelected] = useState(0);
+  const [priceTicks, setPriceTicks] = useState(0);
   const [added, setAdded] = useState(false);
-  const [selectedPortion, setSelectedPortion] = useState(null);
+  const cardRef = useRef(null);
+  const pointer = useRef({ x: 0, y: 0 });
+  const frame = useRef(0);
+  const addTimer = useRef(0);
 
-  const requiresPortionSelection = (item.price2 && item.price2 !== "") || (Array.isArray(item.prices) && item.prices.length > 0);
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(frame.current);
+      clearTimeout(addTimer.current);
+    },
+    []
+  );
 
-  const togglePortion = (label, price) => {
-    setSelectedPortion((prev) => (prev?.label === label ? null : { label, price }));
+  const slug = item.name.toLowerCase().replace(/\s+/g, "-");
+  const portion = portions ? portions[selected] : null;
+  const price = portion ? portion.price : item.price;
+
+  const choosePortion = (next) => {
+    if (next === selected) return;
+    setSelected(next);
+    setPriceTicks((n) => n + 1);
+  };
+
+  // Arrow keys move through the portions, like any radio group.
+  const handlePortionKey = (e) => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const next = (selected + step + portions.length) % portions.length;
+    choosePortion(next);
+    e.currentTarget.querySelectorAll('[role="radio"]')[next]?.focus();
   };
 
   const handleAdd = () => {
-    if (requiresPortionSelection) {
-      if (!selectedPortion) return;
-      addItem({ name: `${item.name} (${selectedPortion.label})`, price: selectedPortion.price, img: item.img });
-      setSelectedPortion(null);
-      setAdded(true);
-      setTimeout(() => setAdded(false), 2000);
-    } else {
-      addItem({ name: item.name, price: item.price, img: item.img });
-      setAdded(true);
-      setTimeout(() => setAdded(false), 2000);
-    }
+    addItem({
+      name: portion ? `${item.name} (${portion.label})` : item.name,
+      price,
+      img: item.img,
+    });
+    setAdded(true);
+    clearTimeout(addTimer.current);
+    addTimer.current = setTimeout(() => setAdded(false), 2000);
+  };
+
+  // The border glow follows the mouse: one style write per frame, touch/pen ignored.
+  const handlePointerMove = (e) => {
+    if (e.pointerType !== "mouse") return;
+    pointer.current = { x: e.clientX, y: e.clientY };
+    if (frame.current) return;
+    frame.current = requestAnimationFrame(() => {
+      frame.current = 0;
+      const el = cardRef.current;
+      if (!el) return;
+      const box = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${pointer.current.x - box.left}px`);
+      el.style.setProperty("--my", `${pointer.current.y - box.top}px`);
+    });
   };
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      whileHover={{ scale: 1.03, y: -6, transition: { duration: 0.2 } }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{
         duration: 0.4,
@@ -128,99 +183,96 @@ const ProductCard = memo(function ProductCard({ item, index }) {
         delay: (index % 4) * 0.06,
         ease: [0.16, 1, 0.3, 1],
       }}
-      data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-      className="food-card overflow-hidden group flex flex-col"
+      onPointerMove={reduceMotion ? undefined : handlePointerMove}
+      data-testid={`product-card-${slug}`}
+      className="menu-card"
     >
-      {/* Image */}
-      <div className="media-fade overflow-hidden h-44 relative flex-shrink-0">
+      {/* The photo leads: clean, no overlays on top of the dish */}
+      <div className="menu-card__photo">
         <img
           src={item.img}
           alt={item.name}
-          className="gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           loading="lazy"
           decoding="async"
+          draggable="false"
         />
       </div>
 
-      {/* Content */}
-      <div className="p-4 flex flex-col flex-1">
-        <div className="flex justify-between items-start gap-2 mb-1.5">
-          <h3 className="font-heading text-lg text-white tracking-wide leading-tight">{item.name}</h3>
-          {!item.prices && !item.price2 && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
-        </div>
-        <p className="font-body text-xs text-gray-400 leading-relaxed flex-1">{item.desc}</p>
+      <div className="flex flex-1 flex-col px-1.5 pt-3">
+        <h3 className="font-heading text-[1.45rem] leading-none tracking-wide text-white">
+          {item.name}
+        </h3>
+        <p className="mt-1.5 flex-1 font-body text-[0.78rem] font-semibold leading-[1.45] text-white/55">
+          {item.desc}
+        </p>
 
-        {/* Dual pricing for 1 / 2 persons — clickable selection buttons */}
-        {item.price2 && (
-          <div className="mt-2 flex gap-2">
-            <button
-              onClick={() => togglePortion("1 persona", item.price)}
-              className={`flex-1 flex flex-col items-center text-center font-body text-xs py-1 px-2 rounded border-2 transition-all duration-200 ${
-                selectedPortion?.label === "1 persona"
-                  ? "bg-[#FF6600] border-[#FF6600] text-white"
-                  : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
-              }`}
-            >
-              <span>1 persona</span><span className="font-semibold">{item.price}</span>
-            </button>
-            <button
-              onClick={() => togglePortion("2 personas", item.price2)}
-              className={`flex-1 flex flex-col items-center text-center font-body text-xs py-1 px-2 rounded border-2 transition-all duration-200 ${
-                selectedPortion?.label === "2 personas"
-                  ? "bg-[#FF6600] border-[#FF6600] text-white"
-                  : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
-              }`}
-            >
-              <span>2 personas</span><span className="font-semibold">{item.price2}</span>
-            </button>
-          </div>
-        )}
-
-        {/* Multi-tier pricing for Salchimax! — clickable selection buttons */}
-        {item.prices && (
-          <div className="mt-2 flex flex-col gap-1">
-            {item.prices.map((tier) => (
+        {/* Portions: segmented control with a sliding thumb */}
+        {portions && (
+          <div
+            role="radiogroup"
+            aria-label={`Porción de ${item.name}`}
+            onKeyDown={handlePortionKey}
+            className="menu-seg"
+            style={{ "--n": portions.length, "--k": selected }}
+          >
+            <i className="menu-seg__thumb" aria-hidden="true" />
+            {portions.map((p, j) => (
               <button
-                key={tier.persons}
-                onClick={() => togglePortion(tier.persons, tier.price)}
-                className={`w-full flex justify-between px-3 py-2 font-body text-xs rounded border transition-all duration-200 ${
-                  selectedPortion?.label === tier.persons
-                    ? "bg-[#FF6600] border-[#FF6600] text-white"
-                    : "bg-[#FF6600]/10 border-[#FF6600]/30 text-[#FF6600] hover:border-[#FF6600]"
-                }`}
+                key={p.label}
+                type="button"
+                role="radio"
+                aria-checked={selected === j}
+                tabIndex={selected === j ? 0 : -1}
+                data-testid={`portion-${slug}-${j}`}
+                onClick={() => choosePortion(j)}
+                className="menu-seg__opt"
               >
-                <span>{tier.persons}</span>
-                <span className="font-semibold">{tier.price}</span>
+                <span>{p.label}</span>
+                <b>{p.price}</b>
               </button>
             ))}
           </div>
         )}
 
-        {/* Add to cart button */}
-        <button
-          data-testid={`add-to-cart-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-          onClick={handleAdd}
-          disabled={requiresPortionSelection && !selectedPortion}
-          className={`mt-3 flex items-center justify-center gap-2 w-full py-2.5 font-heading text-sm tracking-widest transition-all duration-300 ${
-            added
-              ? "bg-green-600 text-white"
-              : requiresPortionSelection && !selectedPortion
-              ? "bg-[#FF6600]/5 border border-[#FF6600]/15 text-[#FF6600]/40 cursor-not-allowed"
-              : "bg-[#FF6600]/10 border border-[#FF6600]/30 text-[#FF6600] hover:bg-[#FF6600] hover:text-white"
-          }`}
-        >
-          {added ? (
-            <>
-              <Check size={15} />
+        <div className="mt-3 flex items-center justify-between gap-2.5">
+          <div className="flex min-w-0 flex-col gap-1">
+            <small className="font-body text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-white/40">
+              {portion ? portion.label : "Precio"}
+            </small>
+            <b
+              key={priceTicks}
+              className={`font-heading text-[1.7rem] font-normal leading-[0.9] text-[#FF6600]${
+                priceTicks ? " menu-tick" : ""
+              }`}
+            >
+              {price}
+            </b>
+          </div>
+
+          {/* Round "+" that opens into an "AGREGADO ✓" pill */}
+          <button
+            type="button"
+            data-testid={`add-to-cart-${slug}`}
+            onClick={handleAdd}
+            aria-label={`Agregar ${item.name} al pedido`}
+            className={`menu-add${added ? " is-done" : ""}`}
+          >
+            <span className="menu-add__label" aria-hidden="true">
               AGREGADO
-            </>
-          ) : (
-            <>
-              <Plus size={15} />
-              AGREGAR AL PEDIDO
-            </>
-          )}
-        </button>
+            </span>
+            <span className="menu-add__icon" aria-hidden="true">
+              <span className="menu-add__plus">
+                <Plus size={20} strokeWidth={2.6} />
+              </span>
+              <span className="menu-add__check">
+                <Check size={20} strokeWidth={2.8} />
+              </span>
+            </span>
+          </button>
+          <span className="sr-only" role="status">
+            {added ? `${item.name} agregado al pedido` : ""}
+          </span>
+        </div>
       </div>
     </motion.div>
   );

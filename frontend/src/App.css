@@ -44,33 +44,6 @@
   transform: translateY(-2px);
 }
 
-/* Card hover effect — transform removed: Framer Motion whileHover handles y:-4.
-   Keeping only non-transform properties to avoid conflict. */
-.food-card {
-  background-color: #171717;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.food-card:hover {
-  border-color: rgba(255, 102, 0, 0.5);
-  box-shadow: 0 10px 40px rgba(255, 102, 0, 0.15);
-}
-
-/* Photo → card-background fade, done as a mask on the photo's own wrapper.
-   A separate gradient overlay is clipped independently of the photo, so on
-   fractional-DPR screens (Windows 125%/150%) the last pixel row of the photo
-   bleeds through as a thin orange seam once the card is transformed on hover.
-   With a mask there is only one layer to clip, and its alpha is 0 at that edge. */
-.media-fade {
-  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 100%);
-  mask-image: linear-gradient(to top, transparent 0%, #000 100%);
-}
-.media-fade-soft {
-  -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.7) 50%, #000 100%);
-  mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.7) 50%, #000 100%);
-}
-
 /* Section fade-in animation */
 @keyframes fadeInUp {
   from {
@@ -145,14 +118,6 @@ html {
 ::-webkit-scrollbar-thumb {
   background: #FF6600;
   border-radius: 3px;
-}
-
-/* Price tag */
-.price-tag {
-  color: #FF6600;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.25rem;
-  letter-spacing: 0.05em;
 }
 
 /* Star rating — single CSS animation replaces 5 Framer Motion infinite loops */
@@ -680,4 +645,188 @@ html {
   .promo-card__photo img,
   .promo-card__go,
   .promo-card__go svg { transition: none; }
+}
+
+/* ── Menú: tarjeta de producto ────────────────────────────────────
+   La foto manda (13.5rem, sin degradados ni textos encima) y todo lo demás es
+   deliberadamente más discreto. El resplandor del borde sigue al cursor solo con
+   mouse (el componente escribe --mx/--my); lo animado es opacidad y transform,
+   salvo el clip-path del botón "+" → "AGREGADO". */
+.menu-card {
+  --mx: 50%;
+  --my: 50%;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-io: cubic-bezier(0.77, 0, 0.175, 1);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px 14px;
+  border-radius: 16px;
+  background: #141414;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+/* Aro de 1px que se enciende bajo el cursor (la máscara deja solo el borde) */
+.menu-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(260px circle at var(--mx) var(--my), #FF6600, rgba(255, 102, 0, 0) 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms var(--ease-out);
+}
+/* Halo muy suave dentro de la tarjeta */
+.menu-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(340px circle at var(--mx) var(--my), rgba(255, 102, 0, 0.075), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms var(--ease-out);
+}
+
+.menu-card__photo {
+  position: relative;
+  height: 13.5rem;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+.menu-card__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 800ms var(--ease-out);
+}
+
+/* Porción: control segmentado con un "pulgar" que se desliza (solo transform) */
+.menu-seg {
+  --n: 2;
+  --k: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  margin-top: 12px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #0e0e0e;
+}
+.menu-seg__thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--n));
+  border-radius: 9px;
+  background: rgba(255, 102, 0, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 102, 0, 0.7);
+  transform: translateX(calc(var(--k) * 100%));
+  transition: transform 300ms var(--ease-io);
+}
+.menu-seg__opt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px 5px;
+  border-radius: 9px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 180ms var(--ease-out);
+}
+.menu-seg__opt b {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+.menu-seg__opt[aria-checked="true"] { color: #fff; }
+.menu-seg__opt[aria-checked="true"] b { color: #FF6600; }
+
+/* Cambio de precio: un cruce corto, sin desplazar nada */
+.menu-tick { animation: menu-tick 220ms var(--ease-out); }
+@keyframes menu-tick { from { opacity: 0; transform: scale(0.94); } }
+
+/* "+" redondo que se abre a una píldora "AGREGADO ✓". Se anima solo el recorte. */
+.menu-add {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 142px;
+  height: 44px;
+  border-radius: 999px;
+  background: #FF6600;
+  color: #0D0D0D;
+  transform-origin: right center;
+  clip-path: inset(0 0 0 98px round 22px);
+  transition:
+    clip-path 360ms var(--ease-io),
+    background-color 220ms var(--ease-out),
+    color 220ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+.menu-add__label {
+  flex: 1;
+  padding: 3px 0 0 18px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+.menu-add__icon { position: relative; flex: none; width: 44px; height: 44px; }
+.menu-add__icon > span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: opacity 200ms var(--ease-out), transform 300ms var(--ease-out);
+}
+.menu-add__check { opacity: 0; transform: scale(0.5) rotate(-40deg); }
+.menu-add:active { transform: scale(0.94); }
+.menu-add.is-done { background: #1f9d55; color: #fff; clip-path: inset(0 0 0 0 round 22px); }
+.menu-add.is-done .menu-add__plus { opacity: 0; transform: scale(0.5) rotate(90deg); }
+.menu-add.is-done .menu-add__check { opacity: 1; transform: none; }
+/* El recorte también recortaría el anillo de foco: solo con teclado se amplía */
+.menu-add:focus-visible { outline: 2px solid #FFCC00; outline-offset: 3px; clip-path: inset(-8px -8px -8px 88px round 28px); }
+.menu-add.is-done:focus-visible { clip-path: inset(-8px -8px -8px -8px round 28px); }
+
+/* Hover solo con mouse: en táctil el hover "se queda pegado" al tocar */
+@media (hover: hover) and (pointer: fine) {
+  .menu-card:hover::before,
+  .menu-card:hover::after { opacity: 1; }
+  .menu-card:hover .menu-card__photo img { transform: scale(1.06); }
+  .menu-add:not(.is-done):hover { background: #FF8533; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-card::before,
+  .menu-card::after,
+  .menu-card__photo img,
+  .menu-seg__thumb,
+  .menu-seg__opt,
+  .menu-add,
+  .menu-add__icon > span { transition: none; }
+  .menu-tick { animation: none; }
 }

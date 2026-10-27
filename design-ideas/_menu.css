@@ -1,0 +1,28 @@
+/* Marco común de los prototipos del Menú */
+.mwrap { position: relative; overflow: hidden; padding: clamp(64px, 7vw, 100px) clamp(16px, 4vw, 56px) clamp(80px, 8vw, 120px); }
+
+.mhead { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto clamp(26px, 3.4vw, 44px); }
+.mhead .eyebrow { display: block; margin-bottom: 8px; }
+.mh2 { font-family: var(--f-head); font-weight: 400; line-height: 0.82; }
+.mh2 .stroke { display: block; font-size: clamp(3.6rem, 10.5vw, 9rem); letter-spacing: 0.01em; color: transparent; -webkit-text-stroke: 2px #fff; }
+.mh2 .stroke .ch { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.04em; }
+.mh2 .stroke .ch i { display: inline-block; font-style: normal; animation: mfade 600ms var(--ease-out) backwards; animation-delay: calc(var(--k) * 45ms + 100ms); }
+.mh2 .hl { display: inline-block; margin-top: clamp(-22px, -1.7vw, -8px); padding: 0.1em 0.3em 0.02em; font-size: clamp(2.2rem, 5.4vw, 4.8rem); background: var(--orange); color: var(--ink); transform: rotate(-2deg); transform-origin: left center; animation: mwipe 700ms var(--ease-out) 420ms backwards; }
+@keyframes mfade { from { opacity: 0; } }
+@keyframes mwipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* Botón de pedido (de mentira) */
+.cartpill { position: fixed; z-index: 70; top: 12px; right: 12px; display: flex; align-items: center; gap: 9px; padding: 9px 16px 8px; background: var(--orange); color: var(--ink); border: 3px solid var(--ink); font-family: var(--f-head); font-size: 1.15rem; letter-spacing: 0.1em; line-height: 1; box-shadow: 4px 4px 0 var(--paper); }
+.cartpill.pop { animation: pillpop 340ms var(--ease-out); }
+@keyframes pillpop { 0% { transform: scale(1); } 40% { transform: scale(1.14) rotate(-2deg); } 100% { transform: scale(1); } }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Chips de porción (1 / 2 personas, 4 / 6 / 8 personas) */
+.opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.opt { display: inline-flex; flex-direction: column; align-items: center; padding: 5px 10px 4px; border: 2px solid currentColor; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; line-height: 1.15; text-transform: uppercase; transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out); }
+.opt b { font-family: var(--f-head); font-size: 1.1rem; font-weight: 400; letter-spacing: 0.04em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mh2 .stroke .ch i, .mh2 .hl, .cartpill.pop { animation: none; }
+}

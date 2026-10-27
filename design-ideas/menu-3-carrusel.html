@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menú · Idea 3 — Carrusel cinematográfico</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_menu.css">
+<style>
+  .car { position: relative; z-index: 2; max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(12px, 2vw, 28px); }
+
+  /* Categorías: lomos verticales de color (como persianas cerradas) */
+  .rail { display: flex; gap: 8px; }
+  .rb { position: relative; width: clamp(46px, 4.4vw, 62px); padding: 14px 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; border: 3px solid var(--paper); background: var(--ink); color: var(--paper); transition: background-color 220ms var(--ease-out), color 220ms var(--ease-out), border-color 220ms var(--ease-out), transform 220ms var(--ease-out); }
+  .rb .v { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--f-head); font-size: clamp(1.4rem, 2.1vw, 1.9rem); line-height: 1; letter-spacing: 0.1em; white-space: nowrap; }
+  .rb .k { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.16em; opacity: 0.65; }
+  .rb[aria-pressed="true"] { background: var(--orange); border-color: var(--ink); color: var(--ink); transform: translateX(6px); }
+  @media (hover: hover) and (pointer: fine) { .rb[aria-pressed="false"]:hover { background: rgba(244, 239, 230, 0.12); } }
+
+  .box { position: relative; min-width: 0; }
+  .track { --sw: min(780px, 62vw); --sh: clamp(430px, 66vh, 540px); display: flex; gap: clamp(18px, 3vw, 44px); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding: 18px calc(50% - var(--sw) / 2) 28px; scrollbar-width: none; cursor: grab; outline-offset: 4px; }
+  .track::-webkit-scrollbar { display: none; }
+  .track.drag { cursor: grabbing; scroll-snap-type: none; }
+
+  .sl { position: relative; flex: none; width: var(--sw); height: var(--sh); scroll-snap-align: center; animation: sin 520ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 60ms); will-change: transform, opacity; }
+  @keyframes sin { from { opacity: 0; scale: 0.9; } }
+  /* Nombre gigante en contorno, detrás del plato (se desplaza más lento que el plato) */
+  .big { position: absolute; z-index: 0; left: 0; top: -2%; font-family: var(--f-head); font-size: calc(var(--sw) * var(--k)); line-height: 0.82; letter-spacing: 0.01em; color: transparent; -webkit-text-stroke: 2px rgba(255, 255, 255, 0.3); white-space: nowrap; pointer-events: none; will-change: transform; }
+  .photo { position: absolute; z-index: 1; right: 0; top: 7%; width: 74%; height: 76%; overflow: hidden; border-radius: 14px; background: #0a0a0a; will-change: transform; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+  .sl:nth-child(odd) .photo { transform-origin: 20% 50%; }
+  .info { position: absolute; z-index: 2; left: 0; bottom: 0; width: 56%; padding: clamp(14px, 1.6vw, 22px) clamp(16px, 1.8vw, 24px) clamp(14px, 1.5vw, 20px); color: var(--ink); }
+  /* papel (z -1) y sombra naranja (z -2) en capas separadas: la sombra queda DETRÁS del papel */
+  .info::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--paper); border: 3px solid var(--ink); }
+  .info::after { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--orange); transform: translate(10px, 10px); }
+  .info h3 { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.7rem, 2.6vw, 2.5rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .info p { margin-top: 6px; font-size: clamp(0.8rem, 0.95vw, 0.92rem); font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .info .opts { margin-top: 9px; color: var(--ink); }
+  .info .opt[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 11px; }
+  .pr { font-family: var(--f-head); font-size: clamp(2rem, 3.2vw, 3.1rem); line-height: 0.9; }
+  .add { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px 7px; background: var(--ink); color: var(--orange); font-family: var(--f-head); font-size: 1.1rem; letter-spacing: 0.12em; line-height: 1; transition: transform 160ms var(--ease-out), background-color 180ms var(--ease-out); }
+  .add:active { transform: scale(0.95); }
+  .add.done { background: #1f9d55; color: #fff; }
+
+  .ctrl { display: flex; align-items: center; gap: 16px; margin-top: 6px; padding-inline: 4px; }
+  .arrow { width: 52px; height: 52px; display: grid; place-items: center; border: 3px solid var(--paper); background: var(--ink); color: var(--paper); transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out), transform 160ms var(--ease-out); }
+  .arrow:active { transform: scale(0.94); }
+  .arrow[disabled] { opacity: 0.3; cursor: default; }
+  @media (hover: hover) and (pointer: fine) { .arrow:not([disabled]):hover { background: var(--orange); color: var(--ink); border-color: var(--ink); } }
+  .cnt { font-family: var(--f-head); font-size: 1.7rem; letter-spacing: 0.12em; line-height: 1; min-width: 5.2em; }
+  .cnt b { color: var(--orange); font-weight: 400; }
+  .bar { flex: 1; height: 5px; background: rgba(255, 255, 255, 0.14); position: relative; overflow: hidden; }
+  .bar i { position: absolute; inset: 0; background: var(--orange); transform-origin: left; transform: scaleX(0); }
+  .tip { margin-top: 10px; padding-inline: 4px; font-size: 11px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.42); }
+
+  @media (max-width: 860px) {
+    .car { grid-template-columns: 1fr; }
+    .rail { overflow-x: auto; scrollbar-width: none; padding: 2px 8px 10px 2px; }
+    .rail::-webkit-scrollbar { display: none; }
+    .rb { flex: none; width: auto; flex-direction: row; gap: 10px; padding: 9px 14px 7px; }
+    .rb .v { writing-mode: horizontal-tb; transform: none; font-size: 1.25rem; }
+    .rb[aria-pressed="true"] { transform: translateY(0); }
+    .track { --sw: 84vw; --sh: 520px; }
+    .photo { width: 100%; height: 62%; top: 0; }
+    .info { width: 92%; }
+    .big { top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sl { animation: none; will-change: auto; }
+    .rb, .arrow, .add { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="mwrap">
+  <header class="mhead">
+    <span class="eyebrow">Lo que más te gusta</span>
+    <h2 class="mh2" aria-label="Nuestro menú"><span class="stroke" id="mstroke"></span><span class="hl" aria-hidden="true">MENÚ</span></h2>
+  </header>
+
+  <div class="car">
+    <nav class="rail" id="rail" aria-label="Categorías"></nav>
+    <div class="box">
+      <div class="track" id="track" tabindex="0" aria-roledescription="carrusel" aria-label="Platos"></div>
+      <div class="ctrl">
+        <button class="arrow" id="prev" aria-label="Plato anterior"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M22 7H3M9 1 3 7l6 6"/></svg></button>
+        <button class="arrow" id="next" aria-label="Plato siguiente"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 7h19M13 1l6 6-6 6"/></svg></button>
+        <span class="cnt" id="cnt"></span>
+        <span class="bar" aria-hidden="true"><i id="bari"></i></span>
+      </div>
+      <p class="tip" id="tip"></p>
+    </div>
+  </div>
+</main>
+
+<script src="_shared.js"></script>
+<script src="_menu.js"></script>
+<script>
+grain(); mountMenuHead(); mountCart();
+const rail = $("#rail"), track = $("#track"), cnt = $("#cnt"), bari = $("#bari");
+$("#tip").textContent = FINE ? "Arrastra, usa las flechas o ← →" : "Desliza para ver más platos";
+let cat = "salchipapas", slides = [];
+
+MENU_CATS.forEach((c) => {
+  const b = document.createElement("button");
+  b.className = "rb"; b.setAttribute("aria-pressed", String(c.id === cat));
+  b.innerHTML = `<span class="v">${c.label.toUpperCase()}</span><span class="k">${pad(MENU[c.id].length)}</span>`;
+  b.addEventListener("click", () => { cat = c.id; $$(".rb", rail).forEach((x) => x.setAttribute("aria-pressed", String(x === b))); build(); });
+  rail.appendChild(b);
+});
+
+function build() {
+  const items = MENU[cat];
+  track.innerHTML = "";
+  slides = items.map((item, i) => {
+    const opts = portions(item); let sel = 0;
+    const s = document.createElement("article");
+    s.className = "sl"; s.style.setProperty("--i", i);
+    s.style.setProperty("--k", Math.min(0.3, 3.3 / item.name.length / 10 * 3.2).toFixed(3));
+    s.setAttribute("aria-label", `${i + 1} de ${items.length}: ${item.name}`);
+    s.innerHTML = `
+      <div class="big" aria-hidden="true">${item.name.toUpperCase()}</div>
+      <div class="photo"><img src="${item.img}" alt="${item.name}" loading="lazy" draggable="false"></div>
+      <div class="info">
+        <h3>${item.name}</h3><p>${item.desc}</p>
+        ${opts ? `<div class="opts" role="group" aria-label="Porción">${opts.map((o, k) => `<button class="opt" aria-pressed="${k === 0}" data-k="${k}">${o.label}<b>${o.price}</b></button>`).join("")}</div>` : ""}
+        <div class="row"><span class="pr">${opts ? opts[0].price : item.price}</span><button class="add">+ AGREGAR</button></div>
+      </div>`;
+    $$(".opt", s).forEach((b) => b.addEventListener("click", () => { sel = +b.dataset.k; $$(".opt", s).forEach((x) => x.setAttribute("aria-pressed", String(x === b))); $(".pr", s).textContent = opts[sel].price; }));
+    const add = $(".add", s);
+    add.addEventListener("click", () => { cartAdd(); add.classList.add("done"); add.textContent = "AGREGADO ✓"; setTimeout(() => { add.classList.remove("done"); add.textContent = "+ AGREGAR"; }, 1500); });
+    track.appendChild(s);
+    return { el: s, big: $(".big", s), photo: $(".photo", s) };
+  });
+  track.scrollLeft = 0;
+  frame();
+}
+
+/* Cada plato se acerca, se aclara y se agranda al llegar al centro; el nombre gigante va más lento que la foto (paralaje). */
+let ticking = false;
+function frame() {
+  ticking = false;
+  const rect = track.getBoundingClientRect(), mid = rect.left + rect.width / 2;
+  let best = 0, bestD = 1e9;
+  slides.forEach((s, i) => {
+    const r = s.el.getBoundingClientRect(), d = (r.left + r.width / 2 - mid) / r.width;   // 0 = centrado
+    const a = Math.abs(d);
+    s.el.style.transform = `scale(${(1 - Math.min(a, 1) * 0.09).toFixed(3)})`;
+    s.el.style.opacity = (1 - Math.min(a, 1) * 0.55).toFixed(3);
+    s.big.style.transform = `translate3d(${(d * -14).toFixed(2)}%, 0, 0)`;
+    s.photo.style.transform = `translate3d(${(d * 5).toFixed(2)}%, 0, 0)`;
+    if (a < bestD) { bestD = a; best = i; }
+  });
+  cnt.innerHTML = `<b>${pad(best + 1)}</b> / ${pad(slides.length)}`;
+  const max = track.scrollWidth - track.clientWidth;
+  bari.style.transform = `scaleX(${max > 0 ? clamp(track.scrollLeft / max, 0, 1) : 1})`;
+  $("#prev").disabled = best === 0; $("#next").disabled = best === slides.length - 1;
+  track.dataset.i = best;
+}
+track.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
+addEventListener("resize", frame);
+
+const go = (dir) => { const i = clamp(+track.dataset.i + dir, 0, slides.length - 1); slides[i].el.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", inline: "center", block: "nearest" }); };
+$("#prev").addEventListener("click", () => go(-1));
+$("#next").addEventListener("click", () => go(1));
+track.addEventListener("keydown", (e) => { if (e.target !== track) return; if (e.key === "ArrowRight") { e.preventDefault(); go(1); } if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); } });
+
+/* Arrastrar con el mouse (en táctil el desplazamiento nativo ya funciona) */
+if (FINE) {
+  let down = false, sx = 0, sl = 0, moved = false;
+  track.addEventListener("pointerdown", (e) => { if (e.target.closest("button")) return; down = true; moved = false; sx = e.clientX; sl = track.scrollLeft; });
+  addEventListener("pointermove", (e) => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 4) { moved = true; track.classList.add("drag"); } track.scrollLeft = sl - dx; });
+  addEventListener("pointerup", () => { if (!down) return; down = false; track.classList.remove("drag"); if (moved) go(0); });
+}
+build();
+</script>
+</body>
+</html>

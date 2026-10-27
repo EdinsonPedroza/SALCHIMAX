@@ -91,16 +91,27 @@ const IDEAS = [
   { file: "promos-6-chapas.html", name: "Chapas · medallones",
     desc: "Cada promo es una chapa de botella: borde dentado, foto circular y el texto «LUNES ★ DE 2 PA' 2 ★ $46.000» girando alrededor. Caen y rebotan al entrar; al pasar el mouse el anillo acelera con un resorte y la chapa se inclina. Debajo, el texto y el botón.",
     react: "SVG con textPath (el texto se ajusta con textLength) y rotación con CSS · aceleración con useSpring sobre animation.playbackRate · entrada con keyframes de caída y rebote o animate() con tipo spring · dentado con clipPath polygon. En móvil: 2 columnas." },
+  /* Menú: tres ideas para la sección "Nuestro menú" (con los platos y precios reales) */
+  { sep: true, file: "menu-1-carta-gigante.html", name: "Carta gigante · tipográfica",
+    desc: "Las categorías son rótulos enormes en contorno; al abrir una, un relleno naranja la recorre de izquierda a derecha y los platos se listan como una carta de restaurante (nombre ........ precio). A la derecha, un visor fijo muestra la foto del plato que señalas. Porciones y «Agregar» en cada renglón.",
+    react: "Acordeón con estado open y grid-template-rows 0fr→1fr · relleno con un pseudo-elemento y clipPath inset · visor sticky con una imagen por plato y opacidad (sin remontar) · en móvil el visor desaparece y cada renglón trae su miniatura. Entradas sin deslizamientos." },
+  { file: "menu-2-bento.html", name: "Bento de tinta · foto grande",
+    desc: "Botones de categoría macizos con sombra dura y un bento donde el primer plato ocupa 2×2. Al pasar el mouse (o tocar), un círculo naranja nace donde está el cursor y descubre el detalle: descripción, porciones, precio y «Agregar». Al cambiar de categoría los platos aparecen con un escalonado suave.",
+    react: "Tarjeta con clipPath: circle(r at x y) animado desde la posición del puntero (variables CSS --x/--y) · bento con CSS grid y grid-auto-flow: dense · clic fija el detalle con el mouse; en táctil, toque abre/cierra · visibility para que lo oculto no tome el foco." },
+  { file: "menu-3-carrusel.html", name: "Carrusel cinematográfico",
+    desc: "Las categorías son lomos verticales de color. Los platos corren en horizontal con snap: el del centro se agranda y se aclara, y el nombre gigante en contorno va detrás con paralaje (más lento que la foto). Flechas, teclado, arrastre con mouse y contador 02 / 08 con barra de progreso.",
+    react: "scroll-snap-type: x mandatory + un solo listener de scroll con requestAnimationFrame que escribe transform/opacity (sin layout) · paralaje con translate3d por plato · arrastre con pointer events solo para mouse · flechas con scrollIntoView · carrusel accesible con aria-roledescription." },
 ];
 const NOTES = [
   ["Datos", "Las tres leen la misma lista que frontend/src/data/promos.js (día, título, descripción, precio, badge, foto, active). Cambiar una promo no requiere tocar el diseño."],
   ["«Hoy»", "Resalta la promo del día con new Date().getDay(). Si hoy no hay promo, la idea 1 avisa cuál es la siguiente. Para probar otro día: agrega ?hoy=0..6 a la URL de cada prototipo."],
+  ["Entradas", "Ninguna idea del menú entra deslizándose hacia arriba: usan fundidos, sellos, recortes en círculo y desplazamientos horizontales."],
   ["Rendimiento", "Todo se mueve con transform y opacity (más clip-path en los recortes). Nada anima width, height ni top/left. Curvas: ease-out fuerte cubic-bezier(.23,1,.32,1) y ease-in-out cubic-bezier(.77,0,.175,1)."],
   ["Accesibilidad", "prefers-reduced-motion: sin cintas, sin inclinaciones y el estado final fijo. Hover solo con mouse (hover: hover). Toda la CTA es un enlace real a WhatsApp con el mensaje de la promo."],
 ];
 
 const frame = $("#frame"), capT = $("#capT"), capD = $("#capD"), notes = $("#notes"), more = $("#more"), capB = $("#capB");
-const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
+const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6", "M1", "M2", "M3"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
 const tabs = IDEAS.map((it, i) => {
   const b = document.createElement("button");
   b.className = "tab"; b.innerHTML = `<b>${LABELS[i]}</b>${it.name}`;
@@ -124,8 +135,8 @@ capB.addEventListener("click", () => {
   capB.setAttribute("aria-expanded", String(open));
   capB.textContent = open ? "Cómo llevarlo a la landing ▾" : "Cómo llevarlo a la landing ▴";
 });
-/* Teclas 1–6 para las ideas; la tecla B abre la 1b */
-addEventListener("keydown", (e) => { const j = LABELS.indexOf(e.key === "b" || e.key === "B" ? "1b" : e.key); if (j >= 0) select(j); });
+/* Teclas 1–6 para las ideas; B abre la 1b y M la primera del menú */
+addEventListener("keydown", (e) => { const j = LABELS.indexOf(e.key === "b" || e.key === "B" ? "1b" : /^[mM]$/.test(e.key) ? "M1" : e.key); if (j >= 0) select(j); });
 select(clamp((parseInt(location.hash.slice(1), 10) || 1) - 1, 0, IDEAS.length - 1));
 </script>
 </body>

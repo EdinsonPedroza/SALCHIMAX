@@ -6,9 +6,9 @@ import { promos } from "../data/promos";
 const WA_LINK = "https://wa.me/573177371695";
 const EASE = [0.23, 1, 0.32, 1];
 
-// Color de acento por promo (naranja, amarillo, rojo, crema). Una promo puede
-// fijar el suyo con `color` en data/promos.js.
-const PALETTE = ["#FF6600", "#FFCC00", "#FF003C", "#F4EFE6"];
+// Un solo acento (el naranja de la marca) para que los textos no compitan con las fotos.
+// Una promo puede fijar el suyo con `color` en data/promos.js.
+const ACCENT = "#FF6600";
 
 const DAY_NAMES = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 const stripAccents = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -108,7 +108,7 @@ export default function Promos() {
     () =>
       promos
         .filter((p) => p.active)
-        .map((p, i) => ({ ...p, dows: dowsOf(p.day), accent: p.color || PALETTE[i % PALETTE.length] })),
+        .map((p, i) => ({ ...p, dows: dowsOf(p.day), accent: p.color || ACCENT })),
     []
   );
   // Índice de la promo que toca hoy (-1 si hoy no hay): solo marca su tarjeta con "HOY"

@@ -4,7 +4,7 @@
 //  Cómo funciona cada promo:
 //   - day:    día(s) de la promo (etiqueta que se muestra arriba). Escribe el
 //             nombre del día ("Lunes", "Lunes y Martes"): así se marca la de HOY
-//   - color:  (opcional) color de acento, ej "#FF6600". Si no, se asigna uno solo
+//   - color:  (opcional) color de acento, ej "#FF6600". Si no, usa el naranja de la marca
 //   - title:  nombre de la promo
 //   - desc:   descripción corta
 //   - price:  precio (deja "" si no aplica)

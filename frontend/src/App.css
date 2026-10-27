@@ -576,14 +576,14 @@ html {
   font-size: clamp(1.3rem, 8.6cqi, 1.95rem);
   line-height: 0.9;
   letter-spacing: 0.08em;
-  color: var(--c);
+  color: rgba(255, 255, 255, 0.62);
 }
 .promo-card__tag {
   flex: none;
   padding: 1cqi 3cqi 0.2cqi;
-  border: 1.5px solid var(--c);
+  border: 1.5px solid rgba(255, 255, 255, 0.26);
   border-radius: 5px;
-  color: var(--c);
+  color: rgba(255, 255, 255, 0.78);
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(0.95rem, 6.2cqi, 1.3rem);
   line-height: 1;
@@ -618,14 +618,14 @@ html {
   gap: 8px;
   margin-left: auto;
   padding: 0.5em 0.9em 0.4em;
-  border: 2px solid var(--c);
+  border: 2px solid rgba(255, 255, 255, 0.32);
   border-radius: 6px;
-  color: var(--c);
+  color: #fff;
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(1rem, 6.2cqi, 1.3rem);
   letter-spacing: 0.1em;
   line-height: 1;
-  transition: background-color 220ms cubic-bezier(0.23, 1, 0.32, 1), color 220ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: background-color 220ms cubic-bezier(0.23, 1, 0.32, 1), color 220ms cubic-bezier(0.23, 1, 0.32, 1), border-color 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .promo-card__go svg { transition: transform 240ms cubic-bezier(0.23, 1, 0.32, 1); }
 
@@ -642,10 +642,10 @@ html {
 
 /* Hover solo con mouse: en táctil el hover "se queda pegado" al tocar */
 @media (hover: hover) and (pointer: fine) {
-  .promo-card:hover { border-color: var(--c); }
+  .promo-card:not(.is-today):hover { border-color: rgba(244, 239, 230, 0.3); }
   .promo-card:hover .promo-card__photo img { transform: scale(1.08); }
   .promo-card:hover .promo-card__sheen { animation: promo-sheen 900ms cubic-bezier(0.23, 1, 0.32, 1); }
-  .promo-card:hover .promo-card__go { background: var(--c); color: #0D0D0D; }
+  .promo-card:hover .promo-card__go { background: var(--c); border-color: var(--c); color: #0D0D0D; }
   .promo-card:hover .promo-card__go svg { transform: translateX(4px); }
 }
 
@@ -659,7 +659,7 @@ html {
 }
 
 /* ── Menú: tarjeta de producto ────────────────────────────────────
-   La foto manda (13.5rem, sin degradados ni textos encima) y todo lo demás es
+   La foto manda (15rem, sin degradados ni textos encima) y todo lo demás es
    deliberadamente más discreto. El resplandor del borde sigue al cursor solo con
    mouse (el componente escribe --mx/--my); lo animado es opacidad y transform,
    salvo el clip-path del botón "+" → "AGREGADO". */
@@ -708,7 +708,7 @@ html {
 
 .menu-card__photo {
   position: relative;
-  height: 13.5rem;
+  height: 15rem;
   border-radius: 9px;
   overflow: hidden;
   background: #0a0a0a;
@@ -722,7 +722,8 @@ html {
   transition: transform 800ms var(--ease-out);
 }
 
-/* Porción: control segmentado con un "pulgar" que se desliza (solo transform) */
+/* Porción: control segmentado compacto (una línea por opción) con un "pulgar" que se desliza.
+   Con 3 o más opciones (--stack) la etiqueta y el precio se apilan para que quepan. */
 .menu-seg {
   --n: 2;
   --k: 0;
@@ -730,17 +731,17 @@ html {
   display: grid;
   grid-template-columns: repeat(var(--n), minmax(0, 1fr));
   margin-top: 12px;
-  padding: 3px;
+  padding: 2px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  border-radius: 11px;
   background: #0e0e0e;
 }
 .menu-seg__thumb {
   position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: calc((100% - 6px) / var(--n));
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: calc((100% - 4px) / var(--n));
   border-radius: 9px;
   background: rgba(255, 102, 0, 0.16);
   box-shadow: inset 0 0 0 1px rgba(255, 102, 0, 0.7);
@@ -750,25 +751,28 @@ html {
 .menu-seg__opt {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 6px 4px 5px;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 4px 7px;
   border-radius: 9px;
   color: rgba(255, 255, 255, 0.55);
   font-size: 0.64rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+  white-space: nowrap;
   transition: color 180ms var(--ease-out);
 }
 .menu-seg__opt b {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   font-weight: 400;
   letter-spacing: 0.03em;
   line-height: 1;
 }
+.menu-seg--stack .menu-seg__opt { flex-direction: column; gap: 1px; padding: 6px 2px 5px; }
+.menu-seg--stack .menu-seg__opt b { font-size: 1.1rem; }
 .menu-seg__opt[aria-checked="true"] { color: #fff; }
 .menu-seg__opt[aria-checked="true"] b { color: #FF6600; }
 

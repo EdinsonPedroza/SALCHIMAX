@@ -212,7 +212,7 @@ const ProductCard = memo(function ProductCard({ item, index }) {
             role="radiogroup"
             aria-label={`Porción de ${item.name}`}
             onKeyDown={handlePortionKey}
-            className="menu-seg"
+            className={`menu-seg${portions.length > 2 ? " menu-seg--stack" : ""}`}
             style={{ "--n": portions.length, "--k": selected }}
           >
             <i className="menu-seg__thumb" aria-hidden="true" />

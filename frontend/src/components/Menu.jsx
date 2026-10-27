@@ -89,9 +89,31 @@ const menuData = {
   ],
 };
 
+// Tamaños del bento: el primer plato manda (2×2 en escritorio) y el resto lo rodea.
+// Clases completas (no armadas con template) para que Tailwind las detecte.
+const CARD_SPAN = {
+  normal: "",
+  big: "sm:col-span-2 lg:row-span-2",
+  wide: "xl:col-span-2",
+};
+const PHOTO_BOX = {
+  normal: "aspect-[5/4] flex-shrink-0",
+  big: "aspect-[5/4] sm:aspect-[2/1] lg:aspect-auto lg:flex-1 lg:min-h-[300px]",
+  wide: "aspect-[5/4] xl:aspect-[5/2] flex-shrink-0",
+};
+
+// Con 4 columnas, el plato grande ocupa 2×2 y deja sitio a 4 más a su lado. Si la
+// última fila queda con un hueco, el último plato se ensancha para cerrarla.
+function sizeOf(i, total) {
+  if (i === 0) return "big";
+  const others = total - 1;
+  if (total > 3 && i === total - 1 && others > 4 && (4 - ((others - 4) % 4)) % 4 === 1) return "wide";
+  return "normal";
+}
+
 // memo + actions-only context: adding one item used to re-render all 20 cards
 // (and their Framer Motion wrappers) through the cart context.
-const ProductCard = memo(function ProductCard({ item, index }) {
+const ProductCard = memo(function ProductCard({ item, index, size = "normal" }) {
   const { addItem } = useCartActions();
   const [added, setAdded] = useState(false);
   const [selectedPortion, setSelectedPortion] = useState(null);
@@ -129,26 +151,26 @@ const ProductCard = memo(function ProductCard({ item, index }) {
         ease: [0.16, 1, 0.3, 1],
       }}
       data-testid={`product-card-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-      className="food-card overflow-hidden group flex flex-col"
+      className={`food-card overflow-hidden group flex flex-col ${CARD_SPAN[size]}`}
     >
       {/* Image */}
-      <div className="media-fade overflow-hidden aspect-[5/4] relative flex-shrink-0">
+      <div className={`media-fade overflow-hidden relative ${PHOTO_BOX[size]}`}>
         <img
           src={item.img}
           alt={item.name}
-          className="gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className={`gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${size === "big" ? "lg:absolute lg:inset-0" : ""}`}
           loading="lazy"
           decoding="async"
         />
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col flex-1">
+      <div className={`p-4 flex flex-col ${size === "big" ? "flex-1 lg:flex-none" : "flex-1"}`}>
         <div className="flex justify-between items-start gap-2 mb-1.5">
-          <h3 className="font-heading text-lg text-white tracking-wide leading-tight">{item.name}</h3>
-          {!item.prices && !item.price2 && <span className="price-tag flex-shrink-0 text-base">{item.price}</span>}
+          <h3 className={`font-heading text-white tracking-wide leading-tight ${size === "big" ? "text-xl lg:text-3xl" : "text-lg"}`}>{item.name}</h3>
+          {!item.prices && !item.price2 && <span className={`price-tag flex-shrink-0 ${size === "big" ? "text-xl lg:text-2xl" : "text-base"}`}>{item.price}</span>}
         </div>
-        <p className="font-body text-xs text-gray-400 leading-relaxed flex-1">{item.desc}</p>
+        <p className={`font-body text-gray-400 leading-relaxed ${size === "big" ? "text-xs lg:text-sm lg:mb-2" : "text-xs flex-1"}`}>{item.desc}</p>
 
         {/* Dual pricing for 1 / 2 persons — clickable selection buttons */}
         {item.price2 && (
@@ -345,10 +367,10 @@ export default function Menu() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             data-testid={`menu-grid-${activeTab}`}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 ${menuData[activeTab].length > 3 ? "xl:grid-cols-4" : ""}`}
           >
             {menuData[activeTab].map((item, i) => (
-              <ProductCard key={i} item={item} index={i} />
+              <ProductCard key={i} item={item} index={i} size={sizeOf(i, menuData[activeTab].length)} />
             ))}
           </motion.div>
         </AnimatePresence>

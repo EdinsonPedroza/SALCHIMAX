@@ -845,3 +845,80 @@ html {
   .menu-add__icon > span { transition: none; }
   .menu-tick { animation: none; }
 }
+
+/* ── Mapa de ubicación ────────────────────────────────────────────
+   Las baldosas de OpenStreetMap son claras: se invierten con un filtro (solo en la
+   capa de baldosas, no en el marcador ni los controles) para que combinen con el
+   fondo oscuro del sitio. Marcador, controles, popup y atribución se redibujan. */
+.map-frame .leaflet-container { background: #121212; font-family: 'Manrope', sans-serif; }
+.map-frame .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92) saturate(0.55);
+}
+.map-pin { background: none; border: 0; }
+.map-pin__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  background: #FF6600;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+}
+.map-pin__pulse {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  background: rgba(255, 102, 0, 0.35);
+  animation: map-pulse 2.4s ease-out infinite;
+}
+@keyframes map-pulse { 0% { transform: scale(0.4); opacity: 0.9; } 100% { transform: scale(1.5); opacity: 0; } }
+
+.map-frame .leaflet-bar { border: 0; box-shadow: none; display: flex; flex-direction: column; gap: 6px; }
+.map-frame .leaflet-bar a {
+  width: 38px;
+  height: 38px;
+  line-height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(23, 23, 23, 0.94);
+  color: #fff;
+  font-size: 20px;
+  transition: background-color 180ms cubic-bezier(0.23, 1, 0.32, 1), color 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.map-frame .leaflet-bar a:first-child,
+.map-frame .leaflet-bar a:last-child { border-radius: 10px; }
+.map-frame .leaflet-bar a.leaflet-disabled { opacity: 0.4; background: rgba(23, 23, 23, 0.94); }
+@media (hover: hover) and (pointer: fine) {
+  .map-frame .leaflet-bar a:not(.leaflet-disabled):hover { background: #FF6600; color: #0D0D0D; }
+}
+.map-frame .leaflet-control-zoom { margin: 0 14px 14px 0; }
+
+.map-frame .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #171717;
+  color: #fff;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+}
+.map-frame .leaflet-popup-content { margin: 12px 16px; font-size: 0.85rem; line-height: 1.45; color: rgba(255, 255, 255, 0.78); }
+.map-frame .leaflet-popup-content strong { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; font-weight: 400; letter-spacing: 0.06em; color: #FF6600; }
+.map-frame .leaflet-popup-tip { background: #171717; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: none; }
+.map-frame .leaflet-popup-close-button { color: rgba(255, 255, 255, 0.55); }
+
+.map-frame .leaflet-control-attribution {
+  background: rgba(13, 13, 13, 0.8);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+}
+.map-frame .leaflet-control-attribution a { color: rgba(255, 255, 255, 0.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .map-pin__pulse { animation: none; opacity: 0.5; }
+}

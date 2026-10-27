@@ -1,15 +1,17 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+// Own marker (no external images): an orange pin with a soft pulse ring, styled in App.css.
+const PIN_ICON = L.divIcon({
+  className: "map-pin",
+  html: '<span class="map-pin__pulse"></span><span class="map-pin__dot"></span>',
+  iconSize: [44, 44],
+  iconAnchor: [22, 22],
+  popupAnchor: [0, -18],
 });
 
 const SALCHIMAX_POS = [3.518157, -76.300247];
@@ -44,7 +46,7 @@ export default function Location() {
           <div className="w-16 h-1 bg-[#FF6600] mx-auto" />
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           {/* Map */}
           <motion.div
             ref={mapRef}
@@ -53,20 +55,22 @@ export default function Location() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             data-testid="map-container"
-            className="w-full h-80 md:h-96 overflow-hidden border border-white/10 bg-[#171717]"
+            className="map-frame w-full h-80 md:h-96 lg:h-auto lg:min-h-[28rem] overflow-hidden rounded-xl border border-white/10 bg-[#171717]"
           >
             {mapInView ? (
               <MapContainer
                 center={SALCHIMAX_POS}
                 zoom={17}
-                style={{ width: "100%", height: "100%", filter: "grayscale(70%) contrast(1.1)" }}
+                style={{ width: "100%", height: "100%" }}
                 scrollWheelZoom={false}
+                zoomControl={false}
               >
+                <ZoomControl position="bottomright" />
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
                 />
-                <Marker position={SALCHIMAX_POS}>
+                <Marker position={SALCHIMAX_POS} icon={PIN_ICON}>
                   <Popup>
                     <strong>SALCHIMAX</strong><br />
                     Cra. 28 #19-20, Palmira

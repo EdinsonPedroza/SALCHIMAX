@@ -97,9 +97,9 @@ const CARD_SPAN = {
   wide: "xl:col-span-2",
 };
 const PHOTO_BOX = {
-  normal: "aspect-[5/4] flex-shrink-0",
-  big: "aspect-[5/4] sm:aspect-[2/1] lg:aspect-auto lg:flex-1 lg:min-h-[300px]",
-  wide: "aspect-[5/4] xl:aspect-[5/2] flex-shrink-0",
+  normal: "aspect-[2/1] sm:aspect-[16/10] flex-shrink-0",
+  big: "aspect-[16/10] sm:aspect-[5/2] lg:aspect-auto lg:flex-1 lg:min-h-[260px]",
+  wide: "aspect-[2/1] sm:aspect-[16/10] xl:aspect-[3/1] flex-shrink-0",
 };
 
 // Con 4 columnas, el plato grande ocupa 2×2 y deja sitio a 4 más a su lado. Si la

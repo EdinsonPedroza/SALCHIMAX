@@ -8,7 +8,7 @@ export default function OrderCTA() {
     <section
       id="order-cta"
       data-testid="order-cta-section"
-      className="py-24 md:py-32 bg-[#0D0D0D] relative overflow-hidden"
+      className="py-14 md:py-20 bg-[#0D0D0D] relative overflow-hidden"
     >
       {/* Orange glow background */}
       <div

@@ -210,7 +210,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16 md:pt-32 md:pb-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center pt-24 pb-16">
         {/* Logo mobile */}
         <div className="flex justify-center mb-6 md:hidden">
           <motion.img
@@ -282,25 +282,6 @@ export default function Hero() {
           >
             VER MENÚ
           </MagneticBtn>
-        </motion.div>
-
-        {/* Stars */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.95 }}
-          className="flex items-center justify-center gap-2 mt-10"
-        >
-          <div className="flex gap-1 hero-stars">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <span key={i} className="text-[#FF6600] text-lg">
-                ★
-              </span>
-            ))}
-          </div>
-          <span className="font-body text-sm text-gray-400">
-            5.0 en Google Maps
-          </span>
         </motion.div>
       </div>
 

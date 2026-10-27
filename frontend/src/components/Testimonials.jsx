@@ -85,7 +85,7 @@ export default function Testimonials() {
       ref={sectionRef}
       id="testimonials"
       data-testid="testimonials-section"
-      className="py-20 md:py-28 bg-[#121212] overflow-hidden"
+      className="py-12 md:py-16 bg-[#121212] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 mb-12">
         <motion.div

@@ -124,12 +124,6 @@ export default function Promos() {
   );
   const today = useMemo(() => findToday(list, dow), [list, dow]);
 
-  const tapeText = useMemo(() => {
-    const badges = [...new Set(list.map((p) => p.badge).filter(Boolean))];
-    const days = list.map((p) => p.day.toUpperCase());
-    return `${[...badges, "PIDE POR WHATSAPP", ...days].join(" ★ ")} ★ `;
-  }, [list]);
-
   if (list.length === 0) return null;
 
   const pill =
@@ -142,37 +136,16 @@ export default function Promos() {
           tail: "",
         });
 
-  const tape =
-    "absolute -left-[6%] z-0 w-[112%] border-y-[3px] border-[#0D0D0D] py-[0.4em] font-heading text-[clamp(1.3rem,2.4vw,2rem)] leading-none tracking-[0.14em] text-[#0D0D0D]";
-
   return (
     <section
       ref={sectionRef}
       id="promos"
       data-testid="promos-section"
       aria-labelledby="promos-title"
-      className={`relative overflow-hidden bg-[#0D0D0D] px-[clamp(16px,4vw,56px)] pb-[clamp(110px,11vw,160px)] pt-[clamp(96px,10vw,140px)] ${
+      className={`relative overflow-hidden bg-[#0D0D0D] px-[clamp(16px,4vw,56px)] pb-[clamp(64px,7vw,96px)] pt-[clamp(64px,7vw,96px)] ${
         inView ? "" : "anim-paused"
       }`}
     >
-      {/* Cintas de precaución */}
-      <div
-        aria-hidden="true"
-        className={`${tape} top-[clamp(22px,3.6vw,46px)] -rotate-[2.2deg] bg-[#FFCC00]`}
-      >
-        <div className="promo-tape-track">
-          {Array.from({ length: 6 }, (_, i) => <span key={i}>{tapeText}</span>)}
-        </div>
-      </div>
-      <div
-        aria-hidden="true"
-        className={`${tape} bottom-[clamp(22px,3.6vw,46px)] rotate-[1.6deg] bg-[#FF6600]`}
-      >
-        <div className="promo-tape-track is-reverse">
-          {Array.from({ length: 6 }, (_, i) => <span key={i}>{tapeText}</span>)}
-        </div>
-      </div>
-
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Encabezado */}
         <header className="mb-[clamp(34px,4.6vw,60px)]">

@@ -563,14 +563,6 @@ html {
    Tarjeta con la foto de borde a borde. `container-type` permite medir el texto
    y los espacios en `cqi` (% del ancho de la tarjeta), así escala igual en 1, 2
    o 4 columnas. El color de la promo llega por la variable --c. */
-.promo-tape-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-scroll 32s linear infinite;
-}
-.promo-tape-track.is-reverse { animation-direction: reverse; }
-.promo-tape-track > span { flex: none; white-space: nowrap; padding-right: 0.6em; }
-
 @keyframes promo-blink { 50% { opacity: 0.25; } }
 .promo-blink { animation: promo-blink 1.2s ease-in-out infinite; }
 
@@ -682,7 +674,6 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .promo-tape-track,
   .promo-blink,
   .promo-card:hover .promo-card__sheen { animation: none; }
   .promo-card,

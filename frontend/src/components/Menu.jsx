@@ -89,25 +89,29 @@ const menuData = {
   ],
 };
 
-// Tamaños del bento: el primer plato manda (2×2 en escritorio) y el resto lo rodea.
+// Tamaños: el primer plato es "destacado" (2 columnas × 1 fila, foto a un lado y texto al otro).
+// Si la última fila queda incompleta, el último plato se ensancha para cerrarla.
 // Clases completas (no armadas con template) para que Tailwind las detecte.
 const CARD_SPAN = {
   normal: "",
-  big: "sm:col-span-2 lg:row-span-2",
-  wide: "xl:col-span-2",
+  big: "sm:col-span-2 lg:flex-row",
+  wide2: "lg:col-span-2 lg:flex-row",
+  wide3: "lg:col-span-3 lg:flex-row",
 };
+// Fotos con altura fija (la original, h-44): ni las pequeñas ni las destacadas crecen con el ancho.
 const PHOTO_BOX = {
-  normal: "aspect-[2/1] sm:aspect-[16/10] flex-shrink-0",
-  big: "aspect-[16/10] sm:aspect-[5/2] lg:aspect-auto lg:flex-1 lg:min-h-[260px]",
-  wide: "aspect-[2/1] sm:aspect-[16/10] xl:aspect-[3/1] flex-shrink-0",
+  normal: "h-44 flex-shrink-0",
+  big: "h-44 sm:h-52 lg:h-auto lg:w-1/2 lg:min-h-[240px] flex-shrink-0",
+  wide2: "h-44 lg:h-auto lg:w-1/2 lg:min-h-[200px] flex-shrink-0",
+  wide3: "h-44 lg:h-auto lg:w-2/5 lg:min-h-[200px] flex-shrink-0",
 };
 
-// Con 4 columnas, el plato grande ocupa 2×2 y deja sitio a 4 más a su lado. Si la
-// última fila queda con un hueco, el último plato se ensancha para cerrarla.
+// Rejilla de 3 columnas en escritorio: el destacado cuenta 2 unidades.
 function sizeOf(i, total) {
   if (i === 0) return "big";
-  const others = total - 1;
-  if (total > 3 && i === total - 1 && others > 4 && (4 - ((others - 4) % 4)) % 4 === 1) return "wide";
+  const left = (3 - ((total + 1) % 3)) % 3;
+  if (i === total - 1 && left === 1) return "wide2";
+  if (i === total - 1 && left === 2) return "wide3";
   return "normal";
 }
 
@@ -158,19 +162,19 @@ const ProductCard = memo(function ProductCard({ item, index, size = "normal" }) 
         <img
           src={item.img}
           alt={item.name}
-          className={`gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${size === "big" ? "lg:absolute lg:inset-0" : ""}`}
+          className={`gallery-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${size !== "normal" ? "lg:absolute lg:inset-0" : ""}`}
           loading="lazy"
           decoding="async"
         />
       </div>
 
       {/* Content */}
-      <div className={`p-4 flex flex-col ${size === "big" ? "flex-1 lg:flex-none" : "flex-1"}`}>
+      <div className={`p-4 flex flex-col ${size !== "normal" ? "flex-1 lg:justify-center" : "flex-1"}`}>
         <div className="flex justify-between items-start gap-2 mb-1.5">
-          <h3 className={`font-heading text-white tracking-wide leading-tight ${size === "big" ? "text-xl lg:text-3xl" : "text-lg"}`}>{item.name}</h3>
-          {!item.prices && !item.price2 && <span className={`price-tag flex-shrink-0 ${size === "big" ? "text-xl lg:text-2xl" : "text-base"}`}>{item.price}</span>}
+          <h3 className={`font-heading text-white tracking-wide leading-tight ${size !== "normal" ? "text-xl lg:text-2xl" : "text-lg"}`}>{item.name}</h3>
+          {!item.prices && !item.price2 && <span className={`price-tag flex-shrink-0 ${size !== "normal" ? "text-xl" : "text-base"}`}>{item.price}</span>}
         </div>
-        <p className={`font-body text-gray-400 leading-relaxed ${size === "big" ? "text-xs lg:text-sm lg:mb-2" : "text-xs flex-1"}`}>{item.desc}</p>
+        <p className={`font-body text-gray-400 leading-relaxed ${size !== "normal" ? "text-xs lg:text-sm lg:mb-2" : "text-xs flex-1"}`}>{item.desc}</p>
 
         {/* Dual pricing for 1 / 2 persons — clickable selection buttons */}
         {item.price2 && (
@@ -367,7 +371,7 @@ export default function Menu() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             data-testid={`menu-grid-${activeTab}`}
-            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 ${menuData[activeTab].length > 3 ? "xl:grid-cols-4" : ""}`}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           >
             {menuData[activeTab].map((item, i) => (
               <ProductCard key={i} item={item} index={i} size={sizeOf(i, menuData[activeTab].length)} />

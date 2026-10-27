@@ -132,7 +132,7 @@ const ProductCard = memo(function ProductCard({ item, index }) {
       className="food-card overflow-hidden group flex flex-col"
     >
       {/* Image */}
-      <div className="media-fade overflow-hidden h-44 relative flex-shrink-0">
+      <div className="media-fade overflow-hidden aspect-[5/4] relative flex-shrink-0">
         <img
           src={item.img}
           alt={item.name}

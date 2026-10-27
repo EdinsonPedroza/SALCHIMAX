@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { MapPin, Clock, Phone } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
+import { MapPin, Clock, Phone, ExternalLink } from "lucide-react";
+import { MapContainer, TileLayer, Marker, ZoomControl, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -15,6 +15,17 @@ const PIN_ICON = L.divIcon({
 });
 
 const SALCHIMAX_POS = [3.518157, -76.300247];
+const MAPS_URL = "https://maps.google.com/?q=Cra.+28+%2319-20,+Palmira,+Valle+del+Cauca";
+
+const openMaps = () => window.open(MAPS_URL, "_blank", "noopener,noreferrer");
+
+// A click on the map opens Google Maps. Leaflet only fires "click" for a real click,
+// not at the end of a drag, so panning the map still works; the zoom buttons stop
+// their own clicks from reaching the map.
+function ClickToOpen() {
+  useMapEvents({ click: openMaps });
+  return null;
+}
 
 export default function Location() {
   const mapRef = useRef(null);
@@ -55,7 +66,7 @@ export default function Location() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             data-testid="map-container"
-            className="map-frame w-full h-80 md:h-96 lg:h-auto lg:min-h-[28rem] overflow-hidden rounded-xl border border-white/10 bg-[#171717]"
+            className="map-frame relative w-full h-80 md:h-96 lg:h-auto lg:min-h-[28rem] overflow-hidden rounded-xl border border-white/10 bg-[#171717]"
           >
             {mapInView ? (
               <MapContainer
@@ -66,22 +77,33 @@ export default function Location() {
                 zoomControl={false}
               >
                 <ZoomControl position="bottomright" />
+                <ClickToOpen />
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
                 />
-                <Marker position={SALCHIMAX_POS} icon={PIN_ICON}>
-                  <Popup>
-                    <strong>SALCHIMAX</strong><br />
-                    Cra. 28 #19-20, Palmira
-                  </Popup>
-                </Marker>
+                <Marker
+                  position={SALCHIMAX_POS}
+                  icon={PIN_ICON}
+                  title="Abrir en Google Maps"
+                  eventHandlers={{ click: openMaps }}
+                />
               </MapContainer>
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <MapPin size={32} className="text-[#FF6600]/40 animate-pulse" />
               </div>
             )}
+            <a
+              href={MAPS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="map-open-link"
+              className="map-open-link"
+            >
+              <ExternalLink size={14} strokeWidth={2.6} aria-hidden="true" />
+              Abrir en Google Maps
+            </a>
           </motion.div>
 
           {/* Info */}
@@ -153,7 +175,7 @@ export default function Location() {
             </motion.div>
 
             <motion.a
-              href="https://maps.google.com/?q=Cra.+28+%2319-20,+Palmira,+Valle+del+Cauca"
+              href={MAPS_URL}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="get-directions-btn"

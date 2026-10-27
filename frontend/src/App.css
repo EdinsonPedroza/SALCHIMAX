@@ -922,3 +922,35 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .map-pin__pulse { animation: none; opacity: 0.5; }
 }
+
+/* Todo el mapa abre Google Maps con un clic: cursor de mano y una pista visible
+   (que además es un enlace real para teclado y lectores de pantalla). */
+.map-frame .leaflet-container { cursor: pointer; }
+.map-frame .leaflet-container.leaflet-drag-target,
+.map-frame .leaflet-dragging .leaflet-container { cursor: grabbing; }
+.map-open-link {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(23, 23, 23, 0.94);
+  color: #fff;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  transition: background-color 180ms cubic-bezier(0.23, 1, 0.32, 1), color 180ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.map-open-link:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .map-open-link:hover { background: #FF6600; color: #0D0D0D; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-open-link { transition: none; }
+}

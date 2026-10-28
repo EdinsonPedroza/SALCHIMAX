@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, MessageCircle } from "lucide-react";
 import { legal, SIC_URL } from "../data/legal";
+import { Reveal } from "./Reveal";
 
 const LOGO_URL = "/logo.jpeg";
 const WA_LINK = "https://wa.me/573177371695";
@@ -22,21 +22,16 @@ export default function Footer() {
       {/* Social media section */}
       <div className="bg-[#121212] border-b border-white/5 py-8">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center"
-          >
-            <span className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-4 block">
+          <div className="text-center">
+            <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-4 block w-fit mx-auto">
               Síguenos para ver promos y novedades
-            </span>
-            <h2 className="font-heading text-4xl md:text-5xl text-white mb-8">
+            </Reveal>
+            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-4xl md:text-5xl text-white mb-8 w-fit mx-auto">
               SIGUENOS EN <span className="text-[#FF6600]">REDES</span>
-            </h2>
+            </Reveal>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Reveal variant="stamp" delay={0.18} className="w-full sm:w-auto">
               <a
                 href="https://www.instagram.com/salchi.maxx"
                 target="_blank"
@@ -47,6 +42,8 @@ export default function Footer() {
                 <Instagram size={24} />
                 @SALCHI.MAXX
               </a>
+              </Reveal>
+              <Reveal variant="stamp" delay={0.26} className="w-full sm:w-auto">
               <a
                 href="https://www.facebook.com/profile.php?id=61571175376351"
                 target="_blank"
@@ -57,8 +54,9 @@ export default function Footer() {
                 <Facebook size={24} />
                 FACEBOOK
               </a>
+              </Reveal>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -137,17 +135,16 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Big brand name — fades in as you reach the bottom */}
+        {/* Big brand name — uncovered left to right as you reach the bottom.
+            eager: it sits too close to the end of the page to ever get 12% inside. */}
         <div className="border-t border-white/5 pt-10 overflow-hidden">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          <Reveal
+            variant="unveil"
+            eager
             className="font-heading text-[18vw] md:text-[15vw] text-white/5 leading-none text-center select-none tracking-tighter"
           >
             SALCHIMAX
-          </motion.div>
+          </Reveal>
         </div>
 
         <div className="text-center mt-4 space-y-2">

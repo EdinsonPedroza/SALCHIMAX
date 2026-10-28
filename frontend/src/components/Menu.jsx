@@ -2,6 +2,7 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ShoppingBag, MessageCircle, Plus, Check } from "lucide-react";
 import { useCart, useCartActions } from "../context/CartContext";
+import { Reveal, VIEWPORT, EASE_OUT } from "./Reveal";
 
 const WA_LINK = "https://wa.me/573177371695";
 
@@ -188,14 +189,14 @@ const ProductCard = memo(function ProductCard({ item, index }) {
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-40px" }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={VIEWPORT}
       transition={{
-        duration: 0.4,
+        duration: 0.5,
         // Stagger per grid row (max 4 columns) so delays never pile up
-        delay: (index % 4) * 0.06,
-        ease: [0.16, 1, 0.3, 1],
+        delay: (index % 4) * 0.07,
+        ease: EASE_OUT,
       }}
       onPointerMove={reduceMotion ? undefined : handlePointerMove}
       onPointerLeave={reduceMotion ? undefined : handlePointerLeave}
@@ -301,19 +302,15 @@ export default function Menu() {
     <section id="menu" data-testid="menu-section" className="py-8 md:py-10 bg-[#0D0D0D]">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10"
-        >
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
-            <span className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block">
+            <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit">
               Lo que más te gusta
-            </span>
-            <h2 className="font-heading text-5xl md:text-6xl text-white mb-3">NUESTRO MENÚ</h2>
-            <div className="w-16 h-1 bg-[#FF6600]" />
+            </Reveal>
+            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit">
+              NUESTRO MENÚ
+            </Reveal>
+            <Reveal variant="bar" delay={0.22} className="w-16 h-1 bg-[#FF6600]" />
           </div>
 
           {/* Cart summary pill */}
@@ -329,10 +326,10 @@ export default function Menu() {
               VER PEDIDO ({totalItems})
             </motion.button>
           )}
-        </motion.div>
+        </div>
 
         {/* Tabs */}
-        <div data-testid="menu-tabs" className="flex flex-wrap gap-2 mb-8">
+        <Reveal data-testid="menu-tabs" delay={0.3} className="flex flex-wrap gap-2 mb-8">
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -347,7 +344,7 @@ export default function Menu() {
               {cat.label}
             </button>
           ))}
-        </div>
+        </Reveal>
 
         {/* Note for burgers */}
         {activeTab === "burgers" && (

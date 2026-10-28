@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { promos } from "../data/promos";
+import { Reveal } from "./Reveal";
 
 const WA_LINK = "https://wa.me/573177371695";
 const EASE = [0.23, 1, 0.32, 1];
@@ -28,12 +29,12 @@ function promoWaLink(promo) {
 }
 
 function PromoCard({ promo, index, isToday }) {
-  const delay = index * 0.1;
-  // Entrada sin deslizamientos: cada tarjeta aparece con un fundido escalonado y
-  // el sello se estampa al final. Solo opacity/transform: nada que repinte por cuadro.
+  const delay = Math.min(index, 3) * 0.09;
+  // Entrada sin deslizamientos: cada tarjeta se asienta (fundido + 95% → 100%) de forma
+  // escalonada y el sello se estampa al final. Solo opacity/transform: nada que repinte por cuadro.
   const card = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { duration: 0.5, ease: EASE, delay } },
+    hidden: { opacity: 0, scale: 0.95 },
+    show: { opacity: 1, scale: 1, transition: { duration: 0.55, ease: EASE, delay } },
   };
   const tag = {
     hidden: { opacity: 0, scale: 1.9, rotate: -14 },
@@ -131,37 +132,38 @@ export default function Promos() {
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Encabezado */}
         <header className="mb-[clamp(34px,4.6vw,60px)]">
-          <motion.span
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: EASE }}
-            className="mb-2 block font-body text-xs font-extrabold uppercase tracking-[0.28em] text-[#FF6600]"
+          <Reveal
+            as="span"
+            variant="wipe"
+            className="mb-2 block w-fit font-body text-xs font-extrabold uppercase tracking-[0.28em] text-[#FF6600]"
           >
             Cada día una excusa para comer
-          </motion.span>
+          </Reveal>
 
           <h2 id="promos-title" aria-label="Promos de la semana" className="font-heading font-normal leading-[0.82]">
-            <motion.span
+            <Reveal
+              as="span"
+              variant="wipe"
+              delay={0.1}
               aria-hidden="true"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-              className="block text-[clamp(4.2rem,13vw,11.5rem)] tracking-[0.01em] text-transparent [-webkit-text-stroke:2px_#fff]"
+              className="block w-fit text-[clamp(4.2rem,13vw,11.5rem)] tracking-[0.01em] text-transparent [-webkit-text-stroke:2px_#fff]"
             >
               PROMOS
-            </motion.span>
-            <motion.span
+            </Reveal>
+            {/* The tilt lives on this wrapper so the chip's own entrance (a stamp) can use transform */}
+            <span
               aria-hidden="true"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
-              className="mt-[clamp(-26px,-2vw,-8px)] inline-block origin-left -rotate-2 bg-[#FF6600] px-[0.3em] pb-[0.02em] pt-[0.1em] text-[clamp(2.2rem,6.2vw,5.6rem)] text-[#0D0D0D]"
+              className="mt-[clamp(-26px,-2vw,-8px)] inline-block origin-left -rotate-2"
             >
-              DE LA SEMANA
-            </motion.span>
+              <Reveal
+                as="span"
+                variant="slam"
+                delay={0.32}
+                className="block origin-left bg-[#FF6600] px-[0.3em] pb-[0.02em] pt-[0.1em] text-[clamp(2.2rem,6.2vw,5.6rem)] text-[#0D0D0D]"
+              >
+                DE LA SEMANA
+              </Reveal>
+            </span>
           </h2>
         </header>
 
@@ -182,7 +184,7 @@ export default function Promos() {
         </div>
 
         {/* Ley 1480 art. 33: time conditions of a promo must be stated where it is advertised */}
-        <p className="mt-6 text-center font-body text-xs text-white/50">
+        <Reveal as="p" delay={0.1} className="mt-6 text-center font-body text-xs text-white/50">
           Cada promo aplica solo el día indicado y mientras esté publicada.{" "}
           <Link
             to="/terminos"
@@ -191,7 +193,7 @@ export default function Promos() {
           >
             Ver condiciones
           </Link>
-        </p>
+        </Reveal>
       </div>
     </section>
   );

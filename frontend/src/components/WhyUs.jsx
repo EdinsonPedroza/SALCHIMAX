@@ -7,6 +7,7 @@ import {
   animate,
 } from "framer-motion";
 import { Leaf, Trophy, DollarSign, Users, Zap } from "lucide-react";
+import { Reveal } from "./Reveal";
 
 // Each reason is told with a real photo from the menu. `pos` is the object-position
 // that keeps the dish in frame; `cap` is the dish name shown on the photo.
@@ -192,54 +193,24 @@ export default function WhyUs() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-10 md:mb-12"
-        >
-          <motion.span
-            initial={{ opacity: 0, letterSpacing: "0.5em" }}
-            whileInView={{ opacity: 1, letterSpacing: "0.3em" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block"
-          >
+        <div className="text-center mb-10 md:mb-12">
+          <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-[0.3em] text-[#FF6600] mb-3 block w-fit mx-auto">
             Nuestra diferencia
-          </motion.span>
+          </Reveal>
           <div className="overflow-hidden">
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="font-heading text-5xl md:text-6xl text-white mb-3"
-            >
+            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
               ¿POR QUÉ ELEGIR{" "}
               <span className="text-[#FF6600] glitch-text" data-text="SALCHIMAX">
                 SALCHIMAX
               </span>
               ?
-            </motion.h2>
+            </Reveal>
           </div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="w-16 h-1 bg-[#FF6600] mx-auto origin-left"
-          />
-        </motion.div>
+          <Reveal variant="bar" delay={0.22} className="w-16 h-1 bg-[#FF6600] mx-auto" style={{ transformOrigin: "center" }} />
+        </div>
 
         {/* Reasons (left) + photo stage (right) */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="why-grid"
-        >
+        <Reveal delay={0.1} className="why-grid">
           <div
             ref={listRef}
             role="tablist"
@@ -322,27 +293,19 @@ export default function WhyUs() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </Reveal>
 
         {/* Stats row — animated counters */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-3 gap-4 mt-10 md:mt-12 border-t border-white/10 pt-10"
-        >
+        <div className="grid grid-cols-3 gap-4 mt-10 md:mt-12 border-t border-white/10 pt-10">
           {[
             { value: "5.0", suffix: "★", label: "En Google Maps" },
             { value: "100", suffix: "%", label: "Ingredientes frescos" },
             { value: "5", suffix: "PM", label: "Abrimos desde" },
           ].map((stat, i) => (
-            <motion.div
+            <Reveal
               key={i}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              variant="stamp"
+              delay={i * 0.08}
               className="text-center group"
               data-testid={`stat-${i}`}
             >
@@ -352,9 +315,9 @@ export default function WhyUs() {
               <div className="font-body text-xs md:text-sm text-gray-400 uppercase tracking-widest">
                 {stat.label}
               </div>
-            </motion.div>
+            </Reveal>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

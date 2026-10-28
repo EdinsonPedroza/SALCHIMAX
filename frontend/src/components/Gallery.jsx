@@ -5,6 +5,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import { Reveal, useKind, HIDDEN, SHOWN, VIEWPORT, EASE_OUT } from "./Reveal";
 
 const galleryImages = [
   {
@@ -75,16 +76,20 @@ function GalleryItem({ img, index, tilt }) {
     rect.current = null;
   };
 
+  // Photos are uncovered left to right. No scale here: the tilt below owns `scale`.
+  const kind = useKind("unveil");
+
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.94 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
+      initial={HIDDEN[kind]}
+      whileInView={SHOWN[kind]}
+      viewport={VIEWPORT}
       transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        ease: [0.16, 1, 0.3, 1],
+        duration: 0.9,
+        // Stagger per row (3 columns on desktop)
+        delay: (index % 3) * 0.1,
+        ease: EASE_OUT,
       }}
       style={
         tilt
@@ -166,34 +171,16 @@ export default function Gallery() {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <motion.span
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block"
-          >
+          <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit mx-auto">
             Hecha para comer
-          </motion.span>
+          </Reveal>
           <div className="overflow-hidden">
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="font-heading text-5xl md:text-6xl text-white mb-3"
-            >
+            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
               GALERÍA DE{" "}
               <span className="text-[#FF6600]">COMIDA</span>
-            </motion.h2>
+            </Reveal>
           </div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="w-16 h-1 bg-[#FF6600] mx-auto origin-left"
-          />
+          <Reveal variant="bar" delay={0.22} className="w-16 h-1 bg-[#FF6600] mx-auto" style={{ transformOrigin: "center" }} />
         </div>
 
         {/* Bento grid */}

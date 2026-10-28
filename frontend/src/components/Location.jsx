@@ -4,6 +4,7 @@ import { MapPin, Clock, Phone, ExternalLink } from "lucide-react";
 import { MapContainer, TileLayer, Marker, ZoomControl, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { Reveal, useKind, HIDDEN, SHOWN, VIEWPORT, EASE_OUT } from "./Reveal";
 
 // Own marker (no external images): an orange pin with a soft pulse ring, styled in App.css.
 const PIN_ICON = L.divIcon({
@@ -34,6 +35,8 @@ export default function Location() {
   const mapInView = useInView(mapRef, { once: true, margin: "400px 0px" });
   // The "open in Google Maps" ring plays when the map is actually on screen, not 400px before.
   const mapSeen = useInView(mapRef, { once: true, amount: 0.5 });
+  // The map frame is uncovered left to right (a fade with reduced motion)
+  const mapKind = useKind("unveil");
 
   return (
     <section
@@ -43,30 +46,24 @@ export default function Location() {
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <span className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block">
+        <div className="text-center mb-12">
+          <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit mx-auto">
             Encuéntranos
-          </span>
-          <h2 className="font-heading text-5xl md:text-6xl text-white mb-3">
+          </Reveal>
+          <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
             NUESTRA <span className="text-[#FF6600]">UBICACIÓN</span>
-          </h2>
-          <div className="w-16 h-1 bg-[#FF6600] mx-auto" />
-        </motion.div>
+          </Reveal>
+          <Reveal variant="bar" delay={0.22} className="w-16 h-1 bg-[#FF6600] mx-auto" style={{ transformOrigin: "center" }} />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           {/* Map */}
           <motion.div
             ref={mapRef}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial={HIDDEN[mapKind]}
+            whileInView={SHOWN[mapKind]}
+            viewport={VIEWPORT}
+            transition={{ duration: 0.9, ease: EASE_OUT }}
             data-testid="map-container"
             className="map-frame relative w-full h-80 md:h-96 lg:h-auto lg:min-h-[28rem] overflow-hidden rounded-xl border border-white/10 bg-[#171717]"
           >
@@ -110,13 +107,8 @@ export default function Location() {
           </motion.div>
 
           {/* Info */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
-          >
+          <div className="space-y-6">
+            <Reveal variant="stamp" delay={0.00}>
             <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
@@ -132,7 +124,9 @@ export default function Location() {
                 </div>
               </div>
             </motion.div>
+            </Reveal>
 
+            <Reveal variant="stamp" delay={0.08}>
             <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
@@ -149,7 +143,9 @@ export default function Location() {
                 </div>
               </div>
             </motion.div>
+            </Reveal>
 
+            <Reveal variant="stamp" delay={0.16}>
             <motion.div className="bg-[#171717] border border-white/5 p-6" whileHover={{ scale: 1.01, borderColor: "rgba(255,102,0,0.2)" }} transition={{ duration: 0.2 }}>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center flex-shrink-0">
@@ -176,7 +172,9 @@ export default function Location() {
                 </div>
               </div>
             </motion.div>
+            </Reveal>
 
+            <Reveal variant="stamp" delay={0.24}>
             <motion.a
               href={MAPS_URL}
               target="_blank"
@@ -189,7 +187,8 @@ export default function Location() {
               <MapPin size={20} />
               VER EN GOOGLE MAPS
             </motion.a>
-          </motion.div>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>

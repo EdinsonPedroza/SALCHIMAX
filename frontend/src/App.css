@@ -218,22 +218,6 @@ html {
   animation: ember-rise var(--ember-dur, 5s) var(--ember-delay, 0s) infinite ease-out;
   pointer-events: none;
 }
-/* Brighter, bigger spark: a small hot core inside a soft glow (the glow is part
-   of the gradient, so there is no blur or box-shadow to repaint). */
-@keyframes spark-rise {
-  0%   { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
-  12%  { opacity: 1; }
-  30%  { opacity: 0.7; }
-  38%  { opacity: 1; }
-  55%  { transform: translate3d(calc(var(--ember-drift, 40px) * 0.7), -55vh, 0) scale(1); opacity: 0.9; }
-  100% { transform: translate3d(var(--ember-drift, 40px), -105vh, 0) scale(0.3); opacity: 0; }
-}
-.ember-spark {
-  background: radial-gradient(circle, #FFF6CC 0%, #FFC233 20%, rgba(255, 102, 0, 0.7) 44%, rgba(255, 102, 0, 0) 74%);
-  animation-name: spark-rise;
-  animation-timing-function: linear;
-  animation-fill-mode: backwards;
-}
 
 /* ── Off-screen animation pause ───────────────────────────────────
    Applied to a section wrapper while it is outside the viewport. Infinite

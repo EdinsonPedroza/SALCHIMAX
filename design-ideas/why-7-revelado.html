@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión F2 — Revelado</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<link rel="stylesheet" href="_whyp.css">
+<style>
+  /* Cinco tarjetas con foto. Al entrar, cada foto se «revela»: un círculo se abre desde el centro y la imagen
+     pasa de gris y borrosa a color. Dentro del marco la foto se mueve un poco con el scroll (profundidad). */
+  .rv { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 20px); }
+  .rv-c { position: relative; display: flex; flex-direction: column; padding: 8px; border-radius: 20px; background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); translate: 0 0; transition: translate 400ms var(--ease-out); }
+  .rv-pw { position: relative; flex: none; }
+  .rv-ph { position: relative; overflow: hidden; aspect-ratio: 5 / 6; border-radius: 13px; background: #1b1b1b; clip-path: circle(0% at 50% 60%); }
+  .rv-ph img { position: absolute; left: 0; top: -8%; width: 100%; height: 116%; max-width: none; object-fit: cover; object-position: var(--pos); filter: grayscale(1) brightness(0.75) blur(6px); scale: 1.16; translate: 0 0; }
+  .rv-ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10, 10, 10, 0.5), transparent 38%); pointer-events: none; }
+  .rv-c.in .rv-ph { clip-path: circle(100% at 50% 60%); transition: clip-path 1000ms var(--ease-io) var(--d); }
+  .rv-c.in .rv-ph img { filter: none; scale: 1.04; transition: filter 1300ms var(--ease-out) calc(var(--d) + 150ms), scale 1700ms var(--ease-out) var(--d); }
+
+  .rv-cap { position: absolute; left: 10px; top: 10px; z-index: 2; opacity: 0; transition: opacity 500ms var(--ease-out) calc(var(--d) + 700ms); }
+  .rv-c.in .rv-cap { opacity: 1; }
+  .rv-ic { position: absolute; right: 14px; bottom: -22px; z-index: 2; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; color: var(--orange); background: var(--sec); border: 1.5px solid rgba(255, 102, 0, 0.55); box-shadow: 0 0 0 4px var(--card); }
+
+  .rv-b { flex: 1; padding: 30px 12px 16px; }
+  .rv-no { display: block; margin-bottom: 8px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2em; color: var(--orange); }
+  .rv-t { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.55rem, 2vw, 1.9rem); line-height: 1; letter-spacing: 0.02em; color: #fff; }
+  .rv-d { margin-top: 8px; font-size: 0.86rem; font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.62); }
+  .rv-b > * { opacity: 0; transition: opacity 600ms var(--ease-out) calc(var(--d) + 600ms); }
+  .rv-c.in .rv-b > * { opacity: 1; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .rv-c.in:hover { translate: 0 -6px; }
+    .rv-c.in:hover .rv-ph img { scale: 1.11; transition: scale 800ms var(--ease-out); }
+    .rv-c:hover .wi * { animation: rvredraw 800ms var(--ease-out) backwards; }
+  }
+  @keyframes rvredraw { 0% { stroke-dashoffset: 1; opacity: 0; } 3% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+
+  @media (max-width: 1099px) {
+    .rv { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .rv-c { grid-column: span 2; }
+    .rv-c:nth-child(4) { grid-column: 2 / span 2; }
+    .rv-c:nth-child(5) { grid-column: 4 / span 2; }
+  }
+  @media (max-width: 699px) {
+    .rv { grid-template-columns: 1fr; gap: 12px; }
+    .rv-c, .rv-c:nth-child(4), .rv-c:nth-child(5) { grid-column: auto; flex-direction: row; gap: 6px; }
+    .rv-pw { width: 40%; }
+    .rv-ph { aspect-ratio: 4 / 5; }
+    .rv-cap { display: none; }
+    .rv-ic { right: auto; left: 8px; bottom: 8px; width: 38px; height: 38px; box-shadow: none; }
+    .rv-ic svg { width: 20px; height: 20px; }
+    .rv-b { padding: 10px 10px 8px 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv-c, .rv-cap, .rv-b > * { transition: none; }
+    .rv-c.in .rv-ph, .rv-c.in .rv-ph img, .rv-c.in:hover .rv-ph img { transition: none; }
+    .rv-c:hover .wi * { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy" id="sec"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <div class="rv" id="rv"></div>
+  <div class="wp-stats" id="stats"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script src="_whyp.js"></script>
+<script>
+const rv = $("#rv");
+WHY.forEach((f, i) => {
+  const a = document.createElement("article");
+  a.className = "rv-c spot";
+  a.style.setProperty("--pos", f.photo.pos);
+  a.style.setProperty("--d", i * 120 + "ms");
+  a.style.setProperty("--dd", i * 120 + 700 + "ms");
+  a.innerHTML = `
+    <div class="rv-pw">
+      <div class="rv-ph">${whyImg(f)}</div>
+      <span class="rv-cap wp-cap">${f.photo.cap}</span>
+      <span class="rv-ic">${whyIcon(f.key, 22, 1.8)}</span>
+    </div>
+    <div class="rv-b"><span class="rv-no">${pad(i + 1)}</span><h3 class="rv-t">${f.title.toUpperCase()}</h3><p class="rv-d">${f.desc}</p></div>`;
+  rv.appendChild(a);
+  spotlight(a);
+});
+
+/* Cada tarjeta se revela al entrar (una sola vez); el ícono se dibuja cuando ya se ve la foto */
+const cards = $$(".rv-c", rv);
+cards.forEach((c) => onceInView(c, () => c.classList.add("in", "drawn"), 0.25));
+
+/* Profundidad: la foto, que es más alta que su marco, sube o baja un poco según dónde esté la tarjeta.
+   Un solo listener de scroll, una escritura de `translate` por cuadro y solo en tarjetas visibles. */
+if (!REDUCED) {
+  const imgs = cards.map((c) => $(".rv-ph img", c));
+  let raf = 0;
+  const parallax = () => {
+    raf = 0;
+    const vh = innerHeight;
+    cards.forEach((c, i) => {
+      const r = c.getBoundingClientRect();
+      if (r.bottom < -60 || r.top > vh + 60) return;
+      const p = clamp((r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2), -1, 1);
+      imgs[i].style.translate = `0 ${(-p * 6).toFixed(2)}%`;
+    });
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(parallax); };
+  addEventListener("scroll", kick, { passive: true });
+  addEventListener("resize", kick);
+  parallax();
+}
+
+whyStats($("#stats"));
+</script>
+</body>
+</html>

@@ -133,18 +133,35 @@ const IDEAS = [
   { file: "why-5-numeros.html", name: "Números primero · sobria",
     desc: "La más sobria. Primero las tres cifras gigantes: el contorno cuenta y un relleno naranja lo sigue. Debajo, las cinco razones en una fila editorial: cada regla se dibuja, cada ícono se traza solo y, con el mouse, se vuelve a trazar mientras la regla naranja se extiende.",
     react: "Contadores con animate() y un clipPath ligado al mismo valor · el ancho final se reserva con un texto invisible para que nada salte · reglas con scaleX · íconos con pathLength · hover solo con pointer: fine." },
+  /* Por qué elegirnos con fotos: la misma sección, pero las razones se cuentan con los platos reales de la carta */
+  { sep: true, file: "why-6-franjas.html", name: "Franjas · fotos",
+    desc: "Cinco franjas de foto en una sola fila (cabe en una pantalla): la activa se abre con su plato, su ícono dibujado, el título revelado con un recorte y el texto; las demás quedan como un lomo oscuro con el número y el nombre en vertical. Al verla da un recorrido solo (3,4 s por franja, una sola vuelta); con el mouse se abre al pasar y en celular las franjas se apilan.",
+    react: "Estado activo + grid-template-columns animado con variables (la única animación de layout, 5 elementos) · la foto con ancho fijo (cqi) para que solo se recorte, nunca se reescale · ícono con pathLength · título con clipPath inset · recorrido con onAnimationEnd de la barra · intención de hover de 110 ms · en móvil grid-template-rows." },
+  { file: "why-7-revelado.html", name: "Revelado · tarjetas",
+    desc: "La más calmada: cinco tarjetas con su foto. Al entrar, cada foto se «revela»: un círculo se abre desde el centro y la imagen pasa de gris y borrosa a color, con un escalonado. Dentro del marco la foto sube o baja un poco con el scroll. Con el mouse la tarjeta sube, la foto se acerca y el ícono se vuelve a trazar. En celular: tarjetas horizontales (foto a la izquierda).",
+    react: "clipPath: circle() animado con whileInView (once) y delay por índice · filter grayscale/blur → none · parallax con useScroll + useTransform sobre el translate de la imagen (más alta que su marco) · whileHover solo con pointer: fine · resplandor del cursor del menú." },
+  { file: "why-8-escenario-foto.html", name: "Escenario · con foto",
+    desc: "Lista de razones con miniatura y, a la derecha, un escenario con la foto de la razón elegida: la nueva foto entra con un barrido desde la derecha mientras se asienta con un zoom lento; encima, el ícono dibujado, el título revelado y el texto. Pasa sola cada 6 s con una barra de tiempo (se pausa con el mouse, el foco o fuera de pantalla; el primer clic la detiene).",
+    react: "Estado activo + una capa por foto con clipPath inset (la nueva sube de z-index y se recorta) · zoom lento con animate scale · panel con AnimatePresence mode=wait · tablist accesible con flechas, inicio y fin · autoplay con onAnimationComplete de la barra." },
+  { file: "why-9-baraja.html", name: "Baraja · arrastrable",
+    desc: "Una baraja de fotos: se arrastra la de arriba (se inclina siguiendo el dedo o el mouse y las de atrás se acercan), y si pasa de 90 px o va rápida vuela hacia un lado; si no, vuelve. También se toca, hay flechas, puntos y teclado. Al lado, la razón de la foto de arriba con el título revelado. Una pista mueve la carta una sola vez al verla.",
+    react: "motion.div con drag=\"x\" + dragSnapToOrigin · onDragEnd con umbral de distancia y de velocidad (offset.x y velocity.x) · rotate = useTransform(x) · las de atrás con useTransform de |x| · orden como arreglo que rota · aria-live en el texto · tap = siguiente." },
+  { file: "why-10-titulares-foto.html", name: "Titulares · con foto",
+    desc: "Titulares gigantes en contorno que se rellenan con la foto del plato (la foto se desliza dentro de las letras) a medida que recorres la página, con un resorte; a la derecha, una ventana se abre desde una línea y muestra la foto con su ícono. Con el mouse, pasar por una fila la llena al instante.",
+    react: "Un useScroll por fila → useSpring → clipPath (inset) y backgroundPositionY con useTransform · texto con background-clip: text y la foto como background-image · ventana con clipPath inset(50% 0) → inset(0) · ícono con pathLength · whileHover fija el progreso en 1." },
 ];
 const NOTES = [
   ["Datos", "Las tres leen la misma lista que frontend/src/data/promos.js (día, título, descripción, precio, badge, foto, active). Cambiar una promo no requiere tocar el diseño."],
   ["«Hoy»", "Resalta la promo del día con new Date().getDay(). Si hoy no hay promo, la idea 1 avisa cuál es la siguiente. Para probar otro día: agrega ?hoy=0..6 a la URL de cada prototipo."],
   ["Entradas", "Ninguna idea del menú entra deslizándose hacia arriba: usan fundidos, sellos, recortes en círculo y desplazamientos horizontales."],
   ["Íconos", "En las versiones de «Por qué elegirnos» los íconos son los mismos de Lucide que ya usa la landing; se dibujan con stroke-dashoffset gracias a pathLength=1 en cada trazo."],
+  ["Fotos", "En las versiones con fotos se usan las mismas imágenes de /images/ que ya carga la landing (sin descargar nada nuevo). El rótulo de cada foto es el nombre real del plato en la carta; «La Clásica · $18.000» es su precio real."],
   ["Rendimiento", "Todo se mueve con transform y opacity (más clip-path en los recortes). Nada anima width, height ni top/left. Curvas: ease-out fuerte cubic-bezier(.23,1,.32,1) y ease-in-out cubic-bezier(.77,0,.175,1)."],
   ["Accesibilidad", "prefers-reduced-motion: sin cintas, sin inclinaciones y el estado final fijo. Hover solo con mouse (hover: hover). Toda la CTA es un enlace real a WhatsApp con el mensaje de la promo."],
 ];
 
 const frame = $("#frame"), capT = $("#capT"), capD = $("#capD"), notes = $("#notes"), more = $("#more"), capB = $("#capB");
-const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "W1", "W2", "W3", "W4", "W5"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
+const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "W1", "W2", "W3", "W4", "W5", "F1", "F2", "F3", "F4", "F5"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
 const tabs = IDEAS.map((it, i) => {
   const b = document.createElement("button");
   b.className = "tab"; b.innerHTML = `<b>${LABELS[i]}</b>${it.name}`;
@@ -170,9 +187,9 @@ capB.addEventListener("click", () => {
   capB.setAttribute("aria-expanded", String(open));
   capB.textContent = open ? "Cómo llevarlo a la landing ▾" : "Cómo llevarlo a la landing ▴";
 });
-/* Teclas 1–6 para las ideas; B abre la 1b, M la primera del menú y W recorre las de «Por qué elegirnos» */
+/* Teclas 1–6 para las ideas; B abre la 1b, M la primera del menú y W recorre las de «Por qué elegirnos» y F las que llevan fotos */
 addEventListener("keydown", (e) => {
-  if (/^[wW]$/.test(e.key)) { const w = LABELS.map((l, k) => (l[0] === "W" ? k : -1)).filter((k) => k >= 0); select(w[(w.indexOf(curI) + 1) % w.length]); return; }
+  if (/^[wWfF]$/.test(e.key)) { const g = e.key.toUpperCase(); const w = LABELS.map((l, k) => (l[0] === g ? k : -1)).filter((k) => k >= 0); select(w[(w.indexOf(curI) + 1) % w.length]); return; }
   const j = LABELS.indexOf(e.key === "b" || e.key === "B" ? "1b" : /^[mM]$/.test(e.key) ? "M1" : e.key); if (j >= 0) select(j);
 });
 select(clamp((parseInt(location.hash.slice(1), 10) || 1) - 1, 0, IDEAS.length - 1));

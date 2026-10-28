@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión F4 — Baraja</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<link rel="stylesheet" href="_whyp.css">
+<style>
+  /* Una baraja de fotos: se arrastra la de arriba (o se toca, o se usan las flechas) y vuela hacia un lado dejando
+     ver la siguiente; a su lado, la razón que corresponde a la foto de arriba. */
+  .bj { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: clamp(28px, 6vw, 96px); }
+  .bj-deckw { display: grid; justify-items: center; padding: 6px 0 4px; }
+  .bj-deck { position: relative; width: min(100%, 330px); aspect-ratio: 3 / 4; margin-bottom: 44px; touch-action: pan-y; }
+  .bj-c { position: absolute; inset: 0; margin: 0; overflow: hidden; border-radius: 22px; background: #1b1b1b; box-shadow: 0 0 0 1px var(--hair), 0 22px 44px -20px rgba(0, 0, 0, 0.75); transition: transform 560ms var(--ease-out), opacity 360ms var(--ease-out); user-select: none; -webkit-user-select: none; }
+  .bj-c.top { cursor: grab; }
+  .bj-c.drag { cursor: grabbing; transition: none; }
+  .bj-c img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); pointer-events: none; -webkit-user-drag: none; }
+  .bj-c::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(10, 10, 10, 0.78) 0%, rgba(10, 10, 10, 0) 38%); }
+  .bj-fc { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .bj-no { font-family: var(--f-head); font-size: 1.6rem; line-height: 1; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.9); }
+  .bj-hint { position: absolute; left: 0; right: 0; top: calc(100% + 16px); text-align: center; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); transition: opacity 400ms var(--ease-out); }
+  .bj-hint.off { opacity: 0; }
+
+  .bj-count { display: block; margin-bottom: 14px; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.22em; color: rgba(255, 255, 255, 0.5); }
+  .bj-count b { color: var(--orange); font-weight: 800; }
+  .bj-live { min-height: 15rem; }
+  .bj-ic { display: grid; place-items: center; width: 54px; height: 54px; margin-bottom: 16px; border-radius: 50%; color: var(--orange); background: rgba(255, 102, 0, 0.12); border: 1.5px solid rgba(255, 102, 0, 0.5); animation: bjfade 400ms var(--ease-out) backwards; }
+  .bj-t { font-family: var(--f-head); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4.2rem); line-height: 0.95; letter-spacing: 0.01em; color: #fff; }
+  .bj-t span { display: block; animation: bjclip 600ms var(--ease-io) 80ms backwards; }
+  .bj-d { max-width: 44ch; margin-top: 12px; font-size: clamp(0.95rem, 1.2vw, 1.08rem); font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.68); animation: bjfade 500ms var(--ease-out) 280ms backwards; }
+  @keyframes bjclip { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes bjfade { from { opacity: 0; } }
+
+  .bj-nav { display: flex; align-items: center; gap: 14px; margin-top: 26px; }
+  .bj-btn { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.2); color: #fff; transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 160ms var(--ease-out); }
+  .bj-btn:active { transform: scale(0.94); }
+  .bj-btn svg { width: 20px; height: 20px; }
+  .bj-btn.prev svg { transform: scaleX(-1); }
+  @media (hover: hover) and (pointer: fine) { .bj-btn:hover { background: rgba(255, 102, 0, 0.14); border-color: rgba(255, 102, 0, 0.7); } }
+  .bj-dots { display: flex; align-items: center; margin-left: 6px; }
+  .bj-dot { display: grid; align-items: center; height: 40px; padding: 0 3px; }
+  .bj-dot i { display: block; width: 18px; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.22); transition: width 300ms var(--ease-out), background-color 300ms var(--ease-out); }
+  .bj-dot[aria-current="true"] i { width: 36px; background: var(--orange); }
+
+  @media (max-width: 820px) {
+    .bj { grid-template-columns: 1fr; gap: 26px; }
+    .bj-deck { width: min(76%, 290px); }
+    .bj-live { min-height: 13.5rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bj-c, .bj-hint, .bj-btn, .bj-dot i { transition: none; }
+    .bj-ic, .bj-t span, .bj-d { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy" id="sec"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <div class="bj" id="bj">
+    <div class="bj-deckw">
+      <div class="bj-deck" id="deck" role="group" aria-roledescription="carrusel" aria-label="Fotos de nuestros platos">
+        <span class="bj-hint" id="hint">Desliza la foto</span>
+      </div>
+    </div>
+    <div class="bj-txt">
+      <span class="bj-count" aria-hidden="true"><b id="cnt">01</b> / 05</span>
+      <div class="bj-live drawn" id="live" aria-live="polite" style="--dd: 220ms"></div>
+      <div class="bj-nav">
+        <button class="bj-btn prev" id="prev" type="button" aria-label="Razón anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        <button class="bj-btn next" id="next" type="button" aria-label="Razón siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        <div class="bj-dots" id="dots"></div>
+      </div>
+    </div>
+  </div>
+  <div class="wp-stats" id="stats"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script src="_whyp.js"></script>
+<script>
+const N = WHY.length;
+const deck = $("#deck"), live = $("#live"), cnt = $("#cnt"), hint = $("#hint"), dotsEl = $("#dots");
+
+/* Posición de cada carta según su lugar en la pila (0 = arriba) */
+const POS = [
+  { y: 0, r: 0, s: 1, o: 1 },
+  { y: 16, r: -4, s: 0.95, o: 1 },
+  { y: 30, r: 4.5, s: 0.9, o: 1 },
+  { y: 38, r: 0, s: 0.86, o: 0 },
+];
+const tf = (p, x = 0, rot = 0) => `translate3d(${x}px, ${p.y}px, 0) rotate(${p.r + rot}deg) scale(${p.s})`;
+
+const cards = WHY.map((f, i) => {
+  const c = document.createElement("figure");
+  c.className = "bj-c"; c.dataset.i = i;
+  c.style.setProperty("--pos", f.photo.pos);
+  c.innerHTML = `${whyImg(f, ' draggable="false"')}<figcaption class="bj-fc"><span class="bj-no">${pad(i + 1)}</span><span class="wp-cap">${f.photo.cap}</span></figcaption>`;
+  deck.insertBefore(c, hint);
+  return c;
+});
+const dots = WHY.map((f, i) => {
+  const b = document.createElement("button");
+  b.className = "bj-dot"; b.type = "button"; b.setAttribute("aria-label", `Ver: ${f.title}`);
+  b.innerHTML = "<i></i>";
+  b.addEventListener("click", () => { interacted(); goto(i); });
+  dotsEl.appendChild(b);
+  return b;
+});
+
+let order = WHY.map((_, i) => i), shown = -1, touched = false;
+const flying = new Set();
+const deckW = () => deck.offsetWidth;
+
+function place(i, k, instant = false) {
+  const c = cards[i];
+  c.style.transition = instant ? "none" : "";
+  c.style.transform = tf(POS[Math.min(k, 3)]);
+  c.style.opacity = POS[Math.min(k, 3)].o;
+  c.style.zIndex = 10 - k;
+  c.classList.toggle("top", k === 0);
+  c.setAttribute("aria-hidden", String(k !== 0));
+}
+function updateText() {
+  const i = order[0];
+  if (i === shown) return;
+  shown = i;
+  const f = WHY[i];
+  live.innerHTML = `<span class="bj-ic">${whyIcon(f.key, 26, 1.7)}</span><h3 class="bj-t"><span>${f.title.toUpperCase()}</span></h3><p class="bj-d">${f.desc}</p>`;
+  cnt.textContent = pad(i + 1);
+  dots.forEach((d, k) => d.setAttribute("aria-current", String(k === i)));
+}
+function render() {
+  order.forEach((i, k) => { if (!flying.has(i)) place(i, k); });
+  updateText();
+}
+function finish(i) {
+  if (!flying.delete(i)) return;
+  place(i, order.indexOf(i), true);
+}
+/* La carta de arriba sale volando hacia un lado y vuelve a la parte de atrás de la pila */
+function fling(i, dir) {
+  if (REDUCED) { place(i, order.indexOf(i), true); return; }
+  const c = cards[i];
+  flying.add(i);
+  c.classList.remove("top"); c.style.zIndex = 20;
+  c.style.transition = "transform 520ms var(--ease-out), opacity 420ms var(--ease-out)";
+  c.style.transform = `translate3d(${dir * deckW() * 1.25}px, -16px, 0) rotate(${dir * 22}deg)`;
+  c.style.opacity = "0";
+  setTimeout(() => finish(i), 700);
+}
+deck.addEventListener("transitionend", (e) => { if (e.propertyName === "transform" && e.target.classList.contains("bj-c")) finish(+e.target.dataset.i); });
+
+function next(dir = 1) { const i = order[0]; order.push(order.shift()); fling(i, dir); render(); }
+function prev() {
+  const j = order.pop(); order.unshift(j);
+  const c = cards[j];
+  if (!REDUCED) {
+    flying.delete(j);
+    c.style.transition = "none"; c.style.transform = `translate3d(${-deckW() * 1.2}px, -10px, 0) rotate(-20deg)`; c.style.opacity = "0"; c.style.zIndex = 20;
+    void c.offsetWidth;
+  }
+  render();
+}
+function goto(i) {
+  const old = order[0];
+  if (i === old) return;
+  while (order[0] !== i) order.push(order.shift());
+  fling(old, 1); render();
+}
+function interacted() { touched = true; hint.classList.add("off"); }
+
+$("#next").addEventListener("click", () => { interacted(); next(1); });
+$("#prev").addEventListener("click", () => { interacted(); prev(); });
+$("#bj").addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") { e.preventDefault(); interacted(); next(1); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); interacted(); prev(); }
+});
+
+/* Arrastre: la carta sigue al puntero (inclinándose) y las de atrás se acercan; al soltar, si pasó de 90 px o iba
+   rápida, vuela; si no, vuelve a su sitio. Un toque simple pasa a la siguiente. */
+let drag = null;
+deck.addEventListener("pointerdown", (e) => {
+  const c = e.target.closest(".bj-c.top");
+  if (!c || (e.pointerType === "mouse" && e.button !== 0)) return;
+  drag = { c, id: e.pointerId, x0: e.clientX, y0: e.clientY, lastX: e.clientX, lastT: performance.now(), v: 0, dx: 0, moved: false };
+  c.setPointerCapture(e.pointerId);
+  c.classList.add("drag");
+  interacted();
+});
+deck.addEventListener("pointermove", (e) => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const now = performance.now();
+  drag.dx = e.clientX - drag.x0;
+  drag.v = (e.clientX - drag.lastX) / Math.max(1, now - drag.lastT);
+  drag.lastX = e.clientX; drag.lastT = now;
+  if (Math.abs(drag.dx) > 6) drag.moved = true;
+  drag.c.style.transform = `translate3d(${drag.dx}px, ${(e.clientY - drag.y0) * 0.25}px, 0) rotate(${drag.dx * 0.055}deg)`;
+  /* las de atrás suben un poco hacia la posición de la de arriba mientras esta se aleja */
+  const t = clamp(Math.abs(drag.dx) / 220, 0, 1) * 0.7;
+  order.slice(1, 4).forEach((i, n) => {
+    const a = POS[n + 1], b = POS[n], c2 = cards[i];
+    c2.style.transition = "none";
+    c2.style.transform = `translate3d(0, ${lerp(a.y, b.y, t)}px, 0) rotate(${lerp(a.r, b.r, t)}deg) scale(${lerp(a.s, b.s, t)})`;
+  });
+});
+function endDrag(e, cancelled) {
+  if (!drag || e.pointerId !== drag.id) return;
+  const { c, dx, v, moved } = drag;
+  drag = null;
+  c.classList.remove("drag");
+  if (!cancelled && (Math.abs(dx) > 90 || Math.abs(v) > 0.5)) next(dx !== 0 ? Math.sign(dx) : Math.sign(v));
+  else if (!cancelled && !moved) next(1);
+  else render();
+}
+deck.addEventListener("pointerup", (e) => endDrag(e, false));
+deck.addEventListener("pointercancel", (e) => endDrag(e, true));
+
+render();
+
+/* Una pista al verla por primera vez: la carta de arriba se mueve un poco hacia un lado y vuelve */
+if (!REDUCED) onceInView(deck, () => {
+  setTimeout(() => {
+    if (touched) return;
+    const c = cards[order[0]], base = tf(POS[0]);
+    c.animate([{ transform: base }, { transform: tf(POS[0], 30, 2.4), offset: 0.42 }, { transform: base }], { duration: 1100, easing: "cubic-bezier(0.77, 0, 0.175, 1)" });
+  }, 500);
+}, 0.6);
+
+whyStats($("#stats"));
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión F1 — Franjas</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<link rel="stylesheet" href="_whyp.css">
+<style>
+  /* Cinco franjas de foto en una sola fila: la activa se abre con su foto, su ícono y su texto; las demás quedan
+     como un lomo oscuro con el número y el nombre en vertical. En celular las franjas se apilan. */
+  .fr-w { container-type: inline-size; }
+  .fr { --gap: 10px; --pw: calc((100cqi - 4 * var(--gap)) * 0.5652); display: grid; grid-template-columns: var(--tc, 5.2fr 1fr 1fr 1fr 1fr); gap: var(--gap); height: clamp(420px, 37vw, 480px); transition: grid-template-columns 700ms var(--ease-io); }
+
+  .fr-s { position: relative; min-width: 0; overflow: hidden; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); isolation: isolate; }
+  /* La foto tiene siempre el ancho de la franja abierta: al abrirse o cerrarse solo se recorta, no se reescala */
+  .fr-ph { position: absolute; inset: 0; z-index: -2; }
+  .fr-ph img { position: absolute; left: 50%; top: 0; width: var(--pw); max-width: none; height: 100%; object-fit: cover; object-position: var(--pos); transform: translateX(-50%) scale(1.07); transition: transform 1200ms var(--ease-out); }
+  .fr-s.on .fr-ph img { transform: translateX(-50%) scale(1); }
+  .fr-s::before, .fr-s::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; transition: opacity 500ms var(--ease-out); }
+  .fr-s::before { background: rgba(10, 10, 10, 0.62); }
+  .fr-s::after { background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.5) 36%, rgba(10, 10, 10, 0) 70%); opacity: 0; }
+  .fr-s.on::before { opacity: 0; }
+  .fr-s.on::after { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { .fr-s:not(.on):hover::before { opacity: 0.4; } }
+
+  /* Cerrada: número arriba y el nombre en vertical abajo */
+  .fr-rest { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 22px 0; pointer-events: none; transition: opacity 180ms ease-out; }
+  .fr-s.on .fr-rest { opacity: 0; }
+  .fr-no { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.72); }
+  .fr-vt { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--f-head); font-size: clamp(1.45rem, 2.1vw, 1.95rem); line-height: 1; letter-spacing: 0.06em; white-space: nowrap; color: #fff; }
+
+  /* Abierta: rótulo de la foto arriba; ícono, título y texto abajo (ancho fijo: no se reacomoda mientras se abre) */
+  .fr-open { position: absolute; left: 0; top: 0; bottom: 0; width: var(--pw); display: flex; flex-direction: column; justify-content: space-between; padding: clamp(18px, 2.2vw, 28px); opacity: 0; visibility: hidden; transition: opacity 160ms ease-out, visibility 0s linear 160ms; }
+  .fr-s.on .fr-open { opacity: 1; visibility: visible; transition: opacity 320ms ease-out 260ms, visibility 0s; }
+  .fr-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .fr-of { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.7); }
+  .fr-ic { display: grid; place-items: center; width: 54px; height: 54px; margin-bottom: 14px; border-radius: 50%; color: var(--orange); background: rgba(255, 102, 0, 0.12); border: 1.5px solid rgba(255, 102, 0, 0.5); }
+  .fr .wi * { stroke-dashoffset: 0; opacity: 1; }
+  .fr-s.on .wi * { animation: wydraw 1000ms var(--ease-out) 380ms backwards; }
+  .fr-t { font-family: var(--f-head); font-weight: 400; font-size: clamp(2.2rem, 3.8vw, 3.3rem); line-height: 0.95; letter-spacing: 0.01em; color: #fff; }
+  .fr-t span { display: block; clip-path: inset(0 100% 0 0); }
+  .fr-s.on .fr-t span { clip-path: inset(0 0 0 0); transition: clip-path 600ms var(--ease-io) 320ms; }
+  .fr-d { max-width: 40ch; margin-top: 10px; font-size: clamp(0.9rem, 1.1vw, 1rem); font-weight: 600; line-height: 1.5; color: rgba(255, 255, 255, 0.78); opacity: 0; }
+  .fr-s.on .fr-d { opacity: 1; transition: opacity 500ms var(--ease-out) 560ms; }
+
+  .fr-prog { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 300ms; }
+  .fr.auto .fr-prog { opacity: 1; }
+  .fr-prog b { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; }
+  .fr.auto .fr-s.on .fr-prog b { animation: frfill var(--dur, 3400ms) linear forwards; animation-play-state: var(--ps, running); }
+  @keyframes frfill { to { transform: scaleX(1); } }
+  .fr.hold { --ps: paused; }
+
+  .fr-hit { position: absolute; inset: 0; z-index: 3; width: 100%; border-radius: inherit; cursor: pointer; }
+  .fr-hit:focus-visible { outline-offset: -5px; }
+
+  @media (max-width: 899px) {
+    .fr { grid-template-columns: 1fr; grid-template-rows: var(--tr, 340px 64px 64px 64px 64px); height: auto; --pw: 100cqi; }
+    .fr-ph img { left: 0; top: 50%; width: 100%; height: 340px; transform: translateY(-50%) scale(1.07); }
+    .fr-s.on .fr-ph img { transform: translateY(-50%) scale(1); }
+    .fr-rest { flex-direction: row; justify-content: flex-start; gap: 14px; bottom: auto; height: 64px; padding: 0 18px; }
+    .fr-vt { writing-mode: horizontal-tb; transform: none; font-size: 1.5rem; }
+    .fr-open { top: auto; height: 340px; width: 100%; padding: 18px; }
+    .fr-ic { width: 46px; height: 46px; margin-bottom: 10px; }
+    .fr-t { font-size: 2.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fr, .fr-ph img, .fr-s::before, .fr-s::after, .fr-rest, .fr-open, .fr-s.on .fr-open, .fr-s.on .fr-d, .fr-prog { transition: none; }
+    .fr-s.on .fr-t span { transition: none; }
+    .fr-s.on .wi * { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy" id="sec"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <div class="fr-w"><div class="fr" id="fr"></div></div>
+  <div class="wp-stats" id="stats"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script src="_whyp.js"></script>
+<script>
+const DUR = 3400, N = WHY.length;
+const fr = $("#fr");
+fr.style.setProperty("--dur", DUR + "ms");
+let cur = 0, auto = false;
+
+const slats = WHY.map((f, i) => {
+  const a = document.createElement("article");
+  a.className = "fr-s";
+  a.style.setProperty("--pos", f.photo.pos);
+  a.innerHTML = `
+    <div class="fr-ph">${whyImg(f)}</div>
+    <div class="fr-rest" aria-hidden="true"><span class="fr-no">${pad(i + 1)}</span><span class="fr-vt">${f.title.toUpperCase()}</span></div>
+    <div class="fr-open">
+      <div class="fr-top"><span class="wp-cap">${f.photo.cap}</span><span class="fr-of">${pad(i + 1)} / ${pad(N)}</span></div>
+      <div class="fr-copy">
+        <span class="fr-ic">${whyIcon(f.key, 26, 1.7)}</span>
+        <h3 class="fr-t" id="frt${i}"><span>${f.title.toUpperCase()}</span></h3>
+        <p class="fr-d" id="frd${i}">${f.desc}</p>
+      </div>
+    </div>
+    <i class="fr-prog"><b></b></i>
+    <button class="fr-hit" type="button" aria-labelledby="frt${i}" aria-describedby="frd${i}" aria-expanded="false"></button>`;
+  fr.appendChild(a);
+  return a;
+});
+const hits = slats.map((s) => $(".fr-hit", s));
+
+function show(i) {
+  cur = i;
+  fr.style.setProperty("--tc", WHY.map((_, k) => (k === i ? "5.2fr" : "1fr")).join(" "));
+  fr.style.setProperty("--tr", WHY.map((_, k) => (k === i ? "340px" : "64px")).join(" "));
+  slats.forEach((s, k) => { s.classList.toggle("on", k === i); hits[k].setAttribute("aria-expanded", String(k === i)); });
+}
+function stopAuto() { auto = false; fr.classList.remove("auto"); }
+show(0);
+
+/* Un solo recorrido: al verse por primera vez abre cada franja 3,4 s y vuelve a la primera.
+   Se pausa con el mouse, el foco o fuera de pantalla; cualquier interacción lo detiene. */
+fr.addEventListener("animationend", (e) => {
+  if (e.animationName !== "frfill" || !auto) return;
+  if (cur === N - 1) { stopAuto(); show(0); } else show(cur + 1);
+});
+let seen = false, hov = false, foc = false;
+const syncHold = () => fr.classList.toggle("hold", !seen || hov || foc);
+fr.addEventListener("pointerenter", () => { hov = true; syncHold(); });
+fr.addEventListener("pointerleave", () => { hov = false; syncHold(); });
+fr.addEventListener("focusin", () => { foc = true; syncHold(); });
+fr.addEventListener("focusout", () => { foc = false; syncHold(); });
+watchVisible($("#sec"), (v) => { seen = v; syncHold(); }, "0px");
+if (!REDUCED) onceInView(fr, () => { auto = true; fr.classList.add("auto"); }, 0.5);
+
+/* Clic o toque; con mouse, al pasar (con una pausa corta para que no se abra todo al cruzar la fila) */
+let intent = 0;
+slats.forEach((s, i) => {
+  hits[i].addEventListener("click", () => { stopAuto(); show(i); });
+  s.addEventListener("pointerenter", (e) => {
+    if (e.pointerType !== "mouse") return;
+    clearTimeout(intent);
+    intent = setTimeout(() => { if (i !== cur) { stopAuto(); show(i); } }, 110);
+  });
+  s.addEventListener("pointerleave", () => clearTimeout(intent));
+  hits[i].addEventListener("keydown", (e) => {
+    const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    const to = (i + d + N) % N;
+    stopAuto(); show(to); hits[to].focus();
+  });
+});
+
+whyStats($("#stats"));
+</script>
+</body>
+</html>

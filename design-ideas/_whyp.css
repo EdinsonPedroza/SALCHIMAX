@@ -1,0 +1,20 @@
+/* Piezas comunes de las versiones con fotos de "¿Por qué elegir SALCHIMAX?" (va después de _why.css) */
+
+/* Cifras: una fila sobria con separadores finos */
+.wp-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(26px, 3.4vw, 46px); border-top: 1px solid var(--hair); }
+.wp-st { padding: clamp(16px, 2.2vw, 26px) 8px 0; text-align: center; opacity: 0; transition: opacity 600ms var(--ease-out); }
+.wp-st + .wp-st { border-left: 1px solid var(--hair); }
+.wp-st.in { opacity: 1; }
+.wp-st b { display: block; font-family: var(--f-head); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4rem); line-height: 0.95; color: var(--orange); font-variant-numeric: tabular-nums; }
+.wp-st span { display: block; margin-top: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.58); }
+@media (max-width: 520px) { .wp-st { padding-inline: 2px; } .wp-st span { letter-spacing: 0.1em; font-size: 0.62rem; } }
+
+/* Rótulo con el nombre del plato de la foto (nombres reales de la carta) */
+.wp-cap { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px 6px 9px; border-radius: 999px; background: rgba(13, 13, 13, 0.78); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.86); white-space: nowrap; }
+.wp-cap::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+
+/* Fotos: llenan su marco y el encuadre sale de --pos (cada foto tiene el suyo) */
+.wp-ph { position: relative; overflow: hidden; background: #1b1b1b; }
+.wp-ph img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); }
+
+@media (prefers-reduced-motion: reduce) { .wp-st { transition: none; } }

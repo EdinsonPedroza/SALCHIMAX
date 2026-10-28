@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión F5 — Titulares con foto</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<link rel="stylesheet" href="_whyp.css">
+<style>
+  /* Titulares gigantes en contorno. Al pasar por la pantalla (con un resorte ligado al scroll) las letras se rellenan
+     con la foto del plato, que se desplaza dentro de ellas; a la derecha, una ventana se abre y deja ver la foto. */
+  .tf { list-style: none; border-top: 1px solid var(--hair); }
+  .tf-row { position: relative; display: grid; grid-template-columns: clamp(2rem, 3.6vw, 3.2rem) minmax(0, 1fr) clamp(170px, 19vw, 250px); align-items: center; column-gap: clamp(12px, 2.2vw, 32px); padding: clamp(14px, 1.8vw, 22px) 6px clamp(14px, 1.8vw, 22px) 18px; border-bottom: 1px solid var(--hair); }
+  .tf-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--orange); transform: scaleY(0); transform-origin: top; transition: transform 500ms var(--ease-io); }
+  .tf-row.on::before { transform: scaleY(1); }
+  .tf-no { align-self: start; margin-top: 0.8em; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.34); transition: color 300ms ease; }
+  .tf-row.on .tf-no { color: var(--orange); }
+
+  .tf-t { position: relative; width: fit-content; max-width: 100%; font-family: var(--f-head); font-weight: 400; font-size: clamp(2.5rem, 6.6vw, 5.8rem); line-height: 0.95; letter-spacing: 0.01em; white-space: nowrap; }
+  .tf-out { display: block; color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); }
+  /* El relleno es la foto recortada con la forma de las letras; --by la desplaza hacia arriba o abajo */
+  .tf-fill { position: absolute; left: 0; top: 0; width: 100%; color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.8); background-image: linear-gradient(rgba(10, 10, 10, 0.2), rgba(10, 10, 10, 0.2)), var(--img); background-size: auto, cover; background-position: 0 0, 50% var(--by, 40%); -webkit-background-clip: text; background-clip: text; clip-path: inset(0 100% 0 0); }
+  .tf-d { max-width: 54ch; margin-top: 10px; font-size: clamp(0.9rem, 1.1vw, 1.02rem); font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.6); opacity: 0.55; transition: opacity 600ms var(--ease-out), color 600ms var(--ease-out); }
+  .tf-row.on .tf-d { opacity: 1; color: rgba(255, 255, 255, 0.72); }
+
+  /* Ventana de foto: una línea que se abre hacia arriba y abajo */
+  .tf-win { position: relative; align-self: stretch; min-height: 118px; overflow: hidden; border-radius: 14px; background: #1b1b1b; clip-path: inset(50% 0 50% 0 round 14px); transition: clip-path 750ms var(--ease-io); }
+  .tf-row.on .tf-win { clip-path: inset(0 0 0 0 round 14px); }
+  .tf-win img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); scale: 1.14; transition: scale 1400ms var(--ease-out); }
+  .tf-row.on .tf-win img { scale: 1; }
+  .tf-win::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(10, 10, 10, 0.6), transparent 46%); }
+  .tf-ic { position: absolute; left: 10px; top: 10px; z-index: 2; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: var(--orange); background: rgba(13, 13, 13, 0.82); border: 1.5px solid rgba(255, 102, 0, 0.55); }
+  .tf-win .wp-cap { position: absolute; left: 10px; bottom: 10px; z-index: 2; max-width: calc(100% - 20px); overflow: hidden; text-overflow: ellipsis; }
+
+  @media (hover: hover) and (pointer: fine) { .tf-row:hover .wi * { animation: tfredraw 800ms var(--ease-out) backwards; } }
+  @keyframes tfredraw { 0% { stroke-dashoffset: 1; opacity: 0; } 3% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+
+  @media (max-width: 1000px) { .tf-win .wp-cap { display: none; } }
+  @media (max-width: 699px) {
+    .tf-row { grid-template-columns: minmax(0, 1fr); padding-left: 14px; row-gap: 0; }
+    .tf-no { display: none; }
+    .tf-t { font-size: clamp(2.5rem, 11.6vw, 3.8rem); white-space: normal; }
+    .tf-out, .tf-fill { -webkit-text-stroke-width: 1px; }
+    .tf-win { margin-top: 14px; min-height: 0; height: clamp(120px, 36vw, 170px); }
+    .tf-win .wp-cap { display: inline-flex; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tf-row::before, .tf-no, .tf-d, .tf-win, .tf-win img { transition: none; }
+    .tf-row:hover .wi * { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy" id="sec"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <ol class="tf" id="tf"></ol>
+  <div class="wp-stats" id="stats"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script src="_whyp.js"></script>
+<script>
+const list = $("#tf");
+WHY.forEach((f, i) => {
+  const li = document.createElement("li");
+  li.className = "tf-row";
+  li.style.setProperty("--pos", f.photo.pos);
+  li.style.setProperty("--img", `url("${f.photo.src}")`);
+  li.style.setProperty("--dd", "250ms");
+  li.innerHTML = `
+    <span class="tf-no">${pad(i + 1)}</span>
+    <div class="tf-main">
+      <h3 class="tf-t" aria-label="${f.title}"><span class="tf-out" aria-hidden="true">${f.title.toUpperCase()}</span><span class="tf-fill" aria-hidden="true">${f.title.toUpperCase()}</span></h3>
+      <p class="tf-d">${f.desc}</p>
+    </div>
+    <div class="tf-win">${whyImg(f)}<span class="tf-ic">${whyIcon(f.key, 22, 1.8)}</span><span class="wp-cap">${f.photo.cap}</span></div>`;
+  list.appendChild(li);
+});
+
+const rows = $$(".tf-row"), fills = rows.map((r) => $(".tf-fill", r));
+const springs = rows.map(() => new Spring(0, { k: 110, c: 19 }));
+const hot = rows.map(() => false);
+
+/* 0 cuando la fila entra por abajo (92 % de la altura) y 1 al llegar al 62 %: se llena en ~30 % de pantalla de scroll */
+function target(i) {
+  const top = rows[i].getBoundingClientRect().top;
+  return hot[i] ? 1 : clamp((innerHeight * 0.92 - top) / (innerHeight * 0.3), 0, 1);
+}
+function paint(i, v) {
+  fills[i].style.clipPath = `inset(0 ${(100 - v * 100).toFixed(2)}% 0 0)`;
+  fills[i].style.setProperty("--by", (34 + v * 32).toFixed(1) + "%");   // la foto se desliza dentro de las letras
+  rows[i].classList.toggle("on", v > 0.6);
+  if (v > 0.6) rows[i].classList.add("drawn");   // el ícono se dibuja una sola vez
+}
+
+/* Un solo bucle que se apaga solo cuando todos los resortes se asientan */
+let raf = 0, last = 0;
+function frame(now) {
+  raf = 0;
+  const dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+  let busy = false;
+  rows.forEach((_, i) => {
+    const s = springs[i];
+    s.target = target(i); s.step(dt);
+    paint(i, clamp(s.value, 0, 1));
+    if (Math.abs(s.value - s.target) > 0.002 || Math.abs(s.vel) > 0.01) busy = true;
+  });
+  if (busy) raf = requestAnimationFrame(frame);
+}
+const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+
+if (REDUCED) {
+  rows.forEach((_, i) => paint(i, 1));
+} else {
+  addEventListener("scroll", kick, { passive: true });
+  addEventListener("resize", kick);
+  if (FINE) rows.forEach((r, i) => { r.addEventListener("pointerenter", () => { hot[i] = true; kick(); }); r.addEventListener("pointerleave", () => { hot[i] = false; kick(); }); });
+  kick();
+}
+
+whyStats($("#stats"));
+</script>
+</body>
+</html>

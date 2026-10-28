@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión F3 — Escenario con foto</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<link rel="stylesheet" href="_whyp.css">
+<style>
+  /* Lista de razones (con miniatura) y un escenario con la foto de cada una. Al elegir, la nueva foto entra con un
+     barrido de derecha a izquierda mientras se asienta con un zoom lento; el título se revela con un recorte.
+     Pasa sola cada 6 s con una barra de tiempo. */
+  .ef { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(20px, 3.4vw, 48px); align-items: stretch; }
+  .ef-list { display: flex; flex-direction: column; justify-content: center; }
+  .ef-tab { position: relative; display: flex; align-items: center; gap: 14px; padding: clamp(9px, 1.2vw, 14px) 4px; text-align: left; border-bottom: 1px solid var(--hair); color: rgba(255, 255, 255, 0.42); transition: color 220ms var(--ease-out), transform 160ms var(--ease-out); }
+  .ef-tab:first-child { border-top: 1px solid var(--hair); }
+  .ef-tab:active { transform: scale(0.99); }
+  .ef-th { position: relative; flex: none; width: clamp(46px, 4.6vw, 58px); aspect-ratio: 1; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--hair); }
+  .ef-th img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); opacity: 0.5; transition: opacity 260ms var(--ease-out); }
+  .ef-th::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--orange); opacity: 0; transition: opacity 260ms var(--ease-out); }
+  .ef-no { flex: none; width: 1.7em; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.16em; transition: color 220ms var(--ease-out); }
+  .ef-tt { font-family: var(--f-head); font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1; letter-spacing: 0.02em; }
+  .ef-tab[aria-selected="true"] { color: #fff; }
+  .ef-tab[aria-selected="true"] .ef-no { color: var(--orange); }
+  .ef-tab[aria-selected="true"] .ef-th img { opacity: 1; }
+  .ef-tab[aria-selected="true"] .ef-th::after { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { .ef-tab[aria-selected="false"]:hover { color: rgba(255, 255, 255, 0.8); } .ef-tab[aria-selected="false"]:hover .ef-th img { opacity: 0.85; } }
+  .ef-prog { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; overflow: hidden; pointer-events: none; }
+  .ef-prog b { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; }
+  .ef-tab[aria-selected="true"] .ef-prog b { transform: scaleX(1); }
+  .ef.auto .ef-tab[aria-selected="true"] .ef-prog b { transform: scaleX(0); animation: effill var(--dur, 6000ms) linear forwards; animation-play-state: var(--ps, running); }
+  @keyframes effill { to { transform: scaleX(1); } }
+  .ef.hold { --ps: paused; }
+
+  .ef-stage { position: relative; min-height: clamp(380px, 38vw, 470px); border-radius: 22px; background: #1b1b1b; box-shadow: inset 0 0 0 1px var(--hair); overflow: hidden; isolation: isolate; }
+  /* Cada foto va en su capa; la que entra se recorta desde la derecha y queda encima de las anteriores */
+  .ef-im { position: absolute; inset: 0; clip-path: inset(0 0 0 100%); }
+  .ef-im.on { clip-path: inset(0 0 0 0); transition: clip-path 800ms var(--ease-io); }
+  .ef-im img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); }
+  .ef-im.on img { animation: efzoom 7000ms var(--ease-out) forwards; animation-play-state: var(--ps, running); }
+  @keyframes efzoom { from { transform: scale(1.1); } to { transform: scale(1.02); } }
+  .ef-shade { position: absolute; inset: 0; z-index: 30; pointer-events: none; background: linear-gradient(to top, rgba(10, 10, 10, 0.92) 0%, rgba(10, 10, 10, 0.55) 34%, rgba(10, 10, 10, 0) 66%), linear-gradient(to bottom, rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0) 26%); }
+
+  .ef-p { position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(18px, 2.6vw, 34px); opacity: 0; visibility: hidden; transition: opacity 160ms ease-out, visibility 0s linear 160ms; }
+  .ef-p.on { opacity: 1; visibility: visible; transition: opacity 300ms ease-out 200ms, visibility 0s; }
+  .ef-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .ef-of { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.78); }
+  .ef-ic { display: grid; place-items: center; width: 54px; height: 54px; margin-bottom: 14px; border-radius: 50%; color: var(--orange); background: rgba(255, 102, 0, 0.14); border: 1.5px solid rgba(255, 102, 0, 0.55); }
+  .ef .wi * { stroke-dashoffset: 0; opacity: 1; }
+  .ef-p.on .wi * { animation: wydraw 1000ms var(--ease-out) 350ms backwards; }
+  .ef-t { font-family: var(--f-head); font-weight: 400; font-size: clamp(2.4rem, 4.8vw, 4rem); line-height: 0.95; letter-spacing: 0.01em; color: #fff; }
+  .ef-t span { display: block; clip-path: inset(0 100% 0 0); }
+  .ef-p.on .ef-t span { clip-path: inset(0 0 0 0); transition: clip-path 600ms var(--ease-io) 300ms; }
+  .ef-d { max-width: 46ch; margin-top: 10px; font-size: clamp(0.92rem, 1.15vw, 1.05rem); font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.8); opacity: 0; }
+  .ef-p.on .ef-d { opacity: 1; transition: opacity 500ms var(--ease-out) 520ms; }
+
+  @media (max-width: 900px) {
+    .ef { grid-template-columns: 1fr; }
+    .ef-list { flex-direction: row; justify-content: flex-start; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+    .ef-list::-webkit-scrollbar { display: none; }
+    .ef-tab { flex: none; gap: 9px; padding: 6px 16px 6px 6px; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; overflow: hidden; }
+    .ef-tab:first-child { border-top: 1px solid rgba(255, 255, 255, 0.14); }
+    .ef-th { width: 32px; border-radius: 50%; }
+    .ef-no { display: none; }
+    .ef-tt { font-size: 1.2rem; }
+    .ef-tab[aria-selected="true"] { background: rgba(255, 102, 0, 0.14); border-color: rgba(255, 102, 0, 0.6); }
+    .ef-prog { bottom: 0; }
+    .ef-stage { min-height: 400px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ef-tab, .ef-no, .ef-th img, .ef-th::after, .ef-p, .ef-p.on, .ef-d, .ef-p.on .ef-d { transition: none; }
+    .ef-im.on { transition: none; }
+    .ef-im.on img, .ef-p.on .wi * { animation: none; }
+    .ef-p.on .ef-t span { transition: none; }
+    .ef-t span { clip-path: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy" id="sec"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <div class="ef" id="ef">
+    <div class="ef-list" id="list" role="tablist" aria-orientation="vertical" aria-label="Razones para elegirnos"></div>
+    <div class="ef-stage" id="stage"><span class="ef-shade"></span></div>
+  </div>
+  <div class="wp-stats" id="stats"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script src="_whyp.js"></script>
+<script>
+const DUR = 6000;
+const ef = $("#ef"), list = $("#list"), stage = $("#stage");
+ef.style.setProperty("--dur", DUR + "ms");
+let cur = 0, auto = !REDUCED;
+const pile = WHY.map((_, i) => i);   // orden de las fotos de abajo hacia arriba (la última es la que se ve)
+ef.classList.toggle("auto", auto);
+
+const tabs = [], panels = [], shots = [];
+WHY.forEach((f, i) => {
+  const b = document.createElement("button");
+  b.className = "ef-tab"; b.id = `t${i}`; b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-controls", `p${i}`);
+  b.style.setProperty("--pos", f.photo.pos);
+  b.innerHTML = `<span class="ef-th"><img src="${f.photo.src}" alt="" width="64" height="64" decoding="async"></span><span class="ef-no">${pad(i + 1)}</span><span class="ef-tt">${f.title.toUpperCase()}</span><i class="ef-prog"><b></b></i>`;
+  b.addEventListener("click", () => { stopAuto(); show(i); });
+  list.appendChild(b); tabs.push(b);
+
+  const im = document.createElement("div");
+  im.className = "ef-im"; im.style.setProperty("--pos", f.photo.pos);
+  im.innerHTML = whyImg(f);
+  stage.insertBefore(im, $(".ef-shade", stage)); shots.push(im);
+
+  const p = document.createElement("div");
+  p.className = "ef-p"; p.id = `p${i}`; p.setAttribute("role", "tabpanel"); p.setAttribute("aria-labelledby", `t${i}`);
+  p.innerHTML = `
+    <div class="ef-top"><span class="wp-cap">${f.photo.cap}</span><span class="ef-of">${pad(i + 1)} / ${pad(WHY.length)}</span></div>
+    <div class="ef-copy"><span class="ef-ic">${whyIcon(f.key, 26, 1.7)}</span><h3 class="ef-t"><span>${f.title.toUpperCase()}</span></h3><p class="ef-d">${f.desc}</p></div>`;
+  stage.appendChild(p); panels.push(p);
+});
+
+function show(i) {
+  cur = i;
+  tabs.forEach((t, k) => { const on = k === i; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; });
+  panels.forEach((p, k) => { const on = k === i; p.classList.toggle("on", on); p.setAttribute("aria-hidden", String(!on)); });
+  /* La foto nueva sube a la capa de arriba y se recorta desde la derecha; las anteriores quedan debajo, completas */
+  const im = shots[i];
+  pile.splice(pile.indexOf(i), 1); pile.push(i);
+  pile.forEach((k, r) => { shots[k].style.zIndex = r + 1; });
+  im.classList.remove("on");
+  void im.offsetWidth;
+  im.classList.add("on");
+  if (innerWidth <= 900) list.scrollTo({ left: tabs[i].offsetLeft - (list.clientWidth - tabs[i].offsetWidth) / 2, behavior: REDUCED ? "auto" : "smooth" });
+}
+function stopAuto() { auto = false; ef.classList.remove("auto"); }
+
+list.addEventListener("animationend", (e) => { if (e.animationName === "effill" && auto) show((cur + 1) % WHY.length); });
+let seen = false, hov = false, foc = false;
+const syncHold = () => { ef.classList.toggle("hold", !seen || hov || foc); stage.style.setProperty("--ps", !seen ? "paused" : "running"); };
+ef.addEventListener("pointerenter", () => { hov = true; syncHold(); });
+ef.addEventListener("pointerleave", () => { hov = false; syncHold(); });
+ef.addEventListener("focusin", () => { foc = true; syncHold(); });
+ef.addEventListener("focusout", () => { foc = false; syncHold(); });
+watchVisible($("#sec"), (v) => { seen = v; syncHold(); }, "0px");
+
+list.addEventListener("keydown", (e) => {
+  const keys = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+  let to = null;
+  if (keys[e.key]) to = (cur + keys[e.key] + WHY.length) % WHY.length;
+  else if (e.key === "Home") to = 0; else if (e.key === "End") to = WHY.length - 1;
+  if (to === null) return;
+  e.preventDefault(); stopAuto(); show(to); tabs[to].focus();
+});
+
+show(0);
+whyStats($("#stats"));
+</script>
+</body>
+</html>

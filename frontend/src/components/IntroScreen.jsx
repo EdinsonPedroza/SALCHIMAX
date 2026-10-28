@@ -307,6 +307,19 @@ export default function IntroScreen({ onComplete }) {
               transition={{ duration: 2.1, delay: 0.08, ease: "linear" }}
             />
 
+            {/* Watermark: agency signature, bottom right (fade only) */}
+            <motion.img
+              src="/lp-watermark.webp"
+              alt=""
+              aria-hidden="true"
+              width={56}
+              height={53}
+              className="absolute bottom-14 right-6 md:bottom-16 md:right-8 w-12 md:w-14 h-auto pointer-events-none select-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.45 }}
+              transition={{ duration: 0.7, delay: 0.8, ease: "easeOut" }}
+            />
+
             {/* Corner brackets */}
             {[
               "top-5 left-5 border-t border-l",

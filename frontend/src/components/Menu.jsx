@@ -338,7 +338,7 @@ export default function Menu() {
               key={cat.id}
               data-testid={`tab-${cat.id}`}
               onClick={() => setActiveTab(cat.id)}
-              className={`font-heading text-sm tracking-widest px-4 py-2 border transition-all duration-200 ${
+              className={`font-heading text-sm tracking-widest px-4 py-2 border active:scale-[0.97] transition-[background-color,border-color,color,transform] duration-150 ease-out-strong ${
                 activeTab === cat.id
                   ? "bg-[#FF6600] text-white border-[#FF6600]"
                   : "bg-transparent text-gray-400 border-white/10 hover:border-[#FF6600] hover:text-white"
@@ -408,9 +408,8 @@ export default function Menu() {
           <motion.div
             key={activeTab}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
+            animate={{ opacity: 1, transition: { duration: 0.2 } }}
+            exit={{ opacity: 0, transition: { duration: 0.1 } }}
             data-testid={`menu-grid-${activeTab}`}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
           >

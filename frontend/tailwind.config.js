@@ -1,12 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
+  // `hover:` / `group-hover:` only apply where hover really exists: on touch a tap
+  // used to leave the hover state stuck on.
+  future: { hoverOnlyWhenSupported: true },
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./public/index.html"
   ],
   theme: {
     extend: {
+      // Same strong ease-out as --ease-out in App.css
+      transitionTimingFunction: {
+        "out-strong": "cubic-bezier(0.23, 1, 0.32, 1)",
+      },
       fontFamily: {
         heading: ['Bebas Neue', 'sans-serif'],
         body: ['Manrope', 'sans-serif'],

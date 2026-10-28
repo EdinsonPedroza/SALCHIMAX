@@ -4,6 +4,8 @@ import { X, Plus, Minus, Trash2, ShoppingBag, MessageCircle } from "lucide-react
 import { useCart } from "../context/CartContext";
 
 const WA_NUMBER = "573177371695";
+const EASE_OUT = [0.23, 1, 0.32, 1];
+const EASE_DRAWER = [0.32, 0.72, 0, 1];
 
 export default function Cart() {
   const {
@@ -41,10 +43,10 @@ export default function Cart() {
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { duration: 0.25 } }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/70 z-[60] backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 z-[60]"
             data-testid="cart-backdrop"
           />
         )}
@@ -56,9 +58,8 @@ export default function Cart() {
           <motion.aside
             key="cart-sidebar"
             initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.35 }}
+            animate={{ x: 0, transition: { type: "tween", duration: 0.4, ease: EASE_DRAWER } }}
+            exit={{ x: "100%", transition: { type: "tween", duration: 0.26, ease: EASE_DRAWER } }}
             data-testid="cart-sidebar"
             className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#111111] z-[70] flex flex-col shadow-2xl border-l border-white/10"
           >
@@ -107,16 +108,20 @@ export default function Cart() {
               ) : (
                 <>
                   <AnimatePresence>
-                    {items.map((item) => (
+                    {items.map((item, i) => (
                       <motion.div
                         key={item.name}
-                        layout
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20, height: 0 }}
-                        transition={{ duration: 0.25 }}
+                        layout="position"
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{
+                          opacity: 1,
+                          scale: 1,
+                          // Rows fade in one after another as the drawer opens (capped, so a new row never waits)
+                          transition: { duration: 0.28, ease: EASE_OUT, delay: Math.min(i, 5) * 0.04 },
+                        }}
+                        exit={{ opacity: 0, scale: 0.96, height: 0, transition: { duration: 0.2, ease: EASE_OUT } }}
                         data-testid={`cart-item-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        className="bg-[#1A1A1A] border border-white/5 p-3 flex gap-3"
+                        className="bg-[#1A1A1A] border border-white/5 p-3 flex gap-3 overflow-hidden"
                       >
                         {/* Image */}
                         <div className="w-16 h-16 flex-shrink-0 overflow-hidden">
@@ -149,7 +154,7 @@ export default function Cart() {
                             <button
                               data-testid={`decrease-qty-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                               onClick={() => updateQty(item.name, -1)}
-                              className="w-7 h-7 bg-[#252525] text-white flex items-center justify-center hover:bg-[#FF6600] transition-colors"
+                              className="w-7 h-7 bg-[#252525] text-white flex items-center justify-center hover:bg-[#FF6600] active:scale-90 transition-[background-color,transform] duration-150 ease-out-strong"
                               aria-label="Reducir cantidad"
                             >
                               <Minus size={12} />
@@ -163,7 +168,7 @@ export default function Cart() {
                             <button
                               data-testid={`increase-qty-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                               onClick={() => updateQty(item.name, 1)}
-                              className="w-7 h-7 bg-[#252525] text-white flex items-center justify-center hover:bg-[#FF6600] transition-colors"
+                              className="w-7 h-7 bg-[#252525] text-white flex items-center justify-center hover:bg-[#FF6600] active:scale-90 transition-[background-color,transform] duration-150 ease-out-strong"
                               aria-label="Aumentar cantidad"
                             >
                               <Plus size={12} />
@@ -202,8 +207,9 @@ export default function Cart() {
                   <div className="flex justify-between items-center">
                     <span className="font-body text-sm text-gray-400 uppercase tracking-widest">Subtotal</span>
                     <span
+                      key={totalPrice}
                       data-testid="cart-total-price"
-                      className="font-heading text-2xl text-[#FF6600]"
+                      className="menu-tick font-heading text-2xl text-[#FF6600]"
                     >
                       ${totalPrice.toLocaleString("es-CO")}
                     </span>

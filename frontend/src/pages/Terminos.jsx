@@ -90,7 +90,7 @@ export default function Terminos() {
   }, []);
 
   return (
-    <main className="relative min-h-screen max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24">
+    <main className="page-enter relative min-h-screen max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24">
       <Link
         to="/"
         data-testid="back-home-link"

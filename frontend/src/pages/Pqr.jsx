@@ -69,7 +69,7 @@ export default function Pqr() {
   };
 
   return (
-    <main className="relative min-h-screen max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24">
+    <main className="page-enter relative min-h-screen max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24">
       <Link
         to="/"
         data-testid="back-home-link"
@@ -103,9 +103,9 @@ export default function Pqr() {
 
       <div aria-live="polite">
         {filing && (
-          <section data-testid="pqr-receipt" className="mt-8 border border-[#FF6600]/40 bg-[#FF6600]/5 p-6">
+          <section data-testid="pqr-receipt" className="page-enter mt-8 border border-[#FF6600]/40 bg-[#FF6600]/5 p-6">
             <p className="font-body text-xs uppercase tracking-widest text-gray-400">Tu número de radicado</p>
-            <p data-testid="pqr-radicado" className="font-heading text-4xl md:text-5xl text-[#FF6600] tracking-wide mt-1">
+            <p key={filing.id} data-testid="pqr-radicado" className="pqr-stamp font-heading text-4xl md:text-5xl text-[#FF6600] tracking-wide mt-1">
               {filing.id}
             </p>
             <p className="font-body text-sm text-gray-300 mt-2">

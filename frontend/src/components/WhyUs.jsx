@@ -346,7 +346,7 @@ export default function WhyUs() {
               className="text-center group"
               data-testid={`stat-${i}`}
             >
-              <div className="font-heading text-4xl md:text-5xl text-[#FF6600] mb-1 group-hover:neon-flicker transition-all">
+              <div className="font-heading text-4xl md:text-5xl text-[#FF6600] mb-1 group-hover:neon-flicker">
                 <Counter value={stat.value} suffix={stat.suffix} />
               </div>
               <div className="font-body text-xs md:text-sm text-gray-400 uppercase tracking-widest">

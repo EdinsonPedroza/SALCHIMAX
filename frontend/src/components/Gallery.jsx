@@ -95,7 +95,7 @@ function GalleryItem({ img, index, tilt }) {
       onMouseMove={tilt ? onMouseMove : undefined}
       onMouseLeave={tilt ? onMouseLeave : undefined}
       data-testid={`gallery-item-${index}`}
-      className={`gallery-item overflow-hidden relative group ${img.span} cursor-none`}
+      className={`gallery-item overflow-hidden relative group ${img.span}`}
     >
       {/* Image */}
       <img
@@ -107,31 +107,27 @@ function GalleryItem({ img, index, tilt }) {
       />
 
       {/* Orange gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       {/* Color tint sweep on hover */}
-      <div className="absolute inset-0 bg-[#FF6600]/0 group-hover:bg-[#FF6600]/8 transition-all duration-500" />
+      <div className="absolute inset-0 bg-[#FF6600]/0 group-hover:bg-[#FF6600]/8 transition-colors duration-500" />
 
-      {/* Caption — slides up */}
-      <motion.div
-        className="absolute inset-0 flex items-end p-4"
-        initial={false}
-      >
-        <motion.span
-          initial={{ y: 20, opacity: 0 }}
-          whileHover={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="font-heading text-sm text-white tracking-widest bg-[#FF6600]/90 px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      {/* Caption — fades in and settles from a slightly smaller size (the old one
+          only moved when the cursor was exactly over the label itself).
+          `scale` is the individual CSS property, so it doesn't replace the inline
+          translateZ below. */}
+      <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+        <span
+          className="origin-bottom-left bg-[#FF6600]/90 px-3 py-1.5 font-heading text-sm tracking-widest text-white opacity-0 [scale:0.94] transition-[opacity,scale] duration-200 ease-out-strong group-hover:opacity-100 group-hover:[scale:1]"
           style={{ transform: "translateZ(20px)" }}
         >
           {img.alt}
-        </motion.span>
-      </motion.div>
+        </span>
+      </div>
 
-      {/* Corner bracket — top left */}
-      <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-[#FF6600]/0 group-hover:border-[#FF6600]/80 transition-all duration-300" />
-      {/* Corner bracket — bottom right */}
-      <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-[#FF6600]/0 group-hover:border-[#FF6600]/80 transition-all duration-300" />
+      {/* Corner brackets: only the color changes */}
+      <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-[#FF6600]/0 group-hover:border-[#FF6600]/80 transition-colors duration-300" />
+      <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-[#FF6600]/0 group-hover:border-[#FF6600]/80 transition-colors duration-300" />
     </motion.div>
   );
 }

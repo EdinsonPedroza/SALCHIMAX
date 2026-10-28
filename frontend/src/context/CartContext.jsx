@@ -14,8 +14,12 @@ const CartActionsContext = createContext(null);
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  // Counts every time something is added (never on removals): the badge pulse,
+  // the one-shot ring and the "added" toast key off it.
+  const [addedTick, setAddedTick] = useState(0);
 
   const addItem = useCallback((product) => {
+    setAddedTick((n) => n + 1);
     setItems((prev) => {
       const existing = prev.find((i) => i.name === product.name);
       if (existing) {
@@ -33,6 +37,7 @@ export function CartProvider({ children }) {
   }, []);
 
   const updateQty = useCallback((name, delta) => {
+    if (delta > 0) setAddedTick((n) => n + 1);
     setItems((prev) =>
       prev
         .map((i) => (i.name === name ? { ...i, qty: i.qty + delta } : i))
@@ -70,6 +75,7 @@ export function CartProvider({ children }) {
       totalItems,
       totalPrice,
       isOpen,
+      addedTick,
       setIsOpen,
       addItem,
       removeItem,
@@ -82,6 +88,7 @@ export function CartProvider({ children }) {
       totalItems,
       totalPrice,
       isOpen,
+      addedTick,
       addItem,
       removeItem,
       updateQty,

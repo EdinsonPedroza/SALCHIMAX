@@ -1,3 +1,11 @@
+/* Curvas compartidas: ease-out fuerte para entradas y feedback, ease-in-out para
+   movimiento en pantalla y la curva "drawer" del carrito. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-io: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 .App {
   background-color: #0D0D0D;
 }
@@ -19,13 +27,27 @@
   color: white;
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.1em;
-  transition: all 0.3s ease;
+  /* `translate`/`scale` (not `transform`) so Framer Motion's inline transform on the
+     same element never fights the CSS lift or press. */
+  transition: background-color 180ms var(--ease-out), border-color 180ms var(--ease-out),
+    color 180ms var(--ease-out), box-shadow 180ms var(--ease-out),
+    translate 180ms var(--ease-out), scale 120ms var(--ease-out);
 }
 
-.btn-orange:hover {
-  background-color: #FF8533;
-  box-shadow: 0 0 25px rgba(255, 102, 0, 0.5);
-  transform: translateY(-2px);
+/* Lift and glow only with a mouse: on touch a tap would leave them stuck on */
+@media (hover: hover) and (pointer: fine) {
+  .btn-orange:hover {
+    background-color: #FF8533;
+    box-shadow: 0 0 25px rgba(255, 102, 0, 0.5);
+    translate: 0 -2px;
+  }
+}
+/* Press feedback works on touch too */
+.btn-orange:active,
+.btn-outline-orange:active,
+.btn-orange-liquid:active {
+  scale: 0.97;
+  translate: 0 0;
 }
 
 .btn-outline-orange {
@@ -33,15 +55,19 @@
   color: #FF6600;
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.1em;
-  transition: all 0.3s ease;
+  transition: background-color 180ms var(--ease-out), border-color 180ms var(--ease-out),
+    color 180ms var(--ease-out), box-shadow 180ms var(--ease-out),
+    translate 180ms var(--ease-out), scale 120ms var(--ease-out);
   background: transparent;
 }
 
-.btn-outline-orange:hover {
-  background-color: #FF6600;
-  color: white;
-  box-shadow: 0 0 25px rgba(255, 102, 0, 0.3);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .btn-outline-orange:hover {
+    background-color: #FF6600;
+    color: white;
+    box-shadow: 0 0 25px rgba(255, 102, 0, 0.3);
+    translate: 0 -2px;
+  }
 }
 
 /* Section fade-in animation */
@@ -421,7 +447,8 @@ html {
   color: white;
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.1em;
-  transition: all 0.3s ease;
+  transition: box-shadow 200ms var(--ease-out), translate 200ms var(--ease-out),
+    scale 120ms var(--ease-out);
   z-index: 0;
 }
 .btn-orange-liquid::before {
@@ -430,18 +457,22 @@ html {
   inset: -2px;
   background: linear-gradient(90deg, #FF6600, #ffcc00, #FF003C, #FF6600, #ff9900);
   background-size: 300% 100%;
-  animation: border-rotate 2.5s linear infinite;
   z-index: -1;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 200ms var(--ease-out);
   border-radius: inherit;
 }
-.btn-orange-liquid:hover::before {
-  opacity: 1;
-}
-.btn-orange-liquid:hover {
-  box-shadow: 0 0 30px rgba(255, 102, 0, 0.7), 0 0 60px rgba(255, 102, 0, 0.3);
-  transform: translateY(-3px);
+/* The gradient loop only runs while the button is hovered: it used to repaint
+   forever behind an opacity-0 layer. Touch devices never show it. */
+@media (hover: hover) and (pointer: fine) {
+  .btn-orange-liquid:hover::before {
+    opacity: 1;
+    animation: border-rotate 2.5s linear infinite;
+  }
+  .btn-orange-liquid:hover {
+    box-shadow: 0 0 30px rgba(255, 102, 0, 0.7), 0 0 60px rgba(255, 102, 0, 0.3);
+    translate: 0 -3px;
+  }
 }
 
 /* Shockwave click ripple */
@@ -1249,4 +1280,32 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .why-tab, .why-th img, .why-th::after, .why-no { transition: none; }
   .why-photo.is-cur, .why-info, .why-desc { animation: none; }
+}
+
+/* ─── Carrito: feedback al agregar ───
+   Contador: un pulso corto cuando sube (usa `scale`, que no choca con el transform
+   de Framer Motion). Anillo: se dispara una vez por producto agregado, ya no en bucle. */
+.badge-pop { animation: badge-pop 280ms var(--ease-out); }
+@keyframes badge-pop { 40% { scale: 1.28; } }
+
+.cart-ring { animation: cart-ring 650ms var(--ease-out) both; }
+@keyframes cart-ring {
+  from { transform: scale(1); opacity: 0.45; }
+  to { transform: scale(1.3, 1.45); opacity: 0; }
+}
+
+/* ─── Páginas legales: entran con un fundido y el radicado se "estampa" ─── */
+.page-enter { animation: page-enter 240ms var(--ease-out) both; }
+@keyframes page-enter { from { opacity: 0; } }
+
+.pqr-stamp {
+  transform-origin: left center;
+  animation: pqr-stamp 380ms var(--ease-out) 90ms both;
+}
+@keyframes pqr-stamp { from { opacity: 0; transform: scale(1.18); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-pop,
+  .cart-ring { animation: none; }
+  .pqr-stamp { animation-name: page-enter; }
 }

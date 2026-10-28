@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, MessageCircle } from "lucide-react";
+import { legal, SIC_URL } from "../data/legal";
 
 const LOGO_URL = "/logo.jpeg";
 const WA_LINK = "https://wa.me/573177371695";
+
+// Owner and NIT show up once they are filled in data/legal.js (Ley 1480, art. 50 lit. a)
+const IDENTITY = [legal.owner, legal.nit && `NIT ${legal.nit}`].filter(Boolean).join(" · ");
 
 const navLinks = [
   { label: "Menú", href: "#menu" },
@@ -58,8 +62,9 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main footer content */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-14">
+      {/* Main footer content — extra bottom room on phones so the floating
+          WhatsApp button never covers the legal links */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 pt-14 pb-24 md:pb-14">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-14">
           {/* Brand */}
           <div>
@@ -106,6 +111,14 @@ export default function Footer() {
                   317 737 1695
                 </a>
               </li>
+              {legal.email && (
+                <li className="font-body text-sm">
+                  <span className="text-[#FF6600]">Correo:</span><br />
+                  <a href={`mailto:${legal.email}`} className="text-gray-400 hover:text-[#FF6600] transition-colors">
+                    {legal.email}
+                  </a>
+                </li>
+              )}
               <li className="font-body text-sm text-gray-400">
                 <span className="text-[#FF6600]">Horario:</span><br />
                 Desde las 5:00 PM todos los días
@@ -142,7 +155,8 @@ export default function Footer() {
             © 2025 SALCHIMAX Urban Food · Palmira, Valle del Cauca, Colombia ·{" "}
             <span className="text-[#FF6600]">Todos los derechos reservados</span>
           </p>
-          <p className="font-body text-xs text-gray-600">
+          {IDENTITY && <p className="font-body text-xs text-gray-600">{IDENTITY}</p>}
+          <p className="font-body text-xs text-gray-400">
             <Link to="/terminos" data-testid="footer-terms-link" className="hover:text-[#FF6600] transition-colors">
               Términos y Condiciones
             </Link>
@@ -150,6 +164,23 @@ export default function Footer() {
             <Link to="/privacidad" data-testid="footer-privacy-link" className="hover:text-[#FF6600] transition-colors">
               Política de Privacidad
             </Link>
+            {" · "}
+            <Link to="/pqr" data-testid="footer-pqr-link" className="hover:text-[#FF6600] transition-colors">
+              PQR
+            </Link>
+          </p>
+          {/* Ley 1480, art. 50 parágrafo: visible link to the consumer protection authority */}
+          <p className="font-body text-xs text-gray-400">
+            Protección al consumidor:{" "}
+            <a
+              href={SIC_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="footer-sic-link"
+              className="underline underline-offset-2 hover:text-[#FF6600] transition-colors"
+            >
+              Superintendencia de Industria y Comercio
+            </a>
           </p>
         </div>
       </div>

@@ -9,6 +9,9 @@
 //   - desc:   descripción corta
 //   - price:  precio (deja "" si no aplica)
 //   - badge:  sello destacado, ej "2x1" o "GRATIS" (deja "" si no aplica)
+//   - cond:   (opcional) condiciones o restricciones, ej "No acumulable · Solo en el local".
+//             La ley (art. 33, Ley 1480) exige mostrarlas en la misma promo: si no las
+//             escribes aquí, la promo aplica sin restricciones el día indicado
 //   - img:    ruta de la foto en /images/...
 //   - active: true = se muestra · false = se oculta (sin borrarla)
 //

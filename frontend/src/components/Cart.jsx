@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import { X, Plus, Minus, Trash2, ShoppingBag, MessageCircle } from "lucide-react";
 import { useCart } from "../context/CartContext";
 
@@ -199,7 +200,7 @@ export default function Cart() {
                 {/* Total */}
                 {totalPrice > 0 && (
                   <div className="flex justify-between items-center">
-                    <span className="font-body text-sm text-gray-400 uppercase tracking-widest">Total estimado</span>
+                    <span className="font-body text-sm text-gray-400 uppercase tracking-widest">Subtotal</span>
                     <span
                       data-testid="cart-total-price"
                       className="font-heading text-2xl text-[#FF6600]"
@@ -209,8 +210,10 @@ export default function Cart() {
                   </div>
                 )}
 
-                <p className="font-body text-xs text-gray-500 text-center">
-                  Los precios marcados como "Consultar" se confirman por WhatsApp
+                {/* Ley 1480 art. 50 lit. c: shipping is quoted separately, before the order closes */}
+                <p className="font-body text-xs text-gray-400 text-center">
+                  El domicilio (si aplica) y el tiempo de entrega te los confirmamos por WhatsApp antes de cerrar
+                  el pedido.
                 </p>
 
                 <button
@@ -221,6 +224,29 @@ export default function Cart() {
                   <MessageCircle size={22} />
                   ENVIAR PEDIDO
                 </button>
+
+                {/* Privacy notice at the moment the data is collected (Decreto 1377 de 2013, art. 14) */}
+                <p className="font-body text-[11px] text-gray-400 text-center leading-relaxed">
+                  Al enviar tu pedido aceptas los{" "}
+                  <Link
+                    to="/terminos"
+                    onClick={() => setIsOpen(false)}
+                    data-testid="cart-terms-link"
+                    className="underline underline-offset-2 hover:text-[#FF6600]"
+                  >
+                    Términos
+                  </Link>{" "}
+                  y la{" "}
+                  <Link
+                    to="/privacidad"
+                    onClick={() => setIsOpen(false)}
+                    data-testid="cart-privacy-link"
+                    className="underline underline-offset-2 hover:text-[#FF6600]"
+                  >
+                    Política de Privacidad
+                  </Link>
+                  .
+                </p>
               </div>
             )}
           </motion.aside>

@@ -55,7 +55,7 @@ export function CartProvider({ children }) {
   const buildWhatsAppMessage = useCallback(() => {
     const lines = items.map((i) => `• ${i.qty}x ${i.name} — ${i.price}`);
     const total = totalPrice > 0
-      ? `\n*Total estimado: $${totalPrice.toLocaleString("es-CO")}*`
+      ? `\n*Subtotal: $${totalPrice.toLocaleString("es-CO")}* (sin domicilio)`
       : "";
     return encodeURIComponent(
       `¡Hola SALCHIMAX! Quiero hacer este pedido:\n\n${lines.join("\n")}${total}\n\n¿Está disponible?`

@@ -420,8 +420,13 @@ export default function Menu() {
           </motion.div>
         </AnimatePresence>
 
+        {/* Ley 1480: prices in COP with taxes (art. 26) and the scale of product photos (art. 50 lit. b) */}
+        <p className="mt-6 text-center font-body text-xs text-white/50">
+          Precios en pesos colombianos (COP), impuestos incluidos. Fotos de referencia, no están a escala.
+        </p>
+
         {/* Bottom CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
           {totalItems > 0 ? (
             <button
               data-testid="menu-view-cart-btn"

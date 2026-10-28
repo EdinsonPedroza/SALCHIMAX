@@ -80,9 +80,10 @@ export default function Location() {
               >
                 <ZoomControl position="bottomright" />
                 <ClickToOpen />
+                {/* ODbL licence: credit OSM contributors and link to the copyright page */}
                 <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+                  url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 />
                 <Marker
                   position={SALCHIMAX_POS}

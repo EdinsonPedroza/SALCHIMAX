@@ -11,6 +11,7 @@ import { useSeoRoute } from "./hooks/useSeoRoute";
 
 const Terminos = lazy(() => import("./pages/Terminos"));
 const Privacidad = lazy(() => import("./pages/Privacidad"));
+const Pqr = lazy(() => import("./pages/Pqr"));
 
 // Must render inside BrowserRouter to access the current location
 function SeoRoute() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/terminos" element={<Terminos />} />
               <Route path="/privacidad" element={<Privacidad />} />
+              <Route path="/pqr" element={<Pqr />} />
             </Routes>
           </Suspense>
         </BrowserRouter>

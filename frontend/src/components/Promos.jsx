@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { promos } from "../data/promos";
@@ -84,6 +85,7 @@ function PromoCard({ promo, index, isToday }) {
 
         <h4 className="promo-card__title">{promo.title}</h4>
         <p className="promo-card__desc">{promo.desc}</p>
+        {promo.cond && <p className="promo-card__cond">{promo.cond}</p>}
 
         <div className="promo-card__foot">
           {promo.price && <span className="promo-card__price">{promo.price}</span>}
@@ -178,6 +180,18 @@ export default function Promos() {
             />
           ))}
         </div>
+
+        {/* Ley 1480 art. 33: time conditions of a promo must be stated where it is advertised */}
+        <p className="mt-6 text-center font-body text-xs text-white/50">
+          Cada promo aplica solo el día indicado y mientras esté publicada.{" "}
+          <Link
+            to="/terminos"
+            data-testid="promos-terms-link"
+            className="underline underline-offset-2 hover:text-[#FF6600] transition-colors"
+          >
+            Ver condiciones
+          </Link>
+        </p>
       </div>
     </section>
   );

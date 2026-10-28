@@ -1,121 +1,65 @@
-import { useRef, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
-  useSpring,
-  useTransform,
   useInView,
+  useReducedMotion,
   animate,
 } from "framer-motion";
 import { Leaf, Trophy, DollarSign, Users, Zap } from "lucide-react";
 
+// Each reason is told with a real photo from the menu. `pos` is the object-position
+// that keeps the dish in frame; `cap` is the dish name shown on the photo.
 const features = [
   {
     icon: Leaf,
     title: "Ingredientes Frescos",
     desc: "Usamos solo ingredientes de la más alta calidad, frescos cada día para garantizar el mejor sabor.",
+    img: "/images/cheesy-crunch.webp",
+    pos: "50% 36%",
+    alt: "Hamburguesa Cheesy Crunch con lechuga crespa, cebolla y carne Angus",
+    cap: "Cheesy Crunch",
   },
   {
     icon: Trophy,
     title: "Porciones Épicas",
     desc: "Porciones generosas que te dejarán satisfecho. Aquí no hay pequeñas porciones.",
+    img: "/images/salchimax.webp",
+    pos: "50% 58%",
+    alt: "La Salchimax!: una salchipapa gigante con carnes, maduro, maíz y queso",
+    cap: "Salchimax!",
   },
   {
     icon: DollarSign,
     title: "Precios Accesibles",
     desc: "La mejor comida rápida de Palmira a precios que todos pueden disfrutar.",
+    img: "/images/clasica.webp",
+    pos: "50% 64%",
+    alt: "La Clásica: salchipapa con tocineta y queso en su caja",
+    cap: "La Clásica · $18.000",
   },
   {
     icon: Users,
     title: "Ambiente Familiar",
     desc: "Un lugar acogedor donde toda la familia y los amigos pueden disfrutar juntos.",
+    img: "/images/nachos-texmex.webp",
+    pos: "50% 42%",
+    alt: "Nachos Tex-Mex para compartir, en el local de Salchimax",
+    cap: "Nachos Tex-Mex",
   },
   {
     icon: Zap,
     title: "Pedidos Rápidos",
     desc: "Tu pedido listo en tiempo récord. Domicilio o para recoger — siempre rápido.",
+    img: "/images/alitas-24.webp",
+    pos: "50% 52%",
+    alt: "Alitas recién hechas con papas y salsas",
+    cap: "Alitas x24",
   },
 ];
 
-/* ── 3D tilt card ── */
-function TiltCard({ children, className, index, tilt }) {
-  const ref = useRef(null);
-  const rect = useRef(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [14, -14]), {
-    stiffness: 400,
-    damping: 30,
-  });
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-14, 14]), {
-    stiffness: 400,
-    damping: 30,
-  });
-  const glowOpacity = useSpring(useTransform(mx, [-0.5, 0, 0.5], [0.05, 0, 0.05]), {
-    stiffness: 300,
-    damping: 25,
-  });
-
-  // Measure once per hover: getBoundingClientRect() inside mousemove forces a
-  // synchronous layout on every pointer event.
-  const onMouseEnter = () => {
-    rect.current = ref.current.getBoundingClientRect();
-  };
-  const onMouseMove = (e) => {
-    const r = rect.current;
-    if (!r) return;
-    mx.set((e.clientX - r.left) / r.width - 0.5);
-    my.set((e.clientY - r.top) / r.height - 0.5);
-  };
-  const onMouseLeave = () => {
-    mx.set(0);
-    my.set(0);
-    rect.current = null;
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.96 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.12,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      style={
-        tilt
-          ? {
-              rotateX,
-              rotateY,
-              transformStyle: "preserve-3d",
-              perspective: 800,
-            }
-          : undefined
-      }
-      onMouseEnter={tilt ? onMouseEnter : undefined}
-      onMouseMove={tilt ? onMouseMove : undefined}
-      onMouseLeave={tilt ? onMouseLeave : undefined}
-      data-testid={`feature-card-${index}`}
-      className={className}
-    >
-      {/* Dynamic highlight on tilt */}
-      {tilt && (
-        <motion.div
-          className="absolute inset-0 rounded-none pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 0%, rgba(255,102,0,0.12) 0%, transparent 60%)",
-            opacity: glowOpacity,
-          }}
-        />
-      )}
-      {children}
-    </motion.div>
-  );
-}
+const N = features.length;
+const pad = (n) => String(n).padStart(2, "0");
 
 /* ── Animated counter ── */
 function Counter({ value, suffix = "" }) {
@@ -155,14 +99,76 @@ function Counter({ value, suffix = "" }) {
 
 export default function WhyUs() {
   const sectionRef = useRef(null);
-  // No hover on touch devices, so the 3D tilt only costs layer promotion there.
-  const [tilt] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(hover: hover) and (pointer: fine)").matches
-  );
-  // Freeze the ambient glow while the section is off-screen.
+  const listRef = useRef(null);
+  const tabRefs = useRef([]);
+  const intent = useRef(0);
+  const swipe = useRef(null);
+  const reduce = useReducedMotion();
+  // Freeze the ambient glow, the autoplay bar and the fades while off-screen.
   const inView = useInView(sectionRef, { margin: "100px 0px" });
+
+  const [cur, setCur] = useState(0);
+  // Photos stacked bottom → top. The chosen one moves to the top and fades in over
+  // the previous ones, which stay fully visible underneath: no dip while crossfading.
+  const [pile, setPile] = useState(() => features.map((_, i) => (i + 1) % N));
+  const auto = !reduce;
+
+  const select = useCallback((i) => {
+    setCur(i);
+    setPile((p) => [...p.filter((k) => k !== i), i]);
+  }, []);
+
+  useEffect(() => () => clearTimeout(intent.current), []);
+
+  // On narrow screens the list scrolls sideways: keep the active pill in view.
+  useEffect(() => {
+    const list = listRef.current;
+    const tab = tabRefs.current[cur];
+    if (!list || !tab || window.innerWidth >= 1024) return;
+    list.scrollTo({
+      left: tab.offsetLeft - (list.clientWidth - tab.offsetWidth) / 2,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  }, [cur, reduce]);
+
+  // With a mouse there is no need to click: resting on a reason shows its photo.
+  // The short delay keeps the photo from flickering while the pointer crosses the list.
+  const onTabEnter = (e, i) => {
+    if (e.pointerType !== "mouse") return;
+    clearTimeout(intent.current);
+    intent.current = setTimeout(() => select(i), 90);
+  };
+  const onTabLeave = () => clearTimeout(intent.current);
+
+  const onKeyDown = (e) => {
+    const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    let to = null;
+    if (step) to = (cur + step + N) % N;
+    else if (e.key === "Home") to = 0;
+    else if (e.key === "End") to = N - 1;
+    if (to === null) return;
+    e.preventDefault();
+    select(to);
+    tabRefs.current[to]?.focus();
+  };
+
+  // Touch screens: swipe the photo sideways to change reason.
+  const onStageDown = (e) => {
+    if (e.pointerType !== "mouse") swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+  };
+  const onStageUp = (e) => {
+    const s = swipe.current;
+    if (!s || e.pointerId !== s.id) return;
+    swipe.current = null;
+    const dx = e.clientX - s.x;
+    const dy = e.clientY - s.y;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+      select((cur + (dx < 0 ? 1 : -1) + N) % N);
+    }
+  };
+
+  const f = features[cur];
+  const Icon = f.icon;
 
   return (
     <section
@@ -172,7 +178,6 @@ export default function WhyUs() {
       className={`py-8 md:py-10 bg-[#121212] relative overflow-hidden ${
         inView ? "" : "anim-paused"
       }`}
-      style={{ perspective: "1200px" }}
     >
       {/* Decorative ambient glow — CSS keeps it off the main thread */}
       <div
@@ -186,13 +191,13 @@ export default function WhyUs() {
       />
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-        {/* Header — clip-path reveal */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-14"
+          className="text-center mb-10 md:mb-12"
         >
           <motion.span
             initial={{ opacity: 0, letterSpacing: "0.5em" }}
@@ -227,50 +232,105 @@ export default function WhyUs() {
           />
         </motion.div>
 
-        {/* Feature grid — 3D tilt cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {features.map((feat, i) => {
-            const Icon = feat.icon;
-            return (
-              <TiltCard
-                key={i}
-                index={i}
-                tilt={tilt}
-                className="relative bg-[#171717] border border-white/5 p-6 text-center hover:border-[#FF6600]/50 transition-colors duration-300 group perspective-card cursor-none"
+        {/* Reasons (left) + photo stage (right) */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="why-grid"
+        >
+          <div
+            ref={listRef}
+            role="tablist"
+            aria-label="Razones para elegirnos"
+            className="why-list"
+            onKeyDown={onKeyDown}
+          >
+            {features.map((feat, i) => {
+              const selected = cur === i;
+              return (
+                <button
+                  key={feat.title}
+                  ref={(el) => { tabRefs.current[i] = el; }}
+                  id={`why-tab-${i}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={selected}
+                  aria-controls="why-panel"
+                  tabIndex={selected ? 0 : -1}
+                  data-testid={`feature-card-${i}`}
+                  className="why-tab"
+                  style={{ "--pos": feat.pos }}
+                  onClick={() => select(i)}
+                  onPointerEnter={(e) => onTabEnter(e, i)}
+                  onPointerLeave={onTabLeave}
+                >
+                  <span className="why-th">
+                    <img src={feat.img} alt="" width="64" height="64" loading="lazy" decoding="async" />
+                  </span>
+                  <span className="why-no">{pad(i + 1)}</span>
+                  <span className="why-tt">{feat.title.toUpperCase()}</span>
+                  {selected && (
+                    <i className="why-prog" aria-hidden="true">
+                      <b
+                        className={auto ? "why-prog__run" : undefined}
+                        onAnimationEnd={(e) => {
+                          if (e.animationName === "why-fill") select((cur + 1) % N);
+                        }}
+                      />
+                    </i>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            id="why-panel"
+            role="tabpanel"
+            aria-labelledby={`why-tab-${cur}`}
+            className="why-stage"
+            onPointerDown={onStageDown}
+            onPointerUp={onStageUp}
+            onPointerCancel={() => { swipe.current = null; }}
+          >
+            {features.map((feat, i) => (
+              <div
+                key={feat.img}
+                className={`why-photo${cur === i ? " is-cur" : ""}`}
+                style={{ zIndex: pile.indexOf(i) + 1, "--pos": feat.pos }}
+                aria-hidden={cur !== i}
               >
-                <div className="flex justify-center mb-4" style={{ transform: "translateZ(20px)" }}>
-                  <motion.div
-                    whileHover={{ rotate: [0, -15, 15, -10, 10, 0], scale: 1.15 }}
-                    transition={{ duration: 0.5 }}
-                    className="w-14 h-14 rounded-full bg-[#FF6600]/10 border border-[#FF6600]/20 flex items-center justify-center group-hover:bg-[#FF6600]/25 group-hover:border-[#FF6600]/60 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(255,102,0,0.35)]"
-                  >
-                    <Icon size={26} className="text-[#FF6600]" />
-                  </motion.div>
-                </div>
-                <h3
-                  className="font-heading text-xl text-white mb-2 tracking-wide"
-                  style={{ transform: "translateZ(12px)" }}
-                >
-                  {feat.title}
-                </h3>
-                <p
-                  className="font-body text-sm text-gray-400 leading-relaxed"
-                  style={{ transform: "translateZ(6px)" }}
-                >
-                  {feat.desc}
-                </p>
-              </TiltCard>
-            );
-          })}
-        </div>
+                <img src={feat.img} alt={feat.alt} width="640" height="900" decoding="async" draggable="false" />
+              </div>
+            ))}
+            <span className="why-shade" aria-hidden="true" />
+
+            {/* Keyed by the reason: each change swaps the text with a plain fade */}
+            <div key={cur} className="why-info">
+              <div className="why-top">
+                <span className="why-cap">{f.cap}</span>
+                <span className="why-of">{pad(cur + 1)} / {pad(N)}</span>
+              </div>
+              <div>
+                <span className="why-ic">
+                  <Icon size={26} className="text-[#FF6600]" />
+                </span>
+                <h3 className="why-title">{f.title.toUpperCase()}</h3>
+                <p className="why-desc">{f.desc}</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Stats row — animated counters */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-3 gap-4 mt-14 border-t border-white/10 pt-12"
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-3 gap-4 mt-10 md:mt-12 border-t border-white/10 pt-10"
         >
           {[
             { value: "5.0", suffix: "★", label: "En Google Maps" },
@@ -279,10 +339,10 @@ export default function WhyUs() {
           ].map((stat, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, scale: 0.85 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.5, delay: 0.2 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="text-center group"
               data-testid={`stat-${i}`}
             >

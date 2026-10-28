@@ -954,3 +954,235 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .map-open-link { transition: none; }
 }
+
+/* ── Why us: escenario con foto ───────────────────────────────────
+   Lista de razones (con miniatura) y un escenario con la foto de la razón
+   elegida. Todo aparece con un fundido: la foto nueva sube a la capa de arriba
+   y se aclara sobre las anteriores (que siguen visibles debajo) y el texto se
+   cambia con un fundido corto. Sin deslizamientos ni recortes. */
+.why-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+.why-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.why-list::-webkit-scrollbar { display: none; }
+
+.why-tab {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 16px 6px 6px;
+  overflow: hidden;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  transition: color 220ms cubic-bezier(0.23, 1, 0.32, 1), background-color 220ms cubic-bezier(0.23, 1, 0.32, 1), border-color 220ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.why-tab:active { transform: scale(0.98); }
+.why-tab[aria-selected="true"] {
+  color: #fff;
+  background: rgba(255, 102, 0, 0.14);
+  border-color: rgba(255, 102, 0, 0.6);
+}
+.why-tab:focus-visible { outline: 2px solid #FF6600; outline-offset: 2px; }
+.why-th {
+  position: relative;
+  flex: none;
+  width: 32px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.why-th img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--pos);
+  opacity: 0.6;
+  transition: opacity 260ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.why-tab[aria-selected="true"] .why-th img { opacity: 1; }
+.why-no { display: none; }
+.why-tt {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* Barra de tiempo del autoplay (pasa a la siguiente razón al terminar) */
+.why-prog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.why-prog b {
+  position: absolute;
+  inset: 0;
+  background: #FF6600;
+  transform-origin: left;
+}
+.why-prog__run {
+  transform: scaleX(0);
+  animation: why-fill 6000ms linear forwards;
+}
+@keyframes why-fill { to { transform: scaleX(1); } }
+.why-grid:hover .why-prog__run,
+.why-grid:focus-within .why-prog__run,
+.anim-paused .why-prog__run,
+.anim-paused .why-photo.is-cur,
+.anim-paused .why-info,
+.anim-paused .why-desc { animation-play-state: paused; }
+
+.why-stage {
+  position: relative;
+  min-height: 400px;
+  overflow: hidden;
+  isolation: isolate;
+  touch-action: pan-y;
+  background: #1b1b1b;
+  border-radius: 22px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+.why-photo { position: absolute; inset: 0; }
+.why-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--pos);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.why-photo.is-cur { animation: why-fade-in 520ms cubic-bezier(0.23, 1, 0.32, 1); }
+.why-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(10, 10, 10, 0.92) 0%, rgba(10, 10, 10, 0.55) 34%, rgba(10, 10, 10, 0) 66%),
+    linear-gradient(to bottom, rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0) 26%);
+}
+.why-info {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(18px, 2.6vw, 34px);
+  pointer-events: none;
+  animation: why-fade-in 420ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.why-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.why-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px 6px 9px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.86);
+  background: rgba(13, 13, 13, 0.78);
+  border-radius: 999px;
+}
+.why-cap::before { content: ""; width: 6px; height: 6px; background: #FF6600; border-radius: 50%; }
+.why-of { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.78); }
+.why-ic {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 14px;
+  background: rgba(255, 102, 0, 0.14);
+  border: 1.5px solid rgba(255, 102, 0, 0.55);
+  border-radius: 50%;
+}
+.why-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 4.8vw, 4rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  color: #fff;
+}
+.why-desc {
+  max-width: 46ch;
+  margin-top: 10px;
+  font-size: clamp(0.92rem, 1.15vw, 1.05rem);
+  font-weight: 600;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
+  animation: why-fade-in 480ms cubic-bezier(0.23, 1, 0.32, 1) 90ms backwards;
+}
+@keyframes why-fade-in { from { opacity: 0; } }
+
+@media (min-width: 1024px) {
+  .why-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: stretch;
+    gap: clamp(28px, 3.4vw, 48px);
+  }
+  .why-list { flex-direction: column; justify-content: center; gap: 0; overflow: visible; padding-bottom: 0; }
+  .why-tab {
+    gap: 14px;
+    padding: clamp(9px, 1.2vw, 14px) 4px;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 0;
+    background: none;
+  }
+  .why-tab:first-child { border-top: 1px solid rgba(255, 255, 255, 0.09); }
+  .why-tab[aria-selected="true"] { background: none; border-color: rgba(255, 255, 255, 0.09); }
+  .why-tab:focus-visible { outline-offset: -2px; }
+  .why-th { width: clamp(46px, 4.6vw, 58px); border-radius: 12px; }
+  .why-th::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 2px #FF6600;
+    opacity: 0;
+    transition: opacity 260ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .why-tab[aria-selected="true"] .why-th::after { opacity: 1; }
+  .why-no {
+    display: block;
+    flex: none;
+    width: 1.7em;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    transition: color 220ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .why-tab[aria-selected="true"] .why-no { color: #FF6600; }
+  .why-tt { font-size: clamp(1.6rem, 2.6vw, 2.2rem); letter-spacing: 0.02em; }
+  .why-prog { bottom: -1px; }
+  .why-stage { min-height: clamp(380px, 38vw, 470px); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .why-tab[aria-selected="false"]:hover { color: rgba(255, 255, 255, 0.8); }
+  .why-tab[aria-selected="false"]:hover .why-th img { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .why-tab, .why-th img, .why-th::after, .why-no { transition: none; }
+  .why-photo.is-cur, .why-info, .why-desc { animation: none; }
+}

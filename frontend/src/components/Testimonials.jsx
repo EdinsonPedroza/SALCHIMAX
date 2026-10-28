@@ -2,50 +2,12 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Marquee from "react-fast-marquee";
 
-const reviews = [
-  {
-    name: "Valentina G.",
-    rating: 5,
-    text: "La mejor salchipapa que he probado en Palmira. ¡La Carnívora es brutal!",
-    avatar: "V",
-  },
-  {
-    name: "Andrés M.",
-    rating: 5,
-    text: "Excelente atención y comida deliciosa. Las alitas son increíbles, 100% recomendado.",
-    avatar: "A",
-  },
-  {
-    name: "Daniela R.",
-    rating: 5,
-    text: "El ambiente es chevere, la comida es buenísima y el precio está muy bien. Volveré pronto.",
-    avatar: "D",
-  },
-  {
-    name: "Carlos P.",
-    rating: 5,
-    text: "La doble burger está brutal. Porciones grandísimas y muy sabrosas. El mejor fast food de Palmira.",
-    avatar: "C",
-  },
-  {
-    name: "Juliana T.",
-    rating: 5,
-    text: "Las nachos colombianas son lo máximo! Siempre pido por WhatsApp y llega rápido.",
-    avatar: "J",
-  },
-  {
-    name: "Miguel O.",
-    rating: 5,
-    text: "El sandwich cubano especial es una delicia. Definitivamente los mejores de la ciudad.",
-    avatar: "M",
-  },
-  {
-    name: "Laura S.",
-    rating: 5,
-    text: "Pedí la Picadita y quedé enamorada. La combinación de ingredientes es perfecta.",
-    avatar: "L",
-  },
-];
+// Only real reviews, copied word for word from Google Maps or Instagram with the
+// customer's permission. Invented ones are misleading advertising (Ley 1480 de 2011,
+// arts. 29-30): the original seven were placeholder text from the site generator.
+// Shape: { name: "Ana M.", rating: 5, text: "...", avatar: "A" }.
+// While the list is empty, the section stays hidden.
+const reviews = [];
 
 /* Plain div + CSS hover: react-fast-marquee duplicates its children, so a
    motion component here means dozens of hover listeners and springs mounted
@@ -79,6 +41,8 @@ export default function Testimonials() {
   // Pause both marquees while the section is off-screen — the browser keeps
   // compositing infinite CSS animations otherwise, wasting frames.
   const inView = useInView(sectionRef, { margin: "150px 0px" });
+
+  if (reviews.length === 0) return null;
 
   return (
     <section

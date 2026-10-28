@@ -32,6 +32,8 @@ export default function Location() {
   // Mount the Leaflet map (and fetch its tiles) only when the user is close —
   // it's expensive and lives at the bottom of the page.
   const mapInView = useInView(mapRef, { once: true, margin: "400px 0px" });
+  // The "open in Google Maps" ring plays when the map is actually on screen, not 400px before.
+  const mapSeen = useInView(mapRef, { once: true, amount: 0.5 });
 
   return (
     <section
@@ -99,9 +101,9 @@ export default function Location() {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="map-open-link"
-              className="map-open-link"
+              className={`map-open-link${mapSeen ? " is-seen" : ""}`}
             >
-              <ExternalLink size={14} strokeWidth={2.6} aria-hidden="true" />
+              <ExternalLink size={17} strokeWidth={2.6} aria-hidden="true" />
               Abrir en Google Maps
             </a>
           </motion.div>

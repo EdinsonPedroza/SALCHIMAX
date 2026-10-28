@@ -218,6 +218,22 @@ html {
   animation: ember-rise var(--ember-dur, 5s) var(--ember-delay, 0s) infinite ease-out;
   pointer-events: none;
 }
+/* Brighter, bigger spark: a small hot core inside a soft glow (the glow is part
+   of the gradient, so there is no blur or box-shadow to repaint). */
+@keyframes spark-rise {
+  0%   { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
+  12%  { opacity: 1; }
+  30%  { opacity: 0.7; }
+  38%  { opacity: 1; }
+  55%  { transform: translate3d(calc(var(--ember-drift, 40px) * 0.7), -55vh, 0) scale(1); opacity: 0.9; }
+  100% { transform: translate3d(var(--ember-drift, 40px), -105vh, 0) scale(0.3); opacity: 0; }
+}
+.ember-spark {
+  background: radial-gradient(circle, #FFF6CC 0%, #FFC233 20%, rgba(255, 102, 0, 0.7) 44%, rgba(255, 102, 0, 0) 74%);
+  animation-name: spark-rise;
+  animation-timing-function: linear;
+  animation-fill-mode: backwards;
+}
 
 /* ── Off-screen animation pause ───────────────────────────────────
    Applied to a section wrapper while it is outside the viewport. Infinite
@@ -935,24 +951,46 @@ html {
   z-index: 1000;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 13px 7px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  gap: 9px;
+  min-height: 44px;
+  padding: 12px 20px 11px;
   border-radius: 999px;
-  background: rgba(23, 23, 23, 0.94);
-  color: #fff;
+  background: #FF6600;
+  color: #0D0D0D;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
   line-height: 1;
-  transition: background-color 180ms cubic-bezier(0.23, 1, 0.32, 1), color 180ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  /* A dark halo separates the orange button from any map colour underneath */
+  box-shadow: 0 0 0 3px rgba(13, 13, 13, 0.7), 0 12px 28px -8px rgba(0, 0, 0, 0.8);
+  transition: background-color 180ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
+/* Attention ring: plays twice when the map comes into view, then stops (a
+   looping animation here would run for the whole session for nothing). */
+.map-open-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid #FF6600;
+  opacity: 0;
+  pointer-events: none;
+}
+.map-open-link.is-seen::after { animation: map-link-ring 1.5s cubic-bezier(0.23, 1, 0.32, 1) 0.5s 2; }
+@keyframes map-link-ring { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.35, 1.7); opacity: 0; } }
+.map-open-link svg { transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1); }
 .map-open-link:active { transform: scale(0.97); }
+.map-open-link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
-  .map-open-link:hover { background: #FF6600; color: #0D0D0D; }
+  .map-open-link:hover { background: #FF8533; }
+  .map-open-link:hover svg { transform: translate(2px, -2px); }
+}
+@media (max-width: 480px) {
+  .map-open-link { left: 10px; top: 10px; padding: 11px 16px 10px; font-size: 1.15rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .map-open-link { transition: none; }
+  .map-open-link, .map-open-link svg { transition: none; }
+  .map-open-link.is-seen::after { animation: none; }
 }
 
 /* ── Why us: escenario con foto ───────────────────────────────────

@@ -39,12 +39,41 @@ const EMBERS = Array.from({ length: 18 }, (_, i) => ({
   opacity: Math.random() * 0.55 + 0.15,
 }));
 
+/* A few bigger, brighter sparks on top of the embers. Same recipe (one element,
+   transform + opacity only, radial gradient instead of blur/box-shadow), spread
+   across the width so they never bunch up and slow enough to be noticed. */
+const SPARKS = Array.from({ length: 6 }, (_, i) => ({
+  id: i,
+  left: `${5 + (i + Math.random() * 0.7) * (88 / 6)}%`,
+  size: Math.random() * 10 + 22,
+  dur: `${Math.random() * 4 + 8}s`,
+  delay: `${i * 1.3 + Math.random()}s`,
+  drift: `${(Math.random() - 0.5) * 140}px`,
+}));
+
 function FloatingEmbers() {
   // Fewer composite layers on mobile: each ember is its own layer while it
   // animates, and phones pay for that in fill rate.
-  const [count] = useState(() => (isMobile() ? 8 : 18));
+  const [mobile] = useState(isMobile);
+  const count = mobile ? 8 : 18;
+  const sparks = mobile ? 3 : 6;
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-[2]">
+      {SPARKS.slice(0, sparks).map((s) => (
+        <span
+          key={`spark-${s.id}`}
+          className="ember ember-spark"
+          style={{
+            left: s.left,
+            bottom: "-24px",
+            width: s.size,
+            height: s.size,
+            "--ember-dur": s.dur,
+            "--ember-delay": s.delay,
+            "--ember-drift": s.drift,
+          }}
+        />
+      ))}
       {EMBERS.slice(0, count).map((e) => (
         <span
           key={e.id}

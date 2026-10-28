@@ -10,7 +10,7 @@
 <style>
   /* Lista de razones (con miniatura) y un escenario con la foto de cada una. Al elegir, la nueva foto entra con un
      barrido de derecha a izquierda mientras se asienta con un zoom lento; el título se revela con un recorte.
-     Pasa sola cada 6 s con una barra de tiempo. */
+     Con el mouse basta pasar sobre una razón (sin clic); en celular se desliza la foto. Pasa sola cada 6 s con una barra de tiempo. */
   .ef { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(20px, 3.4vw, 48px); align-items: stretch; }
   .ef-list { display: flex; flex-direction: column; justify-content: center; }
   .ef-tab { position: relative; display: flex; align-items: center; gap: 14px; padding: clamp(9px, 1.2vw, 14px) 4px; text-align: left; border-bottom: 1px solid var(--hair); color: rgba(255, 255, 255, 0.42); transition: color 220ms var(--ease-out), transform 160ms var(--ease-out); }
@@ -100,6 +100,7 @@ const DUR = 6000;
 const ef = $("#ef"), list = $("#list"), stage = $("#stage");
 ef.style.setProperty("--dur", DUR + "ms");
 let cur = 0, auto = !REDUCED;
+let intent = 0;
 const pile = WHY.map((_, i) => i);   // orden de las fotos de abajo hacia arriba (la última es la que se ve)
 ef.classList.toggle("auto", auto);
 
@@ -109,7 +110,14 @@ WHY.forEach((f, i) => {
   b.className = "ef-tab"; b.id = `t${i}`; b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-controls", `p${i}`);
   b.style.setProperty("--pos", f.photo.pos);
   b.innerHTML = `<span class="ef-th"><img src="${f.photo.src}" alt="" width="64" height="64" decoding="async"></span><span class="ef-no">${pad(i + 1)}</span><span class="ef-tt">${f.title.toUpperCase()}</span><i class="ef-prog"><b></b></i>`;
-  b.addEventListener("click", () => { stopAuto(); show(i); });
+  b.addEventListener("click", () => show(i));
+  /* Con mouse no hace falta hacer clic: al posarse sobre una razón (90 ms, para no saltar al cruzar la lista) se ve su foto */
+  b.addEventListener("pointerenter", (e) => {
+    if (e.pointerType !== "mouse") return;
+    clearTimeout(intent);
+    intent = setTimeout(() => { if (i !== cur) show(i); }, 90);
+  });
+  b.addEventListener("pointerleave", () => clearTimeout(intent));
   list.appendChild(b); tabs.push(b);
 
   const im = document.createElement("div");
@@ -138,7 +146,6 @@ function show(i) {
   im.classList.add("on");
   if (innerWidth <= 900) list.scrollTo({ left: tabs[i].offsetLeft - (list.clientWidth - tabs[i].offsetWidth) / 2, behavior: REDUCED ? "auto" : "smooth" });
 }
-function stopAuto() { auto = false; ef.classList.remove("auto"); }
 
 list.addEventListener("animationend", (e) => { if (e.animationName === "effill" && auto) show((cur + 1) % WHY.length); });
 let seen = false, hov = false, foc = false;
@@ -155,8 +162,20 @@ list.addEventListener("keydown", (e) => {
   if (keys[e.key]) to = (cur + keys[e.key] + WHY.length) % WHY.length;
   else if (e.key === "Home") to = 0; else if (e.key === "End") to = WHY.length - 1;
   if (to === null) return;
-  e.preventDefault(); stopAuto(); show(to); tabs[to].focus();
+  e.preventDefault(); show(to); tabs[to].focus();
 });
+
+/* En pantallas táctiles la foto se desliza hacia los lados (el autoplay sigue y se pausa mientras se toca) */
+let sw = null;
+stage.style.touchAction = "pan-y";
+stage.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") sw = { x: e.clientX, y: e.clientY, id: e.pointerId }; });
+stage.addEventListener("pointerup", (e) => {
+  if (!sw || e.pointerId !== sw.id) return;
+  const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+  sw = null;
+  if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) show((cur + (dx < 0 ? 1 : -1) + WHY.length) % WHY.length);
+});
+stage.addEventListener("pointercancel", () => { sw = null; });
 
 show(0);
 whyStats($("#stats"));

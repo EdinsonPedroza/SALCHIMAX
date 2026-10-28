@@ -887,13 +887,9 @@ html {
 }
 
 /* ── Mapa de ubicación ────────────────────────────────────────────
-   Las baldosas de OpenStreetMap son claras: se invierten con un filtro (solo en la
-   capa de baldosas, no en el marcador ni los controles) para que combinen con el
-   fondo oscuro del sitio. Marcador, controles, popup y atribución se redibujan. */
-.map-frame .leaflet-container { background: #121212; font-family: 'Manrope', sans-serif; }
-.map-frame .leaflet-tile-pane {
-  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92) saturate(0.55);
-}
+   Mapa claro (baldosas de OpenStreetMap tal cual, sin filtro) para que se lean bien
+   las calles. Marcador, controles, popup y atribución se redibujan a la marca. */
+.map-frame .leaflet-container { background: #e8e4dc; font-family: 'Manrope', sans-serif; }
 .map-pin { background: none; border: 0; }
 .map-pin__dot {
   position: absolute;
@@ -953,11 +949,11 @@ html {
 .map-frame .leaflet-popup-close-button { color: rgba(255, 255, 255, 0.55); }
 
 .map-frame .leaflet-control-attribution {
-  background: rgba(13, 13, 13, 0.8);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
+  color: #333;
   font-size: 10px;
 }
-.map-frame .leaflet-control-attribution a { color: rgba(255, 255, 255, 0.6); }
+.map-frame .leaflet-control-attribution a { color: #1a1a1a; }
 
 @media (prefers-reduced-motion: reduce) {
   .map-pin__pulse { animation: none; opacity: 0.5; }

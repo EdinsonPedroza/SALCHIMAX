@@ -20,20 +20,28 @@ function SeoRoute() {
 }
 
 function App() {
-  const [introVisible, setIntroVisible] = useState(true);
+  // "show" → curtains closed, "exit" → curtains opening, "done" → gone.
+  // The intro belongs to the home page: opening /terminos or /pqr straight from a
+  // link goes directly to the content.
+  const [intro, setIntro] = useState(() =>
+    typeof window !== "undefined" && window.location.pathname === "/" ? "show" : "done"
+  );
 
   return (
     <MotionConfig reducedMotion="user">
     <CartProvider>
-      {introVisible && (
-        <IntroScreen onComplete={() => setIntroVisible(false)} />
+      {intro !== "done" && (
+        <IntroScreen
+          onExitStart={() => setIntro((s) => (s === "show" ? "exit" : s))}
+          onComplete={() => setIntro("done")}
+        />
       )}
       <div className="App bg-[#0D0D0D] min-h-screen font-body">
         <BrowserRouter>
           <SeoRoute />
           <Suspense fallback={null}>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Home heroReady={intro !== "show"} />} />
               <Route path="/terminos" element={<Terminos />} />
               <Route path="/privacidad" element={<Privacidad />} />
               <Route path="/pqr" element={<Pqr />} />

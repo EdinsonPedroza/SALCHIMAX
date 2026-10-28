@@ -6,8 +6,19 @@ import {
   useScroll,
   useTransform,
   useInView,
+  useReducedMotion,
 } from "framer-motion";
 import { MessageCircle, ChevronDown } from "lucide-react";
+
+const EASE_OUT = [0.23, 1, 0.32, 1];
+
+// Entrance choreography. Everything is gated by `ready`, which flips the moment the
+// intro curtains start to open, so it plays on screen instead of behind the cover.
+// The wipe's inset leaves room around the text so the line's glow is never clipped.
+const WIPE_HIDDEN = { opacity: 0, clipPath: "inset(-40% 100% -40% -15%)" };
+const WIPE_SHOWN = { opacity: 1, clipPath: "inset(-40% -15% -40% -15%)" };
+const STAMP_HIDDEN = { opacity: 0, scale: 0.88 };
+const STAMP_SHOWN = { opacity: 1, scale: 1 };
 
 const WA_LINK = "https://wa.me/573177371695";
 const HERO_BG_DESKTOP =
@@ -126,8 +137,13 @@ function ParallaxBg({ bgUrl }) {
   );
 }
 
-export default function Hero() {
+export default function Hero({ ready = true }) {
   const sectionRef = useRef(null);
+  const reduce = useReducedMotion();
+  // Headline lines wipe in from the left; with reduced motion they just fade.
+  const lineHidden = reduce ? { opacity: 0 } : WIPE_HIDDEN;
+  const lineShown = reduce ? { opacity: 1 } : WIPE_SHOWN;
+  const lineIn = (delay) => ({ duration: 0.7, delay, ease: EASE_OUT });
   const [bgUrl] = useState(() => (isMobile() ? HERO_BG_MOBILE : HERO_BG_DESKTOP));
   const [parallax] = useState(wantsParallax);
   // Every looping decoration below is CSS-driven; freeze it once the hero
@@ -143,15 +159,18 @@ export default function Hero() {
         inView ? "" : "anim-paused"
       }`}
     >
-      {/* Background — parallax on desktop, static layer elsewhere */}
-      {parallax ? (
-        <ParallaxBg bgUrl={bgUrl} />
-      ) : (
-        <div
-          style={{ backgroundImage: `url(${bgUrl})` }}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        />
-      )}
+      {/* Background — parallax on desktop, static layer elsewhere. The wrapper
+          starts slightly zoomed and settles once the page is revealed. */}
+      <div className={`hero-bg${ready ? " is-ready" : ""}`}>
+        {parallax ? (
+          <ParallaxBg bgUrl={bgUrl} />
+        ) : (
+          <div
+            style={{ backgroundImage: `url(${bgUrl})` }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          />
+        )}
+      </div>
 
       {/* Dark overlay */}
       <div className="hero-overlay absolute inset-0 z-[1]" />
@@ -177,11 +196,11 @@ export default function Hero() {
       {/* Floating embers */}
       <FloatingEmbers />
 
-      {/* Logo izquierdo — entrance in JS, idle float in CSS */}
+      {/* Logo izquierdo — stamped in once revealed, idle float in CSS */}
       <motion.div
-        initial={{ opacity: 0, x: -80, rotate: -12 }}
-        animate={{ opacity: 1, x: 0, rotate: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
+        initial={STAMP_HIDDEN}
+        animate={ready ? STAMP_SHOWN : STAMP_HIDDEN}
+        transition={{ duration: 0.6, delay: 0.7, ease: EASE_OUT }}
         className="absolute left-8 md:left-14 lg:left-20 top-1/2 -translate-y-1/2 hidden md:block z-10"
       >
         <img
@@ -195,9 +214,9 @@ export default function Hero() {
 
       {/* Logo derecho */}
       <motion.div
-        initial={{ opacity: 0, x: 80, rotate: 12 }}
-        animate={{ opacity: 1, x: 0, rotate: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
+        initial={STAMP_HIDDEN}
+        animate={ready ? STAMP_SHOWN : STAMP_HIDDEN}
+        transition={{ duration: 0.6, delay: 0.82, ease: EASE_OUT }}
         className="absolute right-8 md:right-14 lg:right-20 top-1/2 -translate-y-1/2 hidden md:block z-10"
       >
         <img
@@ -218,29 +237,31 @@ export default function Hero() {
             alt="SALCHIMAX"
             width={96}
             height={96}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
+            initial={STAMP_HIDDEN}
+            animate={ready ? STAMP_SHOWN : STAMP_HIDDEN}
+            transition={{ duration: 0.6, delay: 0.25, ease: EASE_OUT }}
             className="hero-logo-mobile w-24 h-24 rounded-full object-cover border-4 border-[#FF6600] shadow-[0_0_30px_rgba(255,102,0,0.5)]"
           />
         </div>
 
-        {/* Main headline — each line fades in (no slide), staggered */}
+        {/* Main headline — each line is wiped in from the left (no slide-up), staggered.
+            w-fit mx-auto: the wipe crosses the text itself, not the empty container. */}
         <div className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-8">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
+            initial={lineHidden}
+            animate={ready ? lineShown : lineHidden}
+            transition={lineIn(0.3)}
+            className="w-fit mx-auto"
           >
             LAS SALCHIPAPAS
           </motion.div>
 
           {/* Line 2 — GLITCH + pulse */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative"
+            initial={lineHidden}
+            animate={ready ? lineShown : lineHidden}
+            transition={lineIn(0.44)}
+            className="relative w-fit mx-auto"
           >
             <span className="text-pulse text-[#FF6600] inline-block">
               MAS BRUTALES
@@ -248,9 +269,10 @@ export default function Hero() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.55 }}
+            initial={lineHidden}
+            animate={ready ? lineShown : lineHidden}
+            transition={lineIn(0.58)}
+            className="w-fit mx-auto"
           >
             DE PALMIRA
           </motion.div>
@@ -259,9 +281,9 @@ export default function Hero() {
 
         {/* Magnetic CTA buttons */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
+          initial={STAMP_HIDDEN}
+          animate={ready ? STAMP_SHOWN : STAMP_HIDDEN}
+          transition={{ duration: 0.5, delay: 0.95, ease: EASE_OUT }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           <MagneticBtn
@@ -289,8 +311,8 @@ export default function Hero() {
       <motion.a
         href="#menu"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.4 }}
+        animate={{ opacity: ready ? 1 : 0 }}
+        transition={{ duration: 0.8, delay: 1.5 }}
         className="soft-bounce absolute bottom-8 left-1/2 -translate-x-1/2 text-[#FF6600] z-10 flex flex-col items-center gap-1"
         data-testid="hero-scroll-indicator"
       >

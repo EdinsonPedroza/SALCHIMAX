@@ -1309,3 +1309,18 @@ html {
   .cart-ring { animation: none; }
   .pqr-stamp { animation-name: page-enter; }
 }
+
+/* ─── Hero: el fondo arranca un poco ampliado y se asienta al abrirse la intro ─── */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  scale: 1.1;
+}
+.hero-bg.is-ready {
+  scale: 1;
+  transition: scale 1.8s var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg,
+  .hero-bg.is-ready { scale: 1; transition: none; }
+}

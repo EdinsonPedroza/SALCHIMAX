@@ -17,13 +17,15 @@ const OrderCTA = lazy(() => import("../components/OrderCTA"));
 const Location = lazy(() => import("../components/Location"));
 const Footer = lazy(() => import("../components/Footer"));
 
-export default function Home() {
+// heroReady: false while the intro covers the page, so the hero's entrance plays as
+// the curtains open instead of behind them.
+export default function Home({ heroReady = true }) {
   return (
     <>
       <Navbar />
       <Cart />
       <MiniCart />
-      <Hero />
+      <Hero ready={heroReady} />
       <MarqueeStrip />
       <Promos />
       <Menu />

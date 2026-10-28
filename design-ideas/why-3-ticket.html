@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión 3 — Ticket</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<style>
+  /* Las cinco razones salen en un ticket de cocina que se imprime línea por línea (clip-path con pasos,
+     como un cabezal térmico), cada ✓ se estampa al imprimirse su renglón y al final cae un sello. */
+  .tk-wrap { display: grid; grid-template-columns: minmax(0, 480px) minmax(0, 1fr); gap: clamp(28px, 6vw, 88px); align-items: center; justify-content: center; }
+  .tk-stage { perspective: 1100px; padding: 6px 6px 18px; }
+  .tk { position: relative; filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.55)); transform: rotate(-1.2deg); will-change: transform; }
+
+  .tk-paper { --s: 14px; position: relative; padding: 32px 26px 62px; background: var(--cream); color: #141414; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Courier New", monospace; font-variant-ligatures: none; font-size: 0.8rem; line-height: 1.5;
+    -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--s) 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--s) 51% repeat-x;
+    mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--s) 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--s) 51% repeat-x;
+    clip-path: inset(0 0 100% 0); }
+  .tk.go .tk-paper { animation: tkprint var(--print, 3400ms) steps(56, end) forwards; }
+  @keyframes tkprint { to { clip-path: inset(0 0 0 0); } }
+
+  .tk-brand { display: block; text-align: center; font-family: var(--f-head); font-weight: 400; font-size: 2.7rem; letter-spacing: 0.08em; line-height: 1; }
+  .tk-sub { display: block; margin-top: 4px; text-align: center; font-size: 0.66rem; letter-spacing: 0.24em; color: #4a443b; }
+  .tk-dash { display: block; margin: 14px 0; border-top: 2px dashed rgba(20, 20, 20, 0.42); }
+  .tk-cap { text-align: center; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; }
+
+  .tk-its { list-style: none; }
+  .tk-it { padding: 10px 0 12px; }
+  .tk-line { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: 0.05em; }
+  .tk-n { color: #6b6051; }
+  .tk-t { flex: 0 1 auto; text-transform: uppercase; }
+  .tk-lead { flex: 1; min-width: 14px; align-self: end; margin-bottom: 0.35em; border-bottom: 2px dotted rgba(20, 20, 20, 0.35); }
+  .tk-ck { flex: none; width: 20px; height: 20px; color: #e04f00; }
+  .tk-ck path { stroke-dasharray: 1 2; stroke-dashoffset: 1; opacity: 0; }
+  .tk.go .tk-ck path { animation: wydraw 520ms var(--ease-out) forwards; animation-delay: var(--d, 0ms); }
+  .tk.go .tk-ck { animation: tkpop 520ms var(--ease-out) backwards; animation-delay: var(--d, 0ms); }
+  @keyframes tkpop { from { opacity: 0; transform: scale(1.8) rotate(-20deg); } }
+  .tk-d { margin: 4px 0 0 28px; font-size: 0.72rem; line-height: 1.5; color: #4a443b; }
+
+  .tk-thanks { text-align: center; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; }
+  .tk-barwrap { position: relative; width: 78%; height: 46px; margin: 14px auto 0; overflow: hidden; }
+  .tk-bar { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, #141414 0 2px, transparent 2px 4px, #141414 4px 5px, transparent 5px 8px, #141414 8px 11px, transparent 11px 12px); }
+  .tk-scan { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--orange); box-shadow: 0 0 10px rgba(255, 102, 0, 0.8); opacity: 0; }
+  .tk.go .tk-scan { animation: tkscan 1500ms ease-in-out calc(var(--print, 3400ms) + 100ms) both; }
+  @keyframes tkscan { 0% { opacity: 1; transform: translateX(0); } 92% { opacity: 1; } 100% { opacity: 0; transform: translateX(var(--bw, 300px)); } }
+
+  .tk-stamp { position: absolute; right: 16px; bottom: 54px; width: 116px; color: #e04f00; opacity: 0; transform: rotate(-14deg); }
+  .tk.go .tk-stamp { animation: tkstamp 520ms var(--ease-out) calc(var(--print, 3400ms) + 200ms) forwards; }
+  @keyframes tkstamp { from { opacity: 0; transform: rotate(-32deg) scale(1.7); } 50% { opacity: 0.95; } to { opacity: 0.9; transform: rotate(-14deg) scale(1); } }
+
+  /* Cifras */
+  .tk-side { display: flex; flex-direction: column; }
+  .tk-st { padding: clamp(14px, 2.4vw, 28px) 0; border-top: 2px dashed rgba(255, 255, 255, 0.16); opacity: 0; transition: opacity 600ms var(--ease-out); }
+  .tk-st:last-child { border-bottom: 2px dashed rgba(255, 255, 255, 0.16); }
+  .tk-st.in { opacity: 1; }
+  .tk-st b { display: block; font-family: var(--f-head); font-weight: 400; font-size: clamp(4.2rem, 9vw, 8.2rem); line-height: 0.92; color: var(--orange); }
+  .tk-st span { display: block; margin-top: 6px; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Courier New", monospace; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.62); }
+
+  @media (max-width: 860px) {
+    .tk-wrap { grid-template-columns: minmax(0, 480px); }
+    .tk-side { flex-direction: row; flex-wrap: wrap; gap: 0 28px; }
+    .tk-st { flex: 1 1 150px; }
+    .tk-st:last-child { border-bottom: 0; }
+  }
+  @media (max-width: 520px) {
+    .tk-paper { padding-inline: 18px; }
+    .tk-brand { font-size: 2.3rem; }
+    .tk-d { margin-left: 24px; }
+    .tk-stamp { width: 84px; right: 4px; bottom: 36px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tk.go .tk-paper, .tk.go .tk-ck, .tk.go .tk-ck path, .tk.go .tk-scan, .tk.go .tk-stamp { animation: none; }
+    .tk-paper { clip-path: none; }
+    .tk-ck path { stroke-dashoffset: 0; opacity: 1; }
+    .tk-stamp { opacity: 0.9; }
+    .tk-st { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <div class="tk-wrap">
+    <div class="tk-stage" id="stage">
+      <article class="tk" id="tk" aria-label="Ticket con las cinco razones para elegir SALCHIMAX">
+        <div class="tk-paper" id="paper">
+          <span class="tk-brand">SALCHIMAX</span>
+          <span class="tk-sub">URBAN FOOD · PALMIRA</span>
+          <i class="tk-dash"></i>
+          <div class="tk-cap">TICKET · 5 RAZONES</div>
+          <i class="tk-dash"></i>
+          <ul class="tk-its" id="its"></ul>
+          <i class="tk-dash"></i>
+          <div class="tk-thanks">GRACIAS POR ELEGIRNOS</div>
+          <div class="tk-barwrap" id="bw" aria-hidden="true"><div class="tk-bar"></div><i class="tk-scan"></i></div>
+          <svg class="tk-stamp" viewBox="0 0 120 120" aria-hidden="true">
+            <defs><path id="stc" d="M60 60 m-43 0 a43 43 0 1 1 86 0 a43 43 0 1 1 -86 0"/></defs>
+            <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="3.5"/>
+            <circle cx="60" cy="60" r="34" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <text font-family="Bebas Neue, Impact, sans-serif" font-size="15" letter-spacing="2.4" fill="currentColor"><textPath href="#stc">SALCHIMAX ★ URBAN FOOD ★ PALMIRA ★</textPath></text>
+            <path d="M42 62 l12 12 l24 -26" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </article>
+    </div>
+
+    <div class="tk-side" id="side"></div>
+  </div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script>
+const PRINT_MS = 3400;
+const its = $("#its"), tk = $("#tk"), paper = $("#paper");
+tk.style.setProperty("--print", PRINT_MS + "ms");
+
+WHY.forEach((f, i) => {
+  const li = document.createElement("li");
+  li.className = "tk-it";
+  li.innerHTML = `<div class="tk-line"><span class="tk-n">${pad(i + 1)}</span><span class="tk-t">${f.title}</span><i class="tk-lead"></i><svg class="tk-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M4 12.5l5 5L20 6"/></svg></div><p class="tk-d">${f.desc}</p>`;
+  its.appendChild(li);
+});
+
+/* Cada ✓ se estampa justo cuando el cabezal "llega" a su renglón */
+function timeChecks() {
+  const H = paper.offsetHeight;
+  $$(".tk-it", paper).forEach((li) => li.style.setProperty("--d", Math.round(((li.offsetTop + 16) / H) * PRINT_MS + 40) + "ms"));
+  $("#bw").style.setProperty("--bw", $("#bw").offsetWidth + "px");
+}
+timeChecks();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(timeChecks);
+addEventListener("resize", timeChecks);
+
+onceInView(tk, () => tk.classList.add("go"), 0.3);
+
+/* Cifras */
+const side = $("#side");
+WHY_STATS.forEach((s, i) => {
+  const d = document.createElement("div");
+  d.className = "tk-st";
+  d.innerHTML = `<b>${s.dec ? s.value.toFixed(s.dec) : s.value}${s.suffix}</b><span>${s.label}</span>`;
+  side.appendChild(d);
+  onceInView(d, () => { d.classList.add("in"); countUp($("b", d), s, { ms: 1500, delay: 100 }); }, 0.5);
+});
+
+/* Inclinación 3D suave con el mouse (resorte; el bucle se apaga al asentarse) */
+if (FINE && !REDUCED) {
+  const stage = $("#stage");
+  const RX = new Spring(0, { k: 90, c: 15 }), RY = new Spring(0, { k: 90, c: 15 });
+  let raf = 0, last = 0;
+  const frame = (now) => {
+    raf = 0; const dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+    RX.step(dt); RY.step(dt);
+    tk.style.transform = `rotate(-1.2deg) rotateX(${RX.value.toFixed(2)}deg) rotateY(${RY.value.toFixed(2)}deg)`;
+    if (Math.abs(RX.value - RX.target) > 0.01 || Math.abs(RY.value - RY.target) > 0.01 || Math.abs(RX.vel) > 0.05 || Math.abs(RY.vel) > 0.05) raf = requestAnimationFrame(frame);
+  };
+  const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  stage.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return;
+    const r = stage.getBoundingClientRect();
+    RY.target = ((e.clientX - r.left) / r.width - 0.5) * 7;
+    RX.target = -((e.clientY - r.top) / r.height - 0.5) * 5;
+    kick();
+  });
+  stage.addEventListener("pointerleave", () => { RX.target = 0; RY.target = 0; kick(); });
+}
+</script>
+</body>
+</html>

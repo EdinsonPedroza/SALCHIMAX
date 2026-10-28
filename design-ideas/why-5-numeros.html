@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión 5 — Números primero</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<style>
+  /* La versión sobria: primero las tres cifras gigantes (contorno que se rellena mientras cuentan) y debajo
+     las cinco razones en una fila editorial: una regla que se dibuja, un ícono que se traza y el texto. */
+  .nm-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 28px); padding-bottom: clamp(26px, 3.6vw, 48px); }
+  .nm-st { min-width: 0; opacity: 0; transition: opacity 600ms var(--ease-out); }
+  .nm-st.in { opacity: 1; }
+  .nm-n { position: relative; display: inline-block; font-family: var(--f-head); font-weight: 400; font-size: clamp(3.6rem, 10.4vw, 9.2rem); line-height: 0.92; letter-spacing: 0.01em; }
+  .nm-g { display: block; visibility: hidden; white-space: nowrap; }   /* reserva el ancho del valor final: nada se mueve mientras cuenta */
+  .nm-o, .nm-f { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .nm-o { color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); }
+  .nm-f { color: var(--orange); -webkit-text-stroke: 1.5px var(--orange); clip-path: inset(0 100% 0 0); }
+  .nm-l { display: block; margin-top: 10px; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.62); }
+
+  .nm-fs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(16px, 2vw, 30px); }
+  .nm-f1 { position: relative; padding-top: 24px; opacity: 0; }
+  .nm-f1.in { opacity: 1; transition: opacity 600ms var(--ease-out); transition-delay: calc(var(--i) * 90ms); }
+  /* Regla gris completa + tramo naranja que se dibuja; con el mouse el tramo naranja se extiende */
+  .nm-f1::before, .nm-f1::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; transform-origin: left; }
+  .nm-f1::before { background: rgba(255, 255, 255, 0.14); }
+  .nm-f1::after { background: var(--orange); transform: scaleX(0.26); transition: transform 500ms var(--ease-io); }
+  .nm-f1.in::before { animation: nmrule 800ms var(--ease-io) backwards; animation-delay: calc(var(--i) * 90ms); }
+  .nm-f1.in::after { animation: nmrule 800ms var(--ease-io) backwards; animation-delay: calc(var(--i) * 90ms + 250ms); }
+  @keyframes nmrule { from { transform: scaleX(0); } }
+
+  .nm-ic { display: block; width: 46px; height: 46px; margin-bottom: 16px; color: var(--orange); }
+  .nm-t { font-family: var(--f-head); font-weight: 400; font-size: clamp(1.6rem, 2.2vw, 2rem); line-height: 1; letter-spacing: 0.02em; color: #fff; }
+  .nm-d { margin-top: 10px; font-size: 0.88rem; font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.6); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nm-f1:hover::after { transform: scaleX(1); }
+    .nm-f1:hover .wi * { animation: nmredraw 800ms var(--ease-out) backwards; }   /* el ícono se vuelve a trazar */
+  }
+  @keyframes nmredraw { 0% { stroke-dashoffset: 1; opacity: 0; } 3% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+
+  @media (max-width: 1100px) { .nm-fs { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 34px; } }
+  @media (max-width: 700px) {
+    .nm-stats { grid-template-columns: 1fr; gap: 0; }
+    .nm-st { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 10px 0; border-top: 1px solid var(--hair); }
+    .nm-n { font-size: clamp(3.4rem, 17vw, 5rem); }
+    .nm-l { flex: 1; margin: 0; text-align: right; }
+    .nm-fs { grid-template-columns: 1fr; row-gap: 28px; }
+    .nm-f1 { display: grid; grid-template-columns: 46px minmax(0, 1fr); column-gap: 16px; }
+    .nm-ic { grid-row: 1 / span 2; margin: 0; }
+    .nm-d { margin-top: 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nm-st, .nm-f1.in, .nm-f1::after { transition: none; }
+    .nm-f1.in::before, .nm-f1.in::after { animation: none; }
+    .nm-f1:hover .wi * { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <div class="nm-stats" id="stats"></div>
+  <div class="nm-fs" id="fs"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script>
+/* Cifras gigantes: el contorno cuenta y un relleno naranja lo sigue (recorte según el progreso del conteo) */
+const stats = $("#stats");
+WHY_STATS.forEach((s, i) => {
+  const final = (s.dec ? s.value.toFixed(s.dec) : s.value) + s.suffix;
+  const d = document.createElement("div");
+  d.className = "nm-st";
+  d.innerHTML = `<div class="nm-n" role="img" aria-label="${final} ${s.label}"><span class="nm-g" aria-hidden="true">${final}</span><span class="nm-o" aria-hidden="true">${final}</span><span class="nm-f" aria-hidden="true">${final}</span></div><span class="nm-l">${s.label}</span>`;
+  stats.appendChild(d);
+  const o = $(".nm-o", d), f = $(".nm-f", d);
+  if (REDUCED) f.style.clipPath = "inset(0 0 0 0)";
+  onceInView(d, () => {
+    d.classList.add("in");
+    countUp([o, f], s, { ms: 1800, delay: 150 + i * 160, onTick: (e) => { f.style.clipPath = `inset(0 ${((1 - e) * 100).toFixed(2)}% 0 0)`; } });
+  }, 0.4);
+});
+
+/* Cinco razones */
+const fs = $("#fs");
+WHY.forEach((w, i) => {
+  const a = document.createElement("article");
+  a.className = "nm-f1"; a.style.setProperty("--i", i); a.style.setProperty("--dd", i * 90 + 300 + "ms");
+  a.innerHTML = `<span class="nm-ic">${whyIcon(w.key, 46, 1.6)}</span><h3 class="nm-t">${w.title}</h3><p class="nm-d">${w.desc}</p>`;
+  fs.appendChild(a);
+});
+$$(".nm-f1").forEach((a) => onceInView(a, () => a.classList.add("in", "drawn"), 0.3));
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión 4 — Escenario</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<style>
+  /* Una lista a la izquierda y un escenario a la derecha: al elegir una razón su ícono se dibuja en grande,
+     laten anillos y el título se revela con un recorte. Pasa sola cada 6 s con una barra de tiempo. */
+  .es { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(20px, 3.4vw, 48px); align-items: stretch; }
+  .es-list { display: flex; flex-direction: column; justify-content: center; }
+  .es-tab { position: relative; display: flex; align-items: baseline; gap: 14px; padding: clamp(12px, 1.6vw, 20px) 4px clamp(14px, 1.8vw, 22px); text-align: left; border-bottom: 1px solid var(--hair); color: rgba(255, 255, 255, 0.4); transition: color 220ms var(--ease-out), transform 160ms var(--ease-out); }
+  .es-tab:first-child { border-top: 1px solid var(--hair); }
+  .es-tab:active { transform: scale(0.99); }
+  .es-no { flex: none; width: 1.8em; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.16em; transition: color 220ms var(--ease-out); }
+  .es-tt { font-family: var(--f-head); font-size: clamp(1.7rem, 2.8vw, 2.4rem); line-height: 1; letter-spacing: 0.02em; }
+  .es-tab[aria-selected="true"] { color: #fff; }
+  .es-tab[aria-selected="true"] .es-no { color: var(--orange); }
+  @media (hover: hover) and (pointer: fine) { .es-tab[aria-selected="false"]:hover { color: rgba(255, 255, 255, 0.78); } }
+  .es-prog { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; overflow: hidden; pointer-events: none; }
+  .es-prog b { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; }
+  .es-tab[aria-selected="true"] .es-prog b { transform: scaleX(1); }
+  .es.auto .es-tab[aria-selected="true"] .es-prog b { transform: scaleX(0); animation: wyfill var(--dur, 6000ms) linear forwards; animation-play-state: var(--ps, running); }
+  @keyframes wyfill { to { transform: scaleX(1); } }
+  .es.hold { --ps: paused; }
+
+  .es-stage { position: relative; min-height: clamp(380px, 38vw, 480px); border-radius: 22px; background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); overflow: hidden; }
+  .es-p { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(22px, 3vw, 40px); opacity: 0; visibility: hidden; transition: opacity 200ms ease-out, visibility 0s linear 200ms; }
+  .es-p.on { opacity: 1; visibility: visible; transition: opacity 320ms ease-out 80ms, visibility 0s; }
+  .es-glow { position: absolute; left: clamp(70px, 9vw, 130px); top: clamp(60px, 8vw, 110px); width: 420px; height: 420px; margin: -210px 0 0 -210px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 102, 0, 0.16) 0%, transparent 68%); pointer-events: none; }
+  .es-big { position: absolute; right: 18px; top: -6px; font-family: var(--f-head); font-size: clamp(9rem, 20vw, 16rem); line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(255, 255, 255, 0.07); pointer-events: none; }
+
+  .es-ic { position: relative; display: grid; place-items: center; width: clamp(120px, 14vw, 170px); aspect-ratio: 1; color: var(--orange); }
+  .es-ic .wi { position: relative; width: 52%; height: 52%; }
+  .es-disc { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(255, 102, 0, 0.4); background: rgba(255, 102, 0, 0.08); }
+  .es-orbit { position: absolute; inset: -14px; border-radius: 50%; border: 1.5px dashed rgba(255, 102, 0, 0.32); }
+  .es-p.on .es-orbit { animation: wyorbit 24s linear infinite; animation-play-state: var(--ps, running); }
+  @keyframes wyorbit { to { transform: rotate(360deg); } }
+  .es-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--orange); opacity: 0; }
+  .es-p.on .es-ring { animation: wyripple 1600ms var(--ease-out) backwards; animation-delay: calc(var(--k) * 260ms + 120ms); }
+  @keyframes wyripple { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(1.9); opacity: 0; } }
+
+  /* El ícono ya está dibujado en reposo; se vuelve a dibujar cada vez que su panel se activa */
+  .es .wi * { stroke-dashoffset: 0; opacity: 1; }
+  .es-p.on .wi * { animation: wydraw 1100ms var(--ease-out) 150ms backwards; }
+
+  .es-t { font-family: var(--f-head); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4.2rem); line-height: 0.95; letter-spacing: 0.01em; color: #fff; }
+  .es-t span { display: block; clip-path: inset(0 100% 0 0); }
+  .es-p.on .es-t span { clip-path: inset(0 0 0 0); transition: clip-path 600ms var(--ease-io) 140ms; }
+  .es-d { max-width: 46ch; margin-top: 12px; font-size: clamp(0.95rem, 1.2vw, 1.08rem); font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.66); opacity: 0; transition: opacity 120ms ease-out; }
+  .es-p.on .es-d { opacity: 1; transition: opacity 500ms var(--ease-out) 420ms; }
+
+  .es-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(22px, 3vw, 40px); border-top: 1px solid var(--hair); }
+  .es-st { padding: clamp(18px, 2.4vw, 28px) 8px 0; text-align: center; opacity: 0; transition: opacity 600ms var(--ease-out); }
+  .es-st + .es-st { border-left: 1px solid var(--hair); }
+  .es-st.in { opacity: 1; }
+  .es-st b { display: block; font-family: var(--f-head); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4rem); line-height: 0.95; color: var(--orange); }
+  .es-st span { display: block; margin-top: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.58); }
+
+  @media (max-width: 900px) {
+    .es { grid-template-columns: 1fr; }
+    .es-list { flex-direction: row; justify-content: flex-start; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+    .es-list::-webkit-scrollbar { display: none; }
+    .es-tab { flex: none; padding: 11px 16px 9px; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; overflow: hidden; }
+    .es-tab:first-child { border-top: 1px solid rgba(255, 255, 255, 0.14); }
+    .es-no { display: none; }
+    .es-tt { font-size: 1.25rem; }
+    .es-tab[aria-selected="true"] { background: rgba(255, 102, 0, 0.14); border-color: rgba(255, 102, 0, 0.6); }
+    .es-prog { bottom: 0; }
+    .es-stage { min-height: 400px; }
+    .es-glow { left: 90px; top: 90px; }
+  }
+  @media (max-width: 520px) { .es-st { padding-inline: 2px; } .es-st span { letter-spacing: 0.1em; font-size: 0.62rem; } }
+  @media (prefers-reduced-motion: reduce) {
+    .es-tab, .es-no, .es-p, .es-p.on, .es-d, .es-p.on .es-d, .es-st { transition: none; }
+    .es-p.on .es-t span { transition: none; }
+    .es-t span { clip-path: none; }
+    .es-p.on .es-orbit, .es-p.on .es-ring, .es-p.on .wi * { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy" id="sec"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+
+  <div class="es" id="es">
+    <div class="es-list" id="list" role="tablist" aria-orientation="vertical" aria-label="Razones para elegirnos"></div>
+    <div class="es-stage" id="stage"></div>
+  </div>
+  <div class="es-stats" id="stats"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script>
+const DUR = 6000;
+const es = $("#es"), list = $("#list"), stage = $("#stage");
+es.style.setProperty("--dur", DUR + "ms");
+let cur = 0, auto = !REDUCED;
+es.classList.toggle("auto", auto);
+
+const tabs = [], panels = [];
+WHY.forEach((f, i) => {
+  const b = document.createElement("button");
+  b.className = "es-tab"; b.id = `t${i}`; b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-controls", `p${i}`);
+  b.innerHTML = `<span class="es-no">${pad(i + 1)}</span><span class="es-tt">${f.title.toUpperCase()}</span><i class="es-prog"><b></b></i>`;
+  b.addEventListener("click", () => { stopAuto(); show(i); });
+  list.appendChild(b); tabs.push(b);
+
+  const p = document.createElement("div");
+  p.className = "es-p"; p.id = `p${i}`; p.setAttribute("role", "tabpanel"); p.setAttribute("aria-labelledby", `t${i}`);
+  p.innerHTML = `
+    <span class="es-glow"></span>
+    <span class="es-big" aria-hidden="true">${pad(i + 1)}</span>
+    <div class="es-ic"><span class="es-ring" style="--k:0"></span><span class="es-ring" style="--k:1"></span><span class="es-orbit"></span><span class="es-disc"></span>${whyIcon(f.key, 90, 1.5)}</div>
+    <div class="es-copy"><h3 class="es-t"><span>${f.title.toUpperCase()}</span></h3><p class="es-d">${f.desc}</p></div>`;
+  stage.appendChild(p); panels.push(p);
+});
+
+function show(i) {
+  cur = i;
+  tabs.forEach((t, k) => { const on = k === i; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; });
+  panels.forEach((p, k) => { const on = k === i; p.classList.toggle("on", on); p.setAttribute("aria-hidden", String(!on)); });
+  // en pantallas angostas la lista se desplaza: deja la pestaña activa a la vista
+  if (innerWidth <= 900) list.scrollTo({ left: tabs[i].offsetLeft - (list.clientWidth - tabs[i].offsetWidth) / 2, behavior: REDUCED ? "auto" : "smooth" });
+}
+function stopAuto() { auto = false; es.classList.remove("auto"); }
+
+/* Autoplay: la barra de la pestaña activa marca el tiempo; al terminar pasa a la siguiente.
+   Se pausa con el mouse encima, con el foco dentro o cuando la sección no se ve. */
+list.addEventListener("animationend", (e) => { if (e.animationName === "wyfill" && auto) show((cur + 1) % WHY.length); });
+let seen = false, hov = false, foc = false;
+const syncHold = () => es.classList.toggle("hold", !seen || hov || foc);
+es.addEventListener("pointerenter", () => { hov = true; syncHold(); });
+es.addEventListener("pointerleave", () => { hov = false; syncHold(); });
+es.addEventListener("focusin", () => { foc = true; syncHold(); });
+es.addEventListener("focusout", () => { foc = false; syncHold(); });
+watchVisible($("#sec"), (v) => { seen = v; syncHold(); $("#sec").style.setProperty("--ps", v ? "running" : "paused"); }, "0px");
+
+/* Teclado: flechas, inicio y fin (roving tabindex) */
+list.addEventListener("keydown", (e) => {
+  const keys = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+  let to = null;
+  if (keys[e.key]) to = (cur + keys[e.key] + WHY.length) % WHY.length;
+  else if (e.key === "Home") to = 0; else if (e.key === "End") to = WHY.length - 1;
+  if (to === null) return;
+  e.preventDefault(); stopAuto(); show(to); tabs[to].focus();
+});
+
+show(0);
+
+/* Cifras */
+const stats = $("#stats");
+WHY_STATS.forEach((s, i) => {
+  const d = document.createElement("div");
+  d.className = "es-st";
+  d.innerHTML = `<b>${s.dec ? s.value.toFixed(s.dec) : s.value}${s.suffix}</b><span>${s.label}</span>`;
+  stats.appendChild(d);
+  onceInView(d, () => { d.classList.add("in"); countUp($("b", d), s, { ms: 1500, delay: i * 120 }); }, 0.5);
+});
+</script>
+</body>
+</html>

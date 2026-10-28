@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión 2 — Escenas vivas</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<style>
+  /* Bento: cada razón trae una mini-escena animada (SVG + CSS). Todo lo infinito se pausa fuera de pantalla. */
+  .bn { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .bt { display: flex; flex-direction: column; padding: 14px 14px 20px; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); }
+  .bt:not(.in) { opacity: 0; }
+  .bt.in { animation: wybt 620ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 90ms); }
+  @keyframes wybt { from { opacity: 0; transform: scale(0.96); } }
+  .bt-fresh { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+  .bt-stats { grid-column: 1 / -1; padding: 22px 8px; }
+
+  .bt-sc { flex: 1 1 auto; display: grid; place-items: center; min-height: 150px; border-radius: 12px; background: rgba(0, 0, 0, 0.3); overflow: hidden; }
+  .bt-fresh .bt-sc { min-height: 340px; }
+  .bt-fresh .sc { max-height: 470px; }
+  .sc { display: block; width: 100%; height: 100%; max-height: 330px; transition: transform 600ms var(--ease-out); }
+  .bt-txt { padding: 16px 6px 0; }
+  .bt-t { font-family: var(--f-head); font-weight: 400; font-size: 1.8rem; line-height: 1; letter-spacing: 0.02em; color: #fff; }
+  .bt-fresh .bt-t { font-size: 2.3rem; }
+  .bt-d { margin-top: 8px; font-size: 0.86rem; font-weight: 600; line-height: 1.5; color: rgba(255, 255, 255, 0.6); }
+  @media (hover: hover) and (pointer: fine) { .bt:hover .sc { transform: scale(1.05); } }
+
+  /* ── Escenas ── */
+  .sc { --ps: running; }
+  .bt.paused { --ps: paused; }
+  .sc * { animation-play-state: var(--ps, running); }
+
+  /* Fresco: hoja que se dibuja, se mece y suelta gotas */
+  .sway { transform-origin: 74px 190px; animation: wysway 5s ease-in-out infinite; }
+  @keyframes wysway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(3deg); } }
+  .lf { fill: rgba(255, 102, 0, 0.16); opacity: 0; }
+  .drawn .lf { animation: wyfade 700ms ease-out 900ms forwards; }
+  .drop { fill: rgba(244, 239, 230, 0.18); stroke: var(--cream); stroke-width: 2; opacity: 0; animation: wydrip 2.8s ease-in infinite; animation-delay: calc(var(--k) * 0.95s); }
+  @keyframes wydrip { 0% { transform: translateY(-8px); opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { transform: translateY(100px); opacity: 0; } }
+  .spk { fill: var(--cream); opacity: 0; transform-box: fill-box; transform-origin: center; animation: wytw 2.6s ease-in-out infinite; animation-delay: calc(var(--k) * 0.6s); }
+  @keyframes wytw { 0%, 100% { transform: scale(0) rotate(0); opacity: 0; } 50% { transform: scale(1) rotate(45deg); opacity: 1; } }
+  .halo { transform-box: fill-box; transform-origin: center; animation: wyhalo 4s ease-in-out infinite; }
+  @keyframes wyhalo { 0%, 100% { transform: scale(0.96); opacity: 0.5; } 50% { transform: scale(1.04); opacity: 1; } }
+
+  /* Porciones: papas que brotan de la caja y "respiran" */
+  .fry { fill: #f2c230; transform-box: fill-box; transform-origin: 50% 100%; }
+  .drawn .fry { animation: wyfryin 700ms var(--ease-out) backwards, wybreath 3.2s ease-in-out infinite; animation-delay: calc(var(--k) * 80ms), calc(900ms + var(--k) * 260ms); }
+  @keyframes wyfryin { from { transform: scaleY(0.15); opacity: 0; } }
+  @keyframes wybreath { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.09); } }
+
+  /* Precios: etiqueta que cuelga y se balancea */
+  .swing { transform-origin: 120px 0; animation: wyswing 3.6s ease-in-out infinite; }
+  @keyframes wyswing { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+  .dollar { transform-box: fill-box; transform-origin: center; animation: wypulse 2s ease-in-out infinite; }
+  @keyframes wypulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+  /* Familia: se van sumando personas y late un corazón */
+  .pp { transform-box: fill-box; transform-origin: 50% 100%; }
+  .drawn .pp { animation: wypop 600ms var(--ease-out) backwards, wybob 3.4s ease-in-out infinite; animation-delay: calc(var(--k) * 130ms), calc(900ms + var(--k) * 400ms); }
+  @keyframes wypop { from { transform: scale(0.6); opacity: 0; } }
+  @keyframes wybob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  .heart { transform-box: fill-box; transform-origin: center; animation: wybeat 1.8s ease-in-out infinite; }
+  @keyframes wybeat { 0%, 100% { transform: scale(1); } 18% { transform: scale(1.18); } 36% { transform: scale(1); } 54% { transform: scale(1.12); } }
+
+  /* Rápido: cronómetro con barrido y líneas de velocidad */
+  .hand { transform-origin: 130px 82px; animation: wyspin 2.4s linear infinite; }
+  @keyframes wyspin { to { transform: rotate(360deg); } }
+  .spd path { stroke-dasharray: 10 8; animation: wydash 0.9s linear infinite; }
+  @keyframes wydash { to { stroke-dashoffset: 36; } }
+  @keyframes wyfade { to { opacity: 1; } }
+
+  /* ── Cifras ── */
+  .stt { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .st { display: flex; align-items: center; justify-content: center; gap: clamp(12px, 2vw, 22px); padding: 6px 12px; }
+  .st + .st { border-left: 1px solid var(--hair); }
+  .st b { display: block; font-family: var(--f-head); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4rem); line-height: 0.95; color: var(--orange); }
+  .st span { display: block; margin-top: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.58); }
+  .ms { flex: none; width: clamp(56px, 7vw, 84px); height: auto; overflow: visible; }
+  .ms-stars { width: clamp(84px, 10vw, 128px); }
+  .star { fill: transparent; stroke: rgba(255, 255, 255, 0.45); stroke-width: 1.6; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; }
+  .in .star { animation: wylit 600ms var(--ease-out) forwards; animation-delay: calc(500ms + var(--k) * 150ms); }
+  @keyframes wylit { 40% { transform: scale(1.35); } 100% { fill: var(--orange); stroke: var(--orange); } }
+  .arc { fill: none; stroke: var(--orange); stroke-width: 5; stroke-dasharray: 100 100; stroke-dashoffset: 100; }
+  .in .arc { animation: wyarc 1600ms var(--ease-out) 400ms forwards; }
+  @keyframes wyarc { to { stroke-dashoffset: 0; } }
+  .hh { transform-origin: 32px 32px; }
+  .in .hh { animation: wyhour 1500ms var(--ease-io) 400ms forwards; }
+  @keyframes wyhour { to { transform: rotate(150deg); } }
+
+  @media (max-width: 1000px) {
+    .bn { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .bt-fresh { grid-column: 1 / -1; grid-row: auto; }
+    .bt-fresh .bt-sc { min-height: 280px; }
+  }
+  @media (max-width: 620px) {
+    .bn { grid-template-columns: 1fr; }
+    .stt { grid-template-columns: 1fr; gap: 14px; }
+    .st { justify-content: flex-start; padding-inline: 10px; }
+    .st + .st { border-left: 0; border-top: 1px solid var(--hair); padding-top: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bt.in { animation: none; }
+    .sc, .bt .sc { transition: none; }
+    .sway, .drop, .spk, .halo, .swing, .dollar, .heart, .hand, .spd path, .fry, .pp, .lf { animation: none; }
+    .lf { opacity: 1; } .drop { opacity: 0.8; } .spk { opacity: 1; transform: scale(0.7); }
+    .star { fill: var(--orange); stroke: var(--orange); animation: none; }
+    .arc { stroke-dashoffset: 0; animation: none; } .hh { transform: rotate(150deg); animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+  <div class="bn" id="bn"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script>
+const SPARK = "M0 -9 L2.2 -2.2 L9 0 L2.2 2.2 L0 9 L-2.2 2.2 L-9 0 L-2.2 -2.2Z";
+const spark = (x, y, s, k) => `<g transform="translate(${x} ${y}) scale(${s})"><path class="spk" style="--k:${k}" d="${SPARK}"/></g>`;
+const DROP = "M0 -7 C4 -1 5 2 5 4 A5 5 0 0 1 -5 4 C-5 2 -4 -1 0 -7Z";
+const STAR = "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z";
+const HEART = "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z";
+const iconGroup = (key, tx, ty, s, sw, stroke = "var(--orange)") =>
+  `<g class="wi" transform="translate(${tx} ${ty}) scale(${s})" fill="none" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${whyShapes(key)}</g>`;
+
+/* ── Escenas ── */
+const SCENE = {
+  fresh: () => `<svg class="sc" viewBox="0 0 300 240" aria-hidden="true">
+    <circle cx="150" cy="126" r="98" fill="rgba(255,102,0,.06)"/>
+    <circle class="halo" cx="150" cy="126" r="98" fill="none" stroke="rgba(255,102,0,.28)" stroke-width="1.5"/>
+    <g class="sway">
+      <g transform="translate(56 24) scale(7.6)"><path class="lf" d="${WHY_ICON.fresh[0].match(/d="([^"]+)"/)[1]}"/></g>
+      ${iconGroup("fresh", 56, 24, 7.6, 0.4)}
+    </g>
+    ${[[212, 44, 0], [236, 24, 1], [196, 28, 2]].map(([x, y, k]) => `<g transform="translate(${x} ${y})"><path class="drop" style="--k:${k}" d="${DROP}"/></g>`).join("")}
+    ${spark(58, 60, 1, 0)}${spark(248, 130, 0.9, 1)}${spark(232, 208, 0.7, 2)}${spark(40, 160, 0.6, 3)}
+  </svg>`,
+
+  epic: () => {
+    const fries = [[76, 28], [89, 20], [102, 32], [115, 16], [128, 26], [141, 18], [154, 30]];
+    return `<svg class="sc" viewBox="0 0 240 150" aria-hidden="true">
+      ${fries.map(([x, y], k) => `<rect class="fry" style="--k:${k}" x="${x}" y="${y}" width="11" height="${86 - y}" rx="3"/>`).join("")}
+      <path d="M66 72 H174 L162 138 H78 Z" fill="#24140a" stroke="var(--orange)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M60 72 H180" stroke="var(--orange)" stroke-width="3" stroke-linecap="round"/>
+      <g transform="translate(120 106) scale(1.7)"><path d="${SPARK}" fill="var(--orange)"/></g>
+      ${spark(44, 40, 0.9, 0)}${spark(200, 52, 1, 1)}${spark(190, 20, 0.6, 2)}
+    </svg>`;
+  },
+
+  price: () => `<svg class="sc" viewBox="0 0 240 150" aria-hidden="true">
+    <g class="swing">
+      <path d="M120 0 V24" stroke="var(--cream)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M120 24 L156 46 V120 a10 10 0 0 1 -10 10 H94 a10 10 0 0 1 -10 -10 V46 Z" fill="#24140a" stroke="var(--orange)" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="120" cy="50" r="5" fill="#171717" stroke="var(--orange)" stroke-width="2"/>
+      <g class="dollar">${iconGroup("price", 97, 66, 2.1, 1.25, "var(--cream)")}</g>
+    </g>
+    ${spark(44, 80, 0.9, 0)}${spark(204, 100, 0.8, 1)}${spark(196, 36, 0.6, 2)}
+  </svg>`,
+
+  family: () => {
+    const ppl = [[60, 11, 17, "var(--orange)"], [100, 8, 12, "var(--cream)"], [140, 11, 17, "var(--cream)"], [180, 8, 12, "var(--orange)"]];
+    return `<svg class="sc" viewBox="0 0 240 150" aria-hidden="true">
+      ${ppl.map(([x, r, w, c], k) => { const top = 114 - w, cy = top - r - 5; return `<g class="pp" style="--k:${k}"><circle cx="${x}" cy="${cy}" r="${r}" fill="none" stroke="${c}" stroke-width="3"/><path d="M${x - w} 118 v-4 a${w} ${w} 0 0 1 ${2 * w} 0 v4" fill="rgba(255,102,0,.1)" stroke="${c}" stroke-width="3" stroke-linejoin="round"/></g>`; }).join("")}
+      <path d="M34 126 H206" stroke="var(--cream)" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>
+      <g transform="translate(109 22) scale(1.05)"><path class="heart" d="${HEART}" fill="rgba(255,102,0,.2)" stroke="var(--orange)" stroke-width="1.8" stroke-linejoin="round"/></g>
+    </svg>`;
+  },
+
+  fast: () => {
+    const ticks = Array.from({ length: 12 }, (_, a) => { const r1 = a % 3 === 0 ? 33 : 37, r2 = 41, an = (a * Math.PI) / 6; return `<line x1="${(130 + r1 * Math.sin(an)).toFixed(1)}" y1="${(82 - r1 * Math.cos(an)).toFixed(1)}" x2="${(130 + r2 * Math.sin(an)).toFixed(1)}" y2="${(82 - r2 * Math.cos(an)).toFixed(1)}"/>`; }).join("");
+    return `<svg class="sc" viewBox="0 0 240 150" aria-hidden="true">
+      <g class="spd" stroke="var(--orange)" stroke-width="3" stroke-linecap="round" fill="none"><path d="M16 62 H56"/><path d="M6 82 H46"/><path d="M20 102 H56"/></g>
+      <rect x="122" y="24" width="16" height="7" rx="2" fill="var(--cream)"/><path d="M130 31 V36" stroke="var(--cream)" stroke-width="3"/>
+      <circle cx="130" cy="82" r="46" fill="#24140a" stroke="var(--orange)" stroke-width="3"/>
+      <g stroke="var(--cream)" stroke-width="2" stroke-linecap="round" opacity=".7">${ticks}</g>
+      <g class="hand"><path d="M130 82 L130 40 A42 42 0 0 0 90.5 67.6 Z" fill="rgba(255,102,0,.28)"/><line x1="130" y1="82" x2="130" y2="46" stroke="var(--cream)" stroke-width="3" stroke-linecap="round"/></g>
+      <circle cx="130" cy="82" r="5" fill="var(--cream)"/>
+      ${spark(206, 40, 0.8, 0)}${spark(214, 120, 0.6, 1)}
+    </svg>`;
+  },
+};
+
+/* ── Mini escenas de las cifras ── */
+const MINI = [
+  () => `<svg class="ms ms-stars" viewBox="0 0 132 24" aria-hidden="true">${[0, 1, 2, 3, 4].map((k) => `<g transform="translate(${k * 26 + 1} 0)"><path class="star" style="--k:${k}" d="${STAR}"/></g>`).join("")}</svg>`,
+  () => `<svg class="ms" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="5"/><circle class="arc" cx="32" cy="32" r="26" pathLength="100" transform="rotate(-90 32 32)"/></svg>`,
+  () => `<svg class="ms" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="#24140a" stroke="rgba(244,239,230,.5)" stroke-width="3"/><line x1="32" y1="32" x2="32" y2="13" stroke="var(--cream)" stroke-width="3" stroke-linecap="round"/><line class="hh" x1="32" y1="32" x2="32" y2="20" stroke="var(--orange)" stroke-width="4.5" stroke-linecap="round"/><circle cx="32" cy="32" r="3" fill="var(--cream)"/></svg>`,
+];
+
+/* ── Armado ── */
+const bn = $("#bn");
+const COPY = Object.fromEntries(WHY.map((w) => [w.key, w]));
+["fresh", "epic", "price", "family", "fast"].forEach((k, i) => {
+  const f = COPY[k];
+  const t = document.createElement("article");
+  t.className = `bt bt-${k} spot`; t.style.setProperty("--i", i);
+  t.innerHTML = `<div class="bt-sc">${SCENE[k]()}</div><div class="bt-txt"><h3 class="bt-t">${f.title}</h3><p class="bt-d">${f.desc}</p></div>`;
+  bn.appendChild(t);
+});
+const stats = document.createElement("article");
+stats.className = "bt bt-stats spot"; stats.style.setProperty("--i", 5);
+stats.innerHTML = `<div class="stt">${WHY_STATS.map((s, i) => `<div class="st">${MINI[i]()}<div><b>0</b><span>${s.label}</span></div></div>`).join("")}</div>`;
+bn.appendChild(stats);
+
+/* Entrada de cada tile al verse (las escenas arrancan con .drawn), pausa fuera de pantalla y resplandor del cursor */
+$$(".bt").forEach((t) => {
+  spotlight(t);
+  watchVisible(t, (v) => t.classList.toggle("paused", !v));
+  onceInView(t, () => {
+    t.classList.add("in", "drawn");
+    if (t.classList.contains("bt-stats")) $$(".st b", t).forEach((b, i) => countUp(b, WHY_STATS[i], { ms: 1600, delay: 300 + i * 120 }));
+  }, 0.2);
+});
+</script>
+</body>
+</html>

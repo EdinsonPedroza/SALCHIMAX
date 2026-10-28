@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Por qué elegirnos · Versión 1 — Mural</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="_why.css">
+<style>
+  /* Cinco razones como un mural: el título es un contorno gigante que se rellena de naranja
+     al pasar por la pantalla (la posición del scroll "pinta" las letras, con un resorte). */
+  .mu { list-style: none; border-top: 1px solid var(--hair); }
+  .mu-row { position: relative; display: grid; grid-template-columns: clamp(2rem, 3.6vw, 3.2rem) minmax(0, 1fr) auto; align-items: center; column-gap: clamp(10px, 2.2vw, 30px); padding: clamp(18px, 2.4vw, 30px) 6px clamp(20px, 2.6vw, 32px) 18px; border-bottom: 1px solid var(--hair); }
+  .mu-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--orange); transform: scaleY(0); transform-origin: top; transition: transform 500ms var(--ease-io); }
+  .mu-row.on::before { transform: scaleY(1); }
+
+  .mu-no { align-self: start; margin-top: 0.7em; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.34); transition: color 300ms ease; }
+  .mu-row.on .mu-no { color: var(--orange); }
+
+  .mu-t { position: relative; width: fit-content; max-width: 100%; font-family: var(--f-head); font-weight: 400; font-size: clamp(2.5rem, 6.2vw, 5.6rem); line-height: 0.95; letter-spacing: 0.01em; }
+  .mu-out { display: block; color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); }
+  .mu-fill { position: absolute; left: 0; top: 0; width: 100%; color: var(--orange); -webkit-text-stroke: 1.5px var(--orange); clip-path: inset(0 100% 0 0); }
+  .mu-d { max-width: 54ch; margin-top: 10px; font-size: clamp(0.9rem, 1.1vw, 1.02rem); font-weight: 600; line-height: 1.55; color: rgba(255, 255, 255, 0.62); opacity: 0; transition: opacity 600ms var(--ease-out) 100ms; }
+  .mu-row.on .mu-d { opacity: 1; }
+
+  .mu-ic { display: grid; place-items: center; width: clamp(50px, 6.2vw, 86px); aspect-ratio: 1; border: 1.5px solid rgba(255, 255, 255, 0.16); border-radius: 50%; color: rgba(255, 255, 255, 0.28); transition: color 300ms ease, border-color 300ms ease, background-color 300ms ease; }
+  .mu-ic svg { width: 44%; height: 44%; }
+  .mu-row.on .mu-ic { color: var(--orange); border-color: rgba(255, 102, 0, 0.55); background: rgba(255, 102, 0, 0.1); }
+
+  .mu-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: clamp(28px, 4vw, 52px); padding-left: 18px; }
+  .mu-st b { display: block; font-family: var(--f-head); font-weight: 400; font-size: clamp(2.6rem, 7.5vw, 6.2rem); line-height: 0.95; color: var(--orange); }
+  .mu-st span { display: block; margin-top: 6px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.58); }
+  .mu-st { opacity: 0; transition: opacity 600ms var(--ease-out); }
+  .mu-st.in { opacity: 1; }
+
+  @media (max-width: 560px) {
+    .mu-row { grid-template-columns: minmax(0, 1fr) auto; padding-left: 14px; }
+    .mu-no { display: none; }
+    .mu-ic { width: 46px; }
+    .mu-stats { padding-left: 14px; gap: 8px; }
+    .mu-out, .mu-fill { -webkit-text-stroke-width: 1px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mu-row::before, .mu-no, .mu-d, .mu-ic, .mu-st { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wy" id="sec"><div class="wy-in">
+  <header class="wy-head">
+    <span class="wy-eyebrow">Nuestra diferencia</span>
+    <h2 class="wy-title">¿POR QUÉ ELEGIR <em>SALCHIMAX</em>?</h2>
+    <div class="wy-bar"></div>
+  </header>
+  <ol class="mu" id="mu"></ol>
+  <div class="mu-stats" id="stats"></div>
+</div></main>
+
+<script src="_shared.js"></script>
+<script src="_why.js"></script>
+<script>
+const list = $("#mu");
+WHY.forEach((f, i) => {
+  const li = document.createElement("li");
+  li.className = "mu-row";
+  li.innerHTML = `
+    <span class="mu-no">${pad(i + 1)}</span>
+    <div class="mu-main">
+      <h3 class="mu-t" aria-label="${f.title}"><span class="mu-out" aria-hidden="true">${f.title.toUpperCase()}</span><span class="mu-fill" aria-hidden="true">${f.title.toUpperCase()}</span></h3>
+      <p class="mu-d">${f.desc}</p>
+    </div>
+    <span class="mu-ic">${whyIcon(f.key, 40, 1.8)}</span>`;
+  list.appendChild(li);
+});
+
+const rows = $$(".mu-row"), fills = rows.map((r) => $(".mu-fill", r));
+const springs = rows.map(() => new Spring(0, { k: 110, c: 19 }));
+const hot = rows.map(() => false);
+
+/* 0 cuando la fila entra por abajo (92 % de la altura) y 1 al llegar al 62 %: se llena en ~30 % de pantalla de scroll */
+function target(i) {
+  const top = rows[i].getBoundingClientRect().top;
+  return hot[i] ? 1 : clamp((innerHeight * 0.92 - top) / (innerHeight * 0.3), 0, 1);
+}
+
+function paint(i, v) {
+  fills[i].style.clipPath = `inset(0 ${(100 - v * 100).toFixed(2)}% 0 0)`;
+  rows[i].classList.toggle("on", v > 0.6);
+  if (v > 0.6) rows[i].classList.add("drawn");   // el ícono se dibuja una sola vez
+}
+
+/* Un solo bucle que se apaga solo cuando todos los resortes se asientan */
+let raf = 0, last = 0;
+function frame(now) {
+  raf = 0;
+  const dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+  let busy = false;
+  rows.forEach((_, i) => {
+    const s = springs[i];
+    s.target = target(i); s.step(dt);
+    paint(i, clamp(s.value, 0, 1));
+    if (Math.abs(s.value - s.target) > 0.002 || Math.abs(s.vel) > 0.01) busy = true;
+  });
+  if (busy) raf = requestAnimationFrame(frame);
+}
+const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+
+if (REDUCED) {
+  rows.forEach((_, i) => paint(i, 1));
+} else {
+  addEventListener("scroll", kick, { passive: true });
+  addEventListener("resize", kick);
+  if (FINE) rows.forEach((r, i) => { r.addEventListener("pointerenter", () => { hot[i] = true; kick(); }); r.addEventListener("pointerleave", () => { hot[i] = false; kick(); }); });
+  kick();
+}
+
+/* Cifras */
+const stats = $("#stats");
+WHY_STATS.forEach((s, i) => {
+  const d = document.createElement("div");
+  d.className = "mu-st";
+  d.innerHTML = `<b>${s.dec ? s.value.toFixed(s.dec) : s.value}${s.suffix}</b><span>${s.label}</span>`;
+  stats.appendChild(d);
+  onceInView(d, () => { d.classList.add("in"); countUp($("b", d), s, { ms: 1500, delay: i * 140 }); }, 0.5);
+});
+</script>
+</body>
+</html>

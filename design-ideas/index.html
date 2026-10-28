@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ideas de diseño — Promos y Menú</title>
+<title>Ideas de diseño — Promos, Menú y Nosotros</title>
 <link rel="stylesheet" href="_shared.css">
 <style>
   body { height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
@@ -42,7 +42,7 @@
 </head>
 <body>
 <header class="top">
-  <div class="brand"><img src="../frontend/public/logo.jpeg" alt="SalchiMax"><div>SALCHIMAX<small>Ideas · Promos y Menú</small></div></div>
+  <div class="brand"><img src="../frontend/public/logo.jpeg" alt="SalchiMax"><div>SALCHIMAX<small>Ideas · Promos, Menú y Nosotros</small></div></div>
   <span class="sep"></span>
   <nav class="grp" id="tabs" aria-label="Ideas"></nav>
 </header>
@@ -117,17 +117,34 @@ const IDEAS = [
   { file: "menu-8-detalle.html", name: "Detalle compartido · sheet",
     desc: "Cuadrícula compacta (foto, nombre y precio). Al tocar un plato, su foto vuela y crece hasta la ficha completa con porciones, cantidad y total; al cerrar vuelve a su sitio. En celular se abre como una hoja desde abajo. Esc, clic fuera y atrapa el foco.",
     react: "layoutId compartido en Framer Motion (la foto) + AnimatePresence · hoja móvil con la curva del drawer y arrastre para cerrar (drag=\"y\") · Radix Dialog para foco y aria-modal · el resto de la página queda inert · total = precio × cantidad." },
+  /* Por qué elegirnos: cinco versiones de la sección «¿Por qué elegir SALCHIMAX?» (mismos textos e íconos que WhyUs.jsx) */
+  { sep: true, file: "why-1-mural.html", name: "Mural · tipográfica",
+    desc: "Las cinco razones como un mural: cada título es un contorno gigante que se rellena de naranja a medida que lo recorres con el scroll (con un resorte, así el relleno fluye). Al llenarse se enciende la barra lateral, el ícono se dibuja solo y aparece la descripción. Con el mouse, pasar por una fila la llena al instante.",
+    react: "Un useScroll por fila (target + offset) → useSpring → clipPath con useTransform (inset) · el ícono con pathLength (0→1) de motion.path · la barra lateral con scaleY · whileHover fija el progreso en 1 · sin entradas deslizantes." },
+  { file: "why-2-escenas.html", name: "Escenas vivas · bento",
+    desc: "Un bento donde cada razón tiene su mini-escena animada: una hoja que se dibuja y suelta gotas, una caja de papas que desborda, una etiqueta de precio que se balancea, una familia que se va sumando y un cronómetro con líneas de velocidad. Las cifras llevan su propia animación (estrellas que se encienden, anillo al 100 %, reloj que llega a las 5) y el resplandor del cursor del menú.",
+    react: "Cada escena es un SVG con keyframes CSS (transform/opacity) que arrancan al entrar en pantalla (useInView once) y se pausan con animation-play-state al salir · íconos con motion.path pathLength · resplandor con las variables --mx/--my del menú · contadores con animate()." },
+  { file: "why-3-ticket.html", name: "Ticket · lúdica",
+    desc: "Las razones salen en un ticket de cocina que se imprime línea por línea (recorte con pasos, como un cabezal térmico). Cada ✓ se estampa justo cuando se imprime su renglón, un lector de código de barras barre una vez y al final cae el sello de SALCHIMAX. A un lado, las cifras gigantes. El ticket se inclina un poco con el mouse.",
+    react: "clipPath con steps() para la impresión (CSS) y el retraso de cada ✓ calculado con su offsetTop · sello y barrido con keyframes · inclinación con useSpring (rotateX/rotateY) solo con pointer: fine · tipografía monoespaciada del sistema: no agrega fuentes." },
+  { file: "why-4-escenario.html", name: "Escenario · interactiva",
+    desc: "Lista de razones a la izquierda y un escenario a la derecha. Al elegir una, su ícono se dibuja en grande, laten dos anillos, el título se revela con un recorte y la descripción aparece con un fundido. Pasa sola cada 6 s con una barra de tiempo (se pausa con el mouse, el foco o fuera de pantalla; el primer clic la detiene). En celular la lista es una fila de píldoras.",
+    react: "Estado activo + AnimatePresence mode=wait por panel · ícono con motion.path pathLength · barra de tiempo con scaleX y onAnimationComplete para avanzar · tablist accesible con flechas, inicio y fin (roving tabindex) · el autoplay se detiene al primer clic." },
+  { file: "why-5-numeros.html", name: "Números primero · sobria",
+    desc: "La más sobria. Primero las tres cifras gigantes: el contorno cuenta y un relleno naranja lo sigue. Debajo, las cinco razones en una fila editorial: cada regla se dibuja, cada ícono se traza solo y, con el mouse, se vuelve a trazar mientras la regla naranja se extiende.",
+    react: "Contadores con animate() y un clipPath ligado al mismo valor · el ancho final se reserva con un texto invisible para que nada salte · reglas con scaleX · íconos con pathLength · hover solo con pointer: fine." },
 ];
 const NOTES = [
   ["Datos", "Las tres leen la misma lista que frontend/src/data/promos.js (día, título, descripción, precio, badge, foto, active). Cambiar una promo no requiere tocar el diseño."],
   ["«Hoy»", "Resalta la promo del día con new Date().getDay(). Si hoy no hay promo, la idea 1 avisa cuál es la siguiente. Para probar otro día: agrega ?hoy=0..6 a la URL de cada prototipo."],
   ["Entradas", "Ninguna idea del menú entra deslizándose hacia arriba: usan fundidos, sellos, recortes en círculo y desplazamientos horizontales."],
+  ["Íconos", "En las versiones de «Por qué elegirnos» los íconos son los mismos de Lucide que ya usa la landing; se dibujan con stroke-dashoffset gracias a pathLength=1 en cada trazo."],
   ["Rendimiento", "Todo se mueve con transform y opacity (más clip-path en los recortes). Nada anima width, height ni top/left. Curvas: ease-out fuerte cubic-bezier(.23,1,.32,1) y ease-in-out cubic-bezier(.77,0,.175,1)."],
   ["Accesibilidad", "prefers-reduced-motion: sin cintas, sin inclinaciones y el estado final fijo. Hover solo con mouse (hover: hover). Toda la CTA es un enlace real a WhatsApp con el mensaje de la promo."],
 ];
 
 const frame = $("#frame"), capT = $("#capT"), capD = $("#capD"), notes = $("#notes"), more = $("#more"), capB = $("#capB");
-const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
+const LABELS = ["1", "1b", "2", "3", "4", "4b", "4c", "4d", "5", "6", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "W1", "W2", "W3", "W4", "W5"];   // 1b: la 1 más calmada · 4b–4d: otras vitrinas
 const tabs = IDEAS.map((it, i) => {
   const b = document.createElement("button");
   b.className = "tab"; b.innerHTML = `<b>${LABELS[i]}</b>${it.name}`;
@@ -137,11 +154,13 @@ const tabs = IDEAS.map((it, i) => {
   return b;
 });
 
+let curI = 0;
 function select(i) {
+  curI = i;
   const it = IDEAS[i];
   tabs.forEach((t, k) => { t.classList.toggle("on", k === i); t.setAttribute("aria-current", k === i ? "true" : "false"); });
   frame.src = it.file + location.search;
-  capT.textContent = `${it.file.startsWith("menu-") ? "Menú" : "Promos"} · ${it.name}`;
+  capT.textContent = `${it.file.startsWith("menu-") ? "Menú" : it.file.startsWith("why-") ? "Por qué elegirnos" : "Promos"} · ${it.name}`;
   capD.textContent = it.desc;
   notes.innerHTML = `<li><b>En React + Framer Motion</b>${it.react}</li>` + NOTES.map(([t, d]) => `<li><b>${t}</b>${d}</li>`).join("");
   history.replaceState(null, "", location.search + "#" + (i + 1));
@@ -151,8 +170,11 @@ capB.addEventListener("click", () => {
   capB.setAttribute("aria-expanded", String(open));
   capB.textContent = open ? "Cómo llevarlo a la landing ▾" : "Cómo llevarlo a la landing ▴";
 });
-/* Teclas 1–6 para las ideas; B abre la 1b y M la primera del menú */
-addEventListener("keydown", (e) => { const j = LABELS.indexOf(e.key === "b" || e.key === "B" ? "1b" : /^[mM]$/.test(e.key) ? "M1" : e.key); if (j >= 0) select(j); });
+/* Teclas 1–6 para las ideas; B abre la 1b, M la primera del menú y W recorre las de «Por qué elegirnos» */
+addEventListener("keydown", (e) => {
+  if (/^[wW]$/.test(e.key)) { const w = LABELS.map((l, k) => (l[0] === "W" ? k : -1)).filter((k) => k >= 0); select(w[(w.indexOf(curI) + 1) % w.length]); return; }
+  const j = LABELS.indexOf(e.key === "b" || e.key === "B" ? "1b" : /^[mM]$/.test(e.key) ? "M1" : e.key); if (j >= 0) select(j);
+});
 select(clamp((parseInt(location.hash.slice(1), 10) || 1) - 1, 0, IDEAS.length - 1));
 </script>
 </body>

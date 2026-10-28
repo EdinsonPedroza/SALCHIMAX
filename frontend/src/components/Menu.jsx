@@ -166,9 +166,23 @@ const ProductCard = memo(function ProductCard({ item, index }) {
       const el = cardRef.current;
       if (!el) return;
       const box = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${pointer.current.x - box.left}px`);
-      el.style.setProperty("--my", `${pointer.current.y - box.top}px`);
+      const x = pointer.current.x - box.left;
+      const y = pointer.current.y - box.top;
+      el.style.setProperty("--mx", `${x}px`);
+      el.style.setProperty("--my", `${y}px`);
+      // -1…1 across the card: the photo drifts a few px against the cursor
+      el.style.setProperty("--nx", (x / box.width) * 2 - 1);
+      el.style.setProperty("--ny", (y / box.height) * 2 - 1);
     });
+  };
+
+  // Photo settles back to the centre (CSS eases it) when the mouse leaves.
+  const handlePointerLeave = (e) => {
+    if (e.pointerType !== "mouse") return;
+    cancelAnimationFrame(frame.current);
+    frame.current = 0;
+    cardRef.current?.style.setProperty("--nx", 0);
+    cardRef.current?.style.setProperty("--ny", 0);
   };
 
   return (
@@ -184,6 +198,7 @@ const ProductCard = memo(function ProductCard({ item, index }) {
         ease: [0.16, 1, 0.3, 1],
       }}
       onPointerMove={reduceMotion ? undefined : handlePointerMove}
+      onPointerLeave={reduceMotion ? undefined : handlePointerLeave}
       data-testid={`product-card-${slug}`}
       className="menu-card"
     >
@@ -199,10 +214,10 @@ const ProductCard = memo(function ProductCard({ item, index }) {
       </div>
 
       <div className="flex flex-1 flex-col px-1.5 pt-3">
-        <h3 className="font-heading text-[1.45rem] leading-none tracking-wide text-white">
+        <h3 className="menu-name font-heading text-[1.45rem] leading-none tracking-wide text-white">
           {item.name}
         </h3>
-        <p className="mt-1.5 flex-1 font-body text-[0.78rem] font-semibold leading-[1.45] text-white/55">
+        <p className="menu-desc mt-1.5 flex-1 font-body text-[0.78rem] font-semibold leading-[1.45] text-white/55">
           {item.desc}
         </p>
 
@@ -241,7 +256,7 @@ const ProductCard = memo(function ProductCard({ item, index }) {
             </small>
             <b
               key={priceTicks}
-              className={`font-heading text-[1.7rem] font-normal leading-[0.9] text-[#FF6600]${
+              className={`menu-price font-heading text-[1.7rem] font-normal leading-[0.9] text-[#FF6600]${
                 priceTicks ? " menu-tick" : ""
               }`}
             >

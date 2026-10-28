@@ -692,6 +692,12 @@ html {
   border-radius: 16px;
   background: #141414;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  /* --nx/--ny (-1…1): dónde está el cursor; la foto se desplaza un poco en contra.
+     "translate" es independiente del transform que usa Framer Motion en la entrada. */
+  --nx: 0;
+  --ny: 0;
+  translate: 0 0;
+  transition: translate 450ms var(--ease-out);
 }
 /* Aro de 1px que se enciende bajo el cursor (la máscara deja solo el borde) */
 .menu-card::after {
@@ -737,6 +743,20 @@ html {
   transform: scale(1.02);
   transition: transform 800ms var(--ease-out);
 }
+/* Destello que cruza la foto una vez al pasar el mouse */
+.menu-card__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.15) 50%, transparent 62%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+@keyframes menu-sheen { to { transform: translateX(120%); } }
+
+.menu-name,
+.menu-desc { transition: color 300ms var(--ease-out); }
+.menu-price { display: block; transform-origin: left center; transition: transform 350ms var(--ease-out); }
 
 /* Porción: control segmentado compacto (una línea por opción) con un "pulgar" que se desliza.
    Con 3 o más opciones (--stack) la etiqueta y el precio se apilan para que quepan. */
@@ -847,7 +867,17 @@ html {
 @media (hover: hover) and (pointer: fine) {
   .menu-card:hover::before,
   .menu-card:hover::after { opacity: 1; }
-  .menu-card:hover .menu-card__photo img { transform: scale(1.06); }
+  .menu-card:hover { translate: 0 -6px; }
+  .menu-card:hover .menu-card__photo img {
+    transform: scale(1.1) translate(calc(var(--nx) * -9px), calc(var(--ny) * -7px));
+    transition: transform 500ms var(--ease-out);
+  }
+  .menu-card:hover .menu-card__photo::after { animation: menu-sheen 900ms var(--ease-out); }
+  .menu-card:hover .menu-desc { color: rgba(255, 255, 255, 0.76); }
+  .menu-card:hover .menu-price { transform: scale(1.07); }
+  .menu-card:hover .menu-add:not(.is-done) { transform: scale(1.07); }
+  .menu-card:hover .menu-add:not(.is-done):active { transform: scale(0.94); }
+  .menu-card:hover .menu-add:not(.is-done) .menu-add__plus { transform: rotate(90deg); }
   .menu-add:not(.is-done):hover { background: #FF8533; }
 }
 
@@ -858,8 +888,18 @@ html {
   .menu-seg__thumb,
   .menu-seg__opt,
   .menu-add,
-  .menu-add__icon > span { transition: none; }
+  .menu-add__icon > span,
+  .menu-name,
+  .menu-desc,
+  .menu-price { transition: none; }
   .menu-tick { animation: none; }
+  /* Sin movimiento: ni elevación, ni desplazamiento de la foto, ni destello, ni giro */
+  .menu-card:hover { translate: 0 0; }
+  .menu-card:hover .menu-card__photo img { transform: scale(1.02); }
+  .menu-card:hover .menu-card__photo::after { animation: none; }
+  .menu-card:hover .menu-price,
+  .menu-card:hover .menu-add:not(.is-done) { transform: none; }
+  .menu-card:hover .menu-add:not(.is-done) .menu-add__plus { transform: none; }
 }
 
 /* ── Mapa de ubicación ────────────────────────────────────────────

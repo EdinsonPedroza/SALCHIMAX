@@ -44,8 +44,7 @@
 }
 /* Press feedback works on touch too */
 .btn-orange:active,
-.btn-outline-orange:active,
-.btn-orange-liquid:active {
+.btn-outline-orange:active {
   scale: 0.97;
   translate: 0 0;
 }
@@ -67,6 +66,11 @@
     color: white;
     box-shadow: 0 0 25px rgba(255, 102, 0, 0.3);
     translate: 0 -2px;
+  }
+  /* Calm CTA (hero): colour and glow on hover, but it stays put */
+  .btn-orange.btn-calm:hover,
+  .btn-outline-orange.btn-calm:hover {
+    translate: 0 0;
   }
 }
 
@@ -435,44 +439,10 @@ html {
   z-index: 1;
 }
 
-/* Liquid orange border on hover */
+/* Shared by .section-divider */
 @keyframes border-rotate {
   from { background-position: 0% 50%; }
   to   { background-position: 200% 50%; }
-}
-.btn-orange-liquid {
-  position: relative;
-  overflow: hidden;
-  background: #FF6600;
-  color: white;
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.1em;
-  transition: box-shadow 200ms var(--ease-out), translate 200ms var(--ease-out),
-    scale 120ms var(--ease-out);
-  z-index: 0;
-}
-.btn-orange-liquid::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(90deg, #FF6600, #ffcc00, #FF003C, #FF6600, #ff9900);
-  background-size: 300% 100%;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 200ms var(--ease-out);
-  border-radius: inherit;
-}
-/* The gradient loop only runs while the button is hovered: it used to repaint
-   forever behind an opacity-0 layer. Touch devices never show it. */
-@media (hover: hover) and (pointer: fine) {
-  .btn-orange-liquid:hover::before {
-    opacity: 1;
-    animation: border-rotate 2.5s linear infinite;
-  }
-  .btn-orange-liquid:hover {
-    box-shadow: 0 0 30px rgba(255, 102, 0, 0.7), 0 0 60px rgba(255, 102, 0, 0.3);
-    translate: 0 -3px;
-  }
 }
 
 /* Shockwave click ripple */
@@ -548,7 +518,6 @@ html {
   .glitch-text::after,
   .neon-flicker,
   .section-divider,
-  .btn-orange-liquid::before,
   .letter-stagger span,
   .text-reveal {
     animation: none !important;

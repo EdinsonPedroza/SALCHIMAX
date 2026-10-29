@@ -1,22 +1,12 @@
 import { useRef, useState } from "react";
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useScroll,
-  useTransform,
-  useInView,
-  useReducedMotion,
-} from "framer-motion";
+import { motion, useSpring, useScroll, useTransform, useInView } from "framer-motion";
 import { MessageCircle, ChevronDown } from "lucide-react";
+import { useRevealStates } from "./Reveal";
 
 const EASE_OUT = [0.23, 1, 0.32, 1];
 
 // Entrance choreography. Everything is gated by `ready`, which flips the moment the
 // intro curtains start to open, so it plays on screen instead of behind the cover.
-// The wipe's inset leaves room around the text so the line's glow is never clipped.
-const WIPE_HIDDEN = { opacity: 0, clipPath: "inset(-40% 100% -40% -15%)" };
-const WIPE_SHOWN = { opacity: 1, clipPath: "inset(-40% -15% -40% -15%)" };
 const STAMP_HIDDEN = { opacity: 0, scale: 0.88 };
 const STAMP_SHOWN = { opacity: 1, scale: 1 };
 
@@ -76,51 +66,6 @@ function FloatingEmbers() {
   );
 }
 
-/* ── Magnetic button ── */
-function MagneticBtn({ href, children, className, target, rel, testid }) {
-  const ref = useRef(null);
-  const rect = useRef(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 260, damping: 18 });
-  const sy = useSpring(my, { stiffness: 260, damping: 18 });
-
-  // Measure once on enter — getBoundingClientRect() inside mousemove forces a
-  // synchronous layout on every pointer event.
-  const onMouseEnter = () => {
-    rect.current = ref.current.getBoundingClientRect();
-  };
-  const onMouseMove = (e) => {
-    const r = rect.current;
-    if (!r) return;
-    mx.set((e.clientX - (r.left + r.width / 2)) * 0.32);
-    my.set((e.clientY - (r.top + r.height / 2)) * 0.32);
-  };
-  const onMouseLeave = () => {
-    mx.set(0);
-    my.set(0);
-    rect.current = null;
-  };
-
-  return (
-    <motion.a
-      ref={ref}
-      href={href}
-      target={target}
-      rel={rel}
-      data-testid={testid}
-      style={{ x: sx, y: sy }}
-      onMouseEnter={onMouseEnter}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      whileTap={{ scale: 0.95 }}
-      className={className}
-    >
-      {children}
-    </motion.a>
-  );
-}
-
 /* ── Parallax background ── */
 function ParallaxBg({ bgUrl }) {
   const { scrollY } = useScroll();
@@ -139,11 +84,8 @@ function ParallaxBg({ bgUrl }) {
 
 export default function Hero({ ready = true }) {
   const sectionRef = useRef(null);
-  const reduce = useReducedMotion();
-  // Headline lines wipe in from the left; with reduced motion they just fade.
-  const lineHidden = reduce ? { opacity: 0 } : WIPE_HIDDEN;
-  const lineShown = reduce ? { opacity: 1 } : WIPE_SHOWN;
-  const lineIn = (delay) => ({ duration: 0.7, delay, ease: EASE_OUT });
+  // Each headline line hops in with its own lean (a fade with reduced motion).
+  const lines = [useRevealStates("hop"), useRevealStates("hop"), useRevealStates("hop")];
   const [bgUrl] = useState(() => (isMobile() ? HERO_BG_MOBILE : HERO_BG_DESKTOP));
   const [parallax] = useState(wantsParallax);
   // Every looping decoration below is CSS-driven; freeze it once the hero
@@ -244,13 +186,12 @@ export default function Hero({ ready = true }) {
           />
         </div>
 
-        {/* Main headline — each line is wiped in from the left (no slide-up), staggered.
-            w-fit mx-auto: the wipe crosses the text itself, not the empty container. */}
+        {/* Main headline — each line hops in, staggered (nothing slides). */}
         <div className="font-heading text-7xl md:text-8xl lg:text-9xl text-white leading-tight tracking-tight text-center mb-8">
           <motion.div
-            initial={lineHidden}
-            animate={ready ? lineShown : lineHidden}
-            transition={lineIn(0.3)}
+            initial={lines[0].hidden}
+            animate={ready ? lines[0].visible : lines[0].hidden}
+            transition={lines[0].transition(0.3)}
             className="w-fit mx-auto"
           >
             LAS SALCHIPAPAS
@@ -258,9 +199,9 @@ export default function Hero({ ready = true }) {
 
           {/* Line 2 — GLITCH + pulse */}
           <motion.div
-            initial={lineHidden}
-            animate={ready ? lineShown : lineHidden}
-            transition={lineIn(0.44)}
+            initial={lines[1].hidden}
+            animate={ready ? lines[1].visible : lines[1].hidden}
+            transition={lines[1].transition(0.44)}
             className="relative w-fit mx-auto"
           >
             <span className="text-pulse text-[#FF6600] inline-block">
@@ -269,9 +210,9 @@ export default function Hero({ ready = true }) {
           </motion.div>
 
           <motion.div
-            initial={lineHidden}
-            animate={ready ? lineShown : lineHidden}
-            transition={lineIn(0.58)}
+            initial={lines[2].hidden}
+            animate={ready ? lines[2].visible : lines[2].hidden}
+            transition={lines[2].transition(0.58)}
             className="w-fit mx-auto"
           >
             DE PALMIRA
@@ -279,31 +220,32 @@ export default function Hero({ ready = true }) {
         </div>
 
 
-        {/* Magnetic CTA buttons */}
+        {/* CTA buttons: they only fade in. No pull toward the cursor, no growing, no lift:
+            hovering changes colour and glow, pressing gives a small squeeze (CSS). */}
         <motion.div
-          initial={STAMP_HIDDEN}
-          animate={ready ? STAMP_SHOWN : STAMP_HIDDEN}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: ready ? 1 : 0 }}
           transition={{ duration: 0.5, delay: 0.95, ease: EASE_OUT }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <MagneticBtn
+          <a
             href={WA_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            testid="hero-whatsapp-btn"
-            className="btn-orange-liquid flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
+            data-testid="hero-whatsapp-btn"
+            className="btn-orange btn-calm flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
           >
             <MessageCircle size={22} />
             PEDIR POR WHATSAPP
-          </MagneticBtn>
+          </a>
 
-          <MagneticBtn
+          <a
             href="#menu"
-            testid="hero-menu-btn"
-            className="btn-outline-orange flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center hover:scale-105 transition-transform"
+            data-testid="hero-menu-btn"
+            className="btn-outline-orange btn-calm flex items-center gap-3 px-8 py-4 text-lg font-heading tracking-widest w-full sm:w-auto justify-center"
           >
             VER MENÚ
-          </MagneticBtn>
+          </a>
         </motion.div>
       </div>
 

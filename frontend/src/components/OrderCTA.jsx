@@ -1,16 +1,17 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Phone } from "lucide-react";
-import { Reveal, useKind, HIDDEN, SHOWN, VIEWPORT, EASE_OUT } from "./Reveal";
+import { Reveal, useRevealStates, VIEWPORT } from "./Reveal";
 
 const WA_LINK = "https://wa.me/573177371695";
 
 export default function OrderCTA() {
-  const kind = useKind("wipe");
   // The in-view observer lives on the h2 and drives its lines through variants, so
-  // both lines wipe in one after the other from a single trigger.
-  const line = (delay) => ({
-    hidden: HIDDEN[kind],
-    visible: { ...SHOWN[kind], transition: { duration: 0.7, delay, ease: EASE_OUT } },
+  // both lines hop in one after the other from a single trigger (each leans its own way).
+  const first = useRevealStates("hop");
+  const second = useRevealStates("hop");
+  const line = (states, delay) => ({
+    hidden: states.hidden,
+    visible: { ...states.visible, transition: states.transition(delay) },
   });
 
   return (
@@ -41,7 +42,7 @@ export default function OrderCTA() {
       />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
-        <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-4 block w-fit mx-auto">
+        <Reveal as="span" variant="hop" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-4 block w-fit mx-auto">
           ¿Listo para el antojo?
         </Reveal>
         <motion.h2
@@ -50,10 +51,10 @@ export default function OrderCTA() {
           viewport={VIEWPORT}
           className="font-heading text-6xl md:text-8xl text-white leading-none mb-6"
         >
-          <motion.span className="block w-fit mx-auto" variants={line(0.08)}>
+          <motion.span className="block w-fit mx-auto" variants={line(first, 0.08)}>
             ANTOJO DE
           </motion.span>
-          <motion.span className="block w-fit mx-auto text-[#FF6600]" variants={line(0.24)}>
+          <motion.span className="block w-fit mx-auto text-[#FF6600]" variants={line(second, 0.24)}>
             ALGO DELICIOSO?
           </motion.span>
         </motion.h2>

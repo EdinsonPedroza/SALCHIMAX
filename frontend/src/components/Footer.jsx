@@ -23,10 +23,10 @@ export default function Footer() {
       <div className="bg-[#121212] border-b border-white/5 py-8">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center">
-            <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-4 block w-fit mx-auto">
+            <Reveal as="span" variant="hop" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-4 block w-fit mx-auto">
               Síguenos para ver promos y novedades
             </Reveal>
-            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-4xl md:text-5xl text-white mb-8 w-fit mx-auto">
+            <Reveal as="h2" variant="hop" delay={0.08} className="font-heading text-4xl md:text-5xl text-white mb-8 w-fit mx-auto">
               SIGUENOS EN <span className="text-[#FF6600]">REDES</span>
             </Reveal>
 
@@ -139,7 +139,7 @@ export default function Footer() {
             eager: it sits too close to the end of the page to ever get 12% inside. */}
         <div className="border-t border-white/5 pt-10 overflow-hidden">
           <Reveal
-            variant="unveil"
+            variant="pop"
             eager
             className="font-heading text-[18vw] md:text-[15vw] text-white/5 leading-none text-center select-none tracking-tighter"
           >

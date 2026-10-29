@@ -134,7 +134,7 @@ export default function Promos() {
         <header className="mb-[clamp(34px,4.6vw,60px)]">
           <Reveal
             as="span"
-            variant="wipe"
+            variant="hop"
             className="mb-2 block w-fit font-body text-xs font-extrabold uppercase tracking-[0.28em] text-[#FF6600]"
           >
             Cada día una excusa para comer
@@ -143,7 +143,7 @@ export default function Promos() {
           <h2 id="promos-title" aria-label="Promos de la semana" className="font-heading font-normal leading-[0.82]">
             <Reveal
               as="span"
-              variant="wipe"
+              variant="hop"
               delay={0.1}
               aria-hidden="true"
               className="block w-fit text-[clamp(4.2rem,13vw,11.5rem)] tracking-[0.01em] text-transparent [-webkit-text-stroke:2px_#fff]"

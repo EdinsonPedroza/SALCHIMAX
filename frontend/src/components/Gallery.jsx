@@ -5,7 +5,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { Reveal, useKind, HIDDEN, SHOWN, VIEWPORT, EASE_OUT } from "./Reveal";
+import { Reveal, useReveal } from "./Reveal";
 
 const galleryImages = [
   {
@@ -76,21 +76,14 @@ function GalleryItem({ img, index, tilt }) {
     rect.current = null;
   };
 
-  // Photos are uncovered left to right. No scale here: the tilt below owns `scale`.
-  const kind = useKind("unveil");
+  // Photos are tossed onto the page, each leaning its own way. The entrance lives on the
+  // outer wrapper because the tilt below owns `scale` on the inner one.
+  const toss = useReveal("toss", { delay: (index % 3) * 0.1 });
 
   return (
+    <motion.div {...toss} className={img.span}>
     <motion.div
       ref={ref}
-      initial={HIDDEN[kind]}
-      whileInView={SHOWN[kind]}
-      viewport={VIEWPORT}
-      transition={{
-        duration: 0.9,
-        // Stagger per row (3 columns on desktop)
-        delay: (index % 3) * 0.1,
-        ease: EASE_OUT,
-      }}
       style={
         tilt
           ? { rotateX, rotateY, scale, transformStyle: "preserve-3d" }
@@ -100,7 +93,7 @@ function GalleryItem({ img, index, tilt }) {
       onMouseMove={tilt ? onMouseMove : undefined}
       onMouseLeave={tilt ? onMouseLeave : undefined}
       data-testid={`gallery-item-${index}`}
-      className={`gallery-item overflow-hidden relative group ${img.span}`}
+      className="gallery-item overflow-hidden relative group h-full w-full"
     >
       {/* Image */}
       <img
@@ -133,6 +126,7 @@ function GalleryItem({ img, index, tilt }) {
       {/* Corner brackets: only the color changes */}
       <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-[#FF6600]/0 group-hover:border-[#FF6600]/80 transition-colors duration-300" />
       <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-[#FF6600]/0 group-hover:border-[#FF6600]/80 transition-colors duration-300" />
+    </motion.div>
     </motion.div>
   );
 }
@@ -171,15 +165,13 @@ export default function Gallery() {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit mx-auto">
+          <Reveal as="span" variant="hop" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit mx-auto">
             Hecha para comer
           </Reveal>
-          <div className="overflow-hidden">
-            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
-              GALERÍA DE{" "}
-              <span className="text-[#FF6600]">COMIDA</span>
-            </Reveal>
-          </div>
+          <Reveal as="h2" variant="hop" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
+            GALERÍA DE{" "}
+            <span className="text-[#FF6600]">COMIDA</span>
+          </Reveal>
           <Reveal variant="bar" delay={0.22} className="w-16 h-1 bg-[#FF6600] mx-auto" style={{ transformOrigin: "center" }} />
         </div>
 

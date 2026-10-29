@@ -304,10 +304,10 @@ export default function Menu() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
-            <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit">
+            <Reveal as="span" variant="hop" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit">
               Lo que más te gusta
             </Reveal>
-            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit">
+            <Reveal as="h2" variant="hop" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit">
               NUESTRO MENÚ
             </Reveal>
             <Reveal variant="bar" delay={0.22} className="w-16 h-1 bg-[#FF6600]" />

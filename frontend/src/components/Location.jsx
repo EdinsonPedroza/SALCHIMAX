@@ -4,7 +4,7 @@ import { MapPin, Clock, Phone, ExternalLink } from "lucide-react";
 import { MapContainer, TileLayer, Marker, ZoomControl, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { Reveal, useKind, HIDDEN, SHOWN, VIEWPORT, EASE_OUT } from "./Reveal";
+import { Reveal, useReveal } from "./Reveal";
 
 // Own marker (no external images): an orange pin with a soft pulse ring, styled in App.css.
 const PIN_ICON = L.divIcon({
@@ -35,8 +35,8 @@ export default function Location() {
   const mapInView = useInView(mapRef, { once: true, margin: "400px 0px" });
   // The "open in Google Maps" ring plays when the map is actually on screen, not 400px before.
   const mapSeen = useInView(mapRef, { once: true, amount: 0.5 });
-  // The map frame is uncovered left to right (a fade with reduced motion)
-  const mapKind = useKind("unveil");
+  // The map frame pops in
+  const mapReveal = useReveal("pop");
 
   return (
     <section
@@ -47,10 +47,10 @@ export default function Location() {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit mx-auto">
+          <Reveal as="span" variant="hop" className="font-body text-xs uppercase tracking-widest text-[#FF6600] mb-3 block w-fit mx-auto">
             Encuéntranos
           </Reveal>
-          <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
+          <Reveal as="h2" variant="hop" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
             NUESTRA <span className="text-[#FF6600]">UBICACIÓN</span>
           </Reveal>
           <Reveal variant="bar" delay={0.22} className="w-16 h-1 bg-[#FF6600] mx-auto" style={{ transformOrigin: "center" }} />
@@ -60,10 +60,7 @@ export default function Location() {
           {/* Map */}
           <motion.div
             ref={mapRef}
-            initial={HIDDEN[mapKind]}
-            whileInView={SHOWN[mapKind]}
-            viewport={VIEWPORT}
-            transition={{ duration: 0.9, ease: EASE_OUT }}
+            {...mapReveal}
             data-testid="map-container"
             className="map-frame relative w-full h-80 md:h-96 lg:h-auto lg:min-h-[28rem] overflow-hidden rounded-xl border border-white/10 bg-[#171717]"
           >

@@ -194,11 +194,11 @@ export default function WhyUs() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-10 md:mb-12">
-          <Reveal as="span" variant="wipe" className="font-body text-xs uppercase tracking-[0.3em] text-[#FF6600] mb-3 block w-fit mx-auto">
+          <Reveal as="span" variant="hop" className="font-body text-xs uppercase tracking-[0.3em] text-[#FF6600] mb-3 block w-fit mx-auto">
             Nuestra diferencia
           </Reveal>
           <div className="overflow-hidden">
-            <Reveal as="h2" variant="wipe" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
+            <Reveal as="h2" variant="hop" delay={0.08} className="font-heading text-5xl md:text-6xl text-white mb-3 w-fit mx-auto">
               ¿POR QUÉ ELEGIR{" "}
               <span className="text-[#FF6600] glitch-text" data-text="SALCHIMAX">
                 SALCHIMAX

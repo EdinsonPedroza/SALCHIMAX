@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { X, Plus, Minus, Trash2, ShoppingBag, MessageCircle } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import CartAddOns from "./CartAddOns";
+import ProductThumb from "./ProductThumb";
 
 const WA_NUMBER = "573177371695";
 const EASE_OUT = [0.23, 1, 0.32, 1];
@@ -123,14 +125,15 @@ export default function Cart() {
                         data-testid={`cart-item-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                         className="bg-[#1A1A1A] border border-white/5 p-3 flex gap-3 overflow-hidden"
                       >
-                        {/* Image */}
-                        <div className="w-16 h-16 flex-shrink-0 overflow-hidden">
-                          <img
-                            src={item.img}
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
+                        {/* Image: retries once and falls back to a placeholder tile, never a broken glyph */}
+                        <ProductThumb
+                          src={item.img}
+                          alt={item.name}
+                          width={64}
+                          height={64}
+                          decoding="async"
+                          className="h-16 w-16 flex-shrink-0"
+                        />
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
@@ -198,6 +201,9 @@ export default function Cart() {
                 </>
               )}
             </div>
+
+            {/* "¿Un último antojo?" sits above the total, so it stays in reach however long the list is */}
+            {items.length > 0 && <CartAddOns />}
 
             {/* Footer with total and CTA */}
             {items.length > 0 && (

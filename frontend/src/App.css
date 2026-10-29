@@ -1293,3 +1293,22 @@ html {
   .hero-bg,
   .hero-bg.is-ready { scale: 1; transition: none; }
 }
+
+/* ── Carrito: ¿Un último antojo? ───────────────────────────────────
+   La fila se desplaza en horizontal sin barra; el degradado del borde derecho
+   avisa de que hay más tarjetas. Solo hover con mouse; en táctil queda el apretón. */
+.addon-row {
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+}
+.addon-row::-webkit-scrollbar { display: none; }
+.addon-tile {
+  transition: scale 120ms var(--ease-out);
+}
+.addon-tile:active { scale: 0.94; }
+.addon-tile:focus-visible {
+  outline: 2px solid #FF6600;
+  outline-offset: 4px;
+  border-radius: 8px;
+}

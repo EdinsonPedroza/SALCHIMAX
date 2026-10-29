@@ -70,24 +70,9 @@
         }
         </script>
 
-        <!-- Google Analytics 4 — reemplaza G-XXXXXXXXXX con el Measurement ID real.
-             El script no se activa mientras el ID sea placeholder.
-             GA4 usa cookies: al activarlo, actualiza "Cookies y analítica" en src/pages/Privacidad.jsx. -->
-        <script>
-            (function () {
-                var GA_ID = "G-XXXXXXXXXX";
-                if (GA_ID.indexOf("XXXX") !== -1) return;
-                var s = document.createElement("script");
-                s.async = true;
-                s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
-                document.head.appendChild(s);
-                window.dataLayer = window.dataLayer || [];
-                function gtag() { dataLayer.push(arguments); }
-                window.gtag = gtag;
-                gtag("js", new Date());
-                gtag("config", GA_ID, { anonymize_ip: true });
-            })();
-        </script>
+        <!-- Google Analytics 4 se configura en src/analytics.js. No agregues <script> en línea
+             en este archivo: la Content-Security-Policy de vercel.json los bloquea (es lo que
+             frena un ataque XSS). Los datos JSON-LD de arriba sí están permitidos. -->
         <!-- Preload LCP: hero background image fetched before render.
              Two variants, matched by media query — Hero.jsx picks the same URL
              for the same breakpoint, so exactly one image is ever downloaded. -->

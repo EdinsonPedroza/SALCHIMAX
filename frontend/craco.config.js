@@ -1,20 +1,6 @@
 // craco.config.js
 const path = require("path");
 
-const config = {
-  enableHealthCheck: process.env.ENABLE_HEALTH_CHECK === "true",
-};
-
-let WebpackHealthPlugin;
-let setupHealthEndpoints;
-let healthPluginInstance;
-
-if (config.enableHealthCheck) {
-  WebpackHealthPlugin = require("./plugins/health-check/webpack-health-plugin");
-  setupHealthEndpoints = require("./plugins/health-check/health-endpoints");
-  healthPluginInstance = new WebpackHealthPlugin();
-}
-
 const webpackConfig = {
   eslint: {
     configure: {
@@ -42,9 +28,6 @@ const webpackConfig = {
         ],
       };
 
-      if (config.enableHealthCheck && healthPluginInstance) {
-        webpackConfig.plugins.push(healthPluginInstance);
-      }
       return webpackConfig;
     },
   },

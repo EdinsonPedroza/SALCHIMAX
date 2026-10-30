@@ -3,7 +3,6 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ShoppingBag, MessageCircle, Plus, Check } from "lucide-react";
 import { useCart, useCartActions } from "../context/CartContext";
 import { Reveal, VIEWPORT, EASE_OUT } from "./Reveal";
-import BurgerBox from "./BurgerBox";
 import { categories, menuData, getPortions } from "../data/menu";
 
 const WA_LINK = "https://wa.me/573177371695";
@@ -258,18 +257,11 @@ export default function Menu() {
             animate={{ opacity: 1 }}
             className="mb-8"
           >
-            <div className="flex flex-col items-center gap-2 border border-[#FF6600]/30 bg-[#FF6600]/5 p-4 sm:flex-row sm:gap-8 sm:pr-8">
-              <BurgerBox />
-              <div className="text-center sm:text-left">
-                <p className="font-heading text-3xl tracking-wide text-white">ÁBRELA Y ANTÓJATE</p>
-                <p className="mt-1 font-body text-sm text-gray-300">
-                  Pan brioche, carne 100% Angus y todo recién armado.
-                </p>
-                <p className="mt-4 font-body text-sm text-gray-300">
-                  <span className="text-[#FF6600] font-semibold">💡 TIP:</span>{" "}
-                  Transforma tu hamburguesa a doble carne por solo: <span className="text-[#FF6600] font-semibold">$8.000 adicionales</span>
-                </p>
-              </div>
+            <div className="p-4 border border-[#FF6600]/30 bg-[#FF6600]/5">
+              <p className="font-body text-sm text-gray-300">
+                <span className="text-[#FF6600] font-semibold">💡 TIP:</span>{" "}
+                Transforma tu hamburguesa a doble carne por solo: <span className="text-[#FF6600] font-semibold">$8.000 adicionales</span>
+              </p>
             </div>
           </motion.div>
         )}

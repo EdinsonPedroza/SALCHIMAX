@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const SITE_URL = "https://salchimax.co";
+const SITE_URL = "https://salchimax.com";
 
 /**
  * Keeps SEO state in sync on SPA route changes:

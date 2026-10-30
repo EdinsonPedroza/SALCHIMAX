@@ -8,9 +8,9 @@ const EASE_CURTAIN = [0.76, 0, 0.24, 1];
 // The intro's clock starts once the heading font is ready (so the letters never
 // flash in a fallback face), but never waits longer than FONT_WAIT_MS.
 const FONT_WAIT_MS = 1000;
-const SHOW_MS = 1900;
-const REDUCED_SHOW_MS = 1000;
-const EXIT_MS = 600;
+const SHOW_MS = 1300;
+const REDUCED_SHOW_MS = 800;
+const EXIT_MS = 450;
 // Exit animation is ~0.6s; if it never reports completion (throttled tab,
 // stuck compositor layer) unmount anyway so the page is never left covered.
 const FAILSAFE_MS = EXIT_MS + 1500;
@@ -29,7 +29,7 @@ function Ring({ delay, scaleTo, opacity }) {
       style={{ width: 160, height: 160, border: "1.5px solid #FF6600" }}
       initial={{ scale: 1, opacity }}
       animate={{ scale: scaleTo, opacity: 0 }}
-      transition={{ duration: 1.4, delay, ease: EASE_OUT }}
+      transition={{ duration: 1, delay, ease: EASE_OUT }}
     />
   );
 }
@@ -63,7 +63,7 @@ function Spark({ x, y, size, delay, color }) {
       }}
       initial={{ x: 0, y: 0, opacity: 0.9, scale: 1 }}
       animate={{ x, y, opacity: 0, scale: 0.3 }}
-      transition={{ duration: 0.85, delay, ease: EASE_OUT }}
+      transition={{ duration: 0.6, delay, ease: EASE_OUT }}
     />
   );
 }
@@ -76,7 +76,7 @@ function Shockwave({ delay }) {
       style={{ width: 200, height: 200 }}
       initial={{ scale: 0.6, opacity: 0.8 }}
       animate={{ scale: 3.2, opacity: 0 }}
-      transition={{ duration: 0.9, delay, ease: EASE_OUT }}
+      transition={{ duration: 0.65, delay, ease: EASE_OUT }}
     />
   );
 }
@@ -193,7 +193,7 @@ export default function IntroScreen({ onExitStart, onComplete }) {
                   className="absolute inset-0 pointer-events-none"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 0.12, 0.07] }}
-                  transition={{ duration: 2, times: [0, 0.4, 1] }}
+                  transition={{ duration: 1.4, times: [0, 0.4, 1] }}
                   style={{
                     background:
                       "radial-gradient(ellipse 55% 45% at 50% 50%, #FF6600 0%, #ff330020 40%, transparent 70%)",
@@ -226,7 +226,7 @@ export default function IntroScreen({ onExitStart, onComplete }) {
                         ? { opacity: 1, scale: 1, rotateY: 0 }
                         : { opacity: 1, scale: 1 }
                     }
-                    transition={{ duration: is3D ? 0.8 : 0.5, ease: EASE_OUT, delay: 0.04 }}
+                    transition={{ duration: is3D ? 0.55 : 0.35, ease: EASE_OUT, delay: 0.03 }}
                     style={is3D ? { transformPerspective: 800 } : undefined}
                   >
                     {/* Soft glow: a plain gradient, no blur filter */}
@@ -239,7 +239,7 @@ export default function IntroScreen({ onExitStart, onComplete }) {
                       }}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: [0, 0.8, 0.4] }}
-                      transition={{ duration: 1.2, times: [0, 0.3, 1] }}
+                      transition={{ duration: 0.9, times: [0, 0.3, 1] }}
                     />
                     <img
                       src="/logo.jpeg"
@@ -262,7 +262,7 @@ export default function IntroScreen({ onExitStart, onComplete }) {
                       className="font-heading text-6xl sm:text-7xl md:text-9xl leading-none select-none text-white"
                       initial={{ opacity: 0, scale: 1.25 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.42, delay: 0.32 + i * 0.05, ease: EASE_OUT }}
+                      transition={{ duration: 0.3, delay: 0.22 + i * 0.035, ease: EASE_OUT }}
                     >
                       {letter}
                     </motion.span>
@@ -274,7 +274,7 @@ export default function IntroScreen({ onExitStart, onComplete }) {
                   className="h-px bg-gradient-to-r from-transparent via-[#FF6600] to-transparent mt-3 origin-center"
                   initial={{ scaleX: 0, opacity: 0 }}
                   animate={{ scaleX: 1, opacity: 1 }}
-                  transition={{ duration: 0.55, delay: 0.85, ease: EASE_OUT }}
+                  transition={{ duration: 0.4, delay: 0.6, ease: EASE_OUT }}
                   style={{ width: "min(500px, 88vw)" }}
                 />
 
@@ -283,7 +283,7 @@ export default function IntroScreen({ onExitStart, onComplete }) {
                   className="font-body uppercase tracking-[0.5em] text-white/30 text-xs md:text-sm mt-4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 1, ease: EASE_OUT }}
+                  transition={{ duration: 0.4, delay: 0.7, ease: EASE_OUT }}
                 >
                   Urban Food · Palmira
                 </motion.p>
@@ -310,7 +310,7 @@ export default function IntroScreen({ onExitStart, onComplete }) {
                 className={`absolute w-8 h-8 ${pos} border-[#FF6600]/40`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={go ? { opacity: 1, scale: 1 } : undefined}
-                transition={{ duration: 0.35, delay: 0.5 + i * 0.06, ease: EASE_OUT }}
+                transition={{ duration: 0.25, delay: 0.35 + i * 0.04, ease: EASE_OUT }}
               />
             ))}
           </motion.div>

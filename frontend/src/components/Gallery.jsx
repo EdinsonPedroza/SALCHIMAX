@@ -9,7 +9,7 @@ import { Reveal, useReveal } from "./Reveal";
 
 const galleryImages = [
   {
-    src: "/images/maxima.webp",
+    src: "/images/maxima-v2.webp",
     alt: "Salchipapa La Máxima",
     span: "col-span-1 row-span-2",
     pos: "50% 72%",
@@ -20,7 +20,7 @@ const galleryImages = [
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/colombiana.webp",
+    src: "/images/colombiana-v2.webp",
     alt: "Salchipapa La Colombiana",
     span: "col-span-1 row-span-1",
     pos: "50% 85%",
@@ -31,7 +31,7 @@ const galleryImages = [
     span: "col-span-1 row-span-2",
   },
   {
-    src: "/images/alitas-12.webp",
+    src: "/images/alitas-12-v2.webp",
     alt: "Alitas BBQ",
     span: "col-span-1 row-span-1",
   },

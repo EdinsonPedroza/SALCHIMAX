@@ -60,9 +60,9 @@ const WA = "https://wa.me/573177371695";
 
 /* Mismos datos que frontend/src/data/promos.js. `dow` = día de la semana (0 = domingo) */
 const PROMOS = [
-  { day: "Lunes", dow: 1, title: "De 2 pa' 2", desc: "2 salchipapas personales (la que quieras) + 2 gaseosas personales", price: "$46.000", badge: "COMBO", img: IMG + "clasica.webp", c: "#ff6600" },
+  { day: "Lunes", dow: 1, title: "De 2 pa' 2", desc: "2 salchipapas personales (la que quieras) + 2 gaseosas personales", price: "$46.000", badge: "COMBO", img: IMG + "clasica-v2.webp", c: "#ff6600" },
   { day: "Miércoles", dow: 3, title: "Miércoles Mexicano", desc: "2x1 en nachos · 2 burros (El Gringo o El Burro) por solo $36.000", price: "2x1", badge: "2x1", img: IMG + "nachos.webp", c: "#ffcc00" },
-  { day: "Jueves", dow: 4, title: "Jueves de Alitas", desc: "2x1 en TODAS las alitas. Elige tus salsas favoritas.", price: "2x1", badge: "2x1", img: IMG + "alitas-12.webp", c: "#ff003c" },
+  { day: "Jueves", dow: 4, title: "Jueves de Alitas", desc: "2x1 en TODAS las alitas. Elige tus salsas favoritas.", price: "2x1", badge: "2x1", img: IMG + "alitas-12-v2.webp", c: "#ff003c" },
   { day: "Domingo", dow: 0, title: "Domingo de Burgers", desc: "Por la compra de cualquier hamburguesa, ¡la gaseosa personal va GRATIS!", price: "GRATIS", badge: "GRATIS", img: IMG + "hamburguesa-especial.webp", c: "#f4efe6" },
 ];
 

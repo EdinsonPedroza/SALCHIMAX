@@ -30,12 +30,12 @@ export const categories = [
 // when the photo is taller than the card.
 export const menuData = {
   salchipapas: [
-    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: "/images/clasica.webp", pos: "50% 80%" },
+    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: "/images/clasica-v2.webp", pos: "50% 80%" },
     { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: "/images/mixta.webp" },
     { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: "/images/de-la-casa.webp" },
-    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: "/images/maxima.webp", pos: "50% 80%" },
-    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: "/images/colombiana.webp", pos: "50% 80%" },
-    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: "/images/callejera.webp", pos: "50% 80%" },
+    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: "/images/maxima-v2.webp", pos: "50% 80%" },
+    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: "/images/colombiana-v2.webp", pos: "50% 80%" },
+    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: "/images/callejera-v2.webp", pos: "50% 80%" },
     { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: "/images/tex-mex-salchi.webp" },
     {
       name: "Salchimax!",
@@ -46,7 +46,7 @@ export const menuData = {
         { persons: "6 personas", price: "$110.000" },
         { persons: "8 personas", price: "$150.000" },
       ],
-      img: "/images/salchimax.webp",
+      img: "/images/salchimax-v2.webp",
       pos: "50% 80%",
     },
   ],
@@ -58,9 +58,9 @@ export const menuData = {
     { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: "/images/la-triple.webp" },
   ],
   alitas: [
-    { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: "/images/alitas-6.webp", pos: "50% 65%" },
-    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: "/images/alitas-12.webp" },
-    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: "/images/alitas-12.webp" },
+    { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: "/images/alitas-6-v2.webp", pos: "50% 65%" },
+    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: "/images/alitas-12-v2.webp" },
+    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: "/images/alitas-12-v2.webp" },
   ],
   nachos: [
     { name: "Toppins Nachos", desc: "Nachos, queso, pico de gallo, sour cream, guacamole", price: "$25.000", img: "/images/nachos.webp" },
@@ -74,10 +74,10 @@ export const menuData = {
   ],
   bebidas: [
     { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: IMAGES.drink },
-    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: "/images/hit-personal.webp", pos: "50% 75%" },
+    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: "/images/hit-personal-v2.webp" },
     { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: IMAGES.drink3 },
     { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: "/images/gaseosa-litro.webp" },
-    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: "/images/hit-litro.webp", pos: "50% 40%" },
+    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: "/images/hit-litro-medio.webp" },
   ],
 };
 

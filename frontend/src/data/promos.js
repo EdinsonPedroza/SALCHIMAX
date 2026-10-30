@@ -27,7 +27,7 @@ export const promos = [
     desc: "2 salchipapas personales (la que quieras) + 2 gaseosas personales",
     price: "$46.000",
     badge: "COMBO",
-    img: "/images/clasica.webp",
+    img: "/images/clasica-v2.webp",
     pos: "50% 75%",
     active: true,
   },
@@ -46,7 +46,7 @@ export const promos = [
     desc: "2x1 en TODAS las alitas. Elige tus salsas favoritas.",
     price: "2x1",
     badge: "2x1",
-    img: "/images/alitas-12.webp",
+    img: "/images/alitas-12-v2.webp",
     active: true,
   },
   {

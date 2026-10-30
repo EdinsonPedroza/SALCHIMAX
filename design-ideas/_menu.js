@@ -14,14 +14,14 @@ const MENU_CATS = [
 
 const MENU = {
   salchipapas: [
-    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: L("clasica.webp") },
+    { name: "La Clásica", desc: "Papa amarilla, papa francesa, salchicha, queso, tocineta", price: "$18.000", price2: "$32.000", img: L("clasica-v2.webp") },
     { name: "La Mixta", desc: "Papa amarilla, salchicha, queso, tocineta, pollo y guacamole", price: "$20.000", price2: "$38.000", img: L("mixta.webp") },
     { name: "De La Casa", desc: "Papa amarilla, papa francesa, salchicha, queso, maíz, chorizo", price: "$20.000", price2: "$36.000", img: L("de-la-casa.webp") },
-    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: L("maxima.webp") },
-    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: L("colombiana.webp") },
-    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: L("callejera.webp") },
+    { name: "La Máxima", desc: "Papa amarilla, salchicha, queso, pollo, BBQ, maduro y chorizo", price: "$22.000", price2: "$38.000", img: L("maxima-v2.webp") },
+    { name: "La Colombiana", desc: "Papa amarilla, papa francesa, salchicha, maíz, maduro, costilla BBQ, queso", price: "$23.000", price2: "$41.000", img: L("colombiana-v2.webp") },
+    { name: "Callejera", desc: "Papa amarilla, salchicha, queso, pollo y carne desmechada, ripio de papa", price: "$22.000", price2: "$38.000", img: L("callejera-v2.webp") },
     { name: "Tex - Mex", desc: "Papa amarilla, salchicha, queso, carne desmechada, guacamole, pico de gallo", price: "$23.000", price2: "$41.000", img: L("tex-mex-salchi.webp") },
-    { name: "Salchimax!", desc: "Salchicha, tocineta, papa amarilla, papa francesa, chorizo, pollo y carne desmechada, maduro, maicitos, doble queso, salsas y costilla BBQ casera", price: "$78.000", prices: [{ persons: "4 personas", price: "$78.000" }, { persons: "6 personas", price: "$110.000" }, { persons: "8 personas", price: "$150.000" }], img: L("salchimax.webp") },
+    { name: "Salchimax!", desc: "Salchicha, tocineta, papa amarilla, papa francesa, chorizo, pollo y carne desmechada, maduro, maicitos, doble queso, salsas y costilla BBQ casera", price: "$78.000", prices: [{ persons: "4 personas", price: "$78.000" }, { persons: "6 personas", price: "$110.000" }, { persons: "8 personas", price: "$150.000" }], img: L("salchimax-v2.webp") },
   ],
   burgers: [
     { name: "La Clásica", desc: "Pan brioche, queso, carne 100% Angus, lechuga crespa, tomate, cebolla, salsa especial", price: "$21.000", img: U("photo-1568901346375-23c9450c58cd") },
@@ -31,9 +31,9 @@ const MENU = {
     { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: U("photo-1571091718767-18b5b1457add") },
   ],
   alitas: [
-    { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: L("alitas-6.webp") },
-    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: L("alitas-12.webp") },
-    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: L("alitas-12.webp") },
+    { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: L("alitas-6-v2.webp") },
+    { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: L("alitas-12-v2.webp") },
+    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: L("alitas-12-v2.webp") },
   ],
   nachos: [
     { name: "Toppins Nachos", desc: "Nachos, queso, pico de gallo, sour cream, guacamole", price: "$25.000", img: U("photo-1513456852971-30c0b8199d4d") },
@@ -47,10 +47,10 @@ const MENU = {
   ],
   bebidas: [
     { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: U("photo-1622483767028-3f66f32aef97") },
-    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: L("hit-personal.webp") },
+    { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: L("hit-personal-v2.webp") },
     { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: U("photo-1548839140-29a749e1cf4d") },
     { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: L("gaseosa-litro.webp") },
-    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: L("hit-litro.webp") },
+    { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: L("hit-litro-medio.webp") },
   ],
 };
 

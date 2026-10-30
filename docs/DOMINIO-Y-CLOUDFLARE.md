@@ -5,7 +5,7 @@ El dominio se compró en Hostinger. Esta guía lo deja funcionando con la págin
 ## Qué ya quedó hecho en el código
 
 - Todas las direcciones que el sitio da de sí mismo (canonical, Open Graph, datos para Google, `sitemap.xml`, `robots.txt`) apuntan a `https://salchimax.com`. Antes apuntaban a `salchimax.co`, que no existe.
-- `frontend/wrangler.jsonc` le dice a Cloudflare cómo servir la carpeta `build` y que `/terminos`, `/privacidad` y `/pqr` carguen la página.
+- `wrangler.jsonc` (en la raíz, junto a `vercel.json`) le dice a Cloudflare cómo servir la carpeta `build` y que `/terminos`, `/privacidad` y `/pqr` carguen la página.
 - `frontend/public/_headers` trae las mismas medidas de seguridad y de caché que `vercel.json`. Mientras el sitio pueda salir por los dos lados, si cambias una política cambia la otra.
 - La analítica de Vercel solo se carga cuando el sitio está en `*.vercel.app`. En Cloudflare no pide scripts que no existen.
 - Probado en local con `wrangler dev` (el mismo motor de Cloudflare): las 4 rutas, las cabeceras, la caché, el mapa y el carrito funcionan, sin errores en consola.
@@ -40,8 +40,8 @@ El dominio sigue siendo de Hostinger (ahí lo renuevas cada año). Solo cambia q
 |---|---|
 | Nombre del Worker | `salchimax` (tiene que ser igual al `name` de `wrangler.jsonc`) |
 | Production branch | `main` |
-| Root directory | `frontend` |
-| Build command | `yarn install --frozen-lockfile && CI=false GENERATE_SOURCEMAP=false yarn build` |
+| Root directory | vacío (la raíz del repositorio, `/`) |
+| Build command | `cd frontend && yarn install --frozen-lockfile && CI=false GENERATE_SOURCEMAP=false yarn build` |
 | Deploy command | `npx wrangler deploy` (el que viene por defecto) |
 | Variable de build | `YARN_VERSION` = `1.22.22` |
 
@@ -86,6 +86,7 @@ Hazlo cuando el dominio ya diga **Active** en Cloudflare.
 |---|---|
 | Cloudflare sigue en "Pending Nameserver Update" | En Hostinger deben estar exactamente los dos nameservers de Cloudflare. Espera hasta 24 h. |
 | El build falla en `yarn` | Que exista la variable `YARN_VERSION` = `1.22.22`. |
+| "Couldn't find a package.json" | El build command debe empezar con `cd frontend &&` y el Root directory debe estar vacío. |
 | El build pasa pero falla al desplegar | El nombre del Worker en Cloudflare debe ser `salchimax`. |
 | `/terminos` o `/pqr` dan 404 | Que `wrangler.jsonc` conserve `"not_found_handling": "single-page-application"`. |
 | No deja agregar el Custom domain | Hay un registro `A` o `CNAME` con ese nombre en DNS: bórralo y repite. |

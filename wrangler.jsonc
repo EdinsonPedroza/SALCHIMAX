@@ -1,11 +1,11 @@
 {
   // Cloudflare Workers with static assets: there is no Worker code, it only serves the built site.
-  // In the dashboard (Workers & Pages > Create > Import a repository) use Root directory "frontend".
-  // Security headers and cache rules live in public/_headers.
+  // Lives at the repo root, next to vercel.json: the build command does `cd frontend`.
+  // Security headers and cache rules live in frontend/public/_headers.
   "name": "salchimax",
   "compatibility_date": "2026-06-01",
   "assets": {
-    "directory": "./build",
+    "directory": "./frontend/build",
     // Unknown paths (/terminos, /pqr...) get index.html and React Router takes it from there
     "not_found_handling": "single-page-application"
   },

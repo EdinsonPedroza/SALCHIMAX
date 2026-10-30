@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, motion, useInView, useMotionValue, useReducedMotion } from "framer-motion";
 
-// A burger box in plain CSS 3D (no library): it turns slowly, and a tap opens the lid and
-// lets the burger come up. Everything is a flat panel placed in space; see .bbx in App.css.
-// Layers of the burger, bottom to top: [y from the box centre (down is positive), diameter, colour].
+// The SALCHIMAX box in plain CSS 3D (no library): it turns slowly, and a tap opens the lid and
+// lets the burger come up. Everything is a flat panel placed in space, and the faces carry the
+// photos of the real box (/images/box); see .bbx in App.css.
+// Layers of the burger, bottom to top: [y, diameter, colour]. The y values are on a 26..-16
+// scale (down is positive) and squeezed by `fit` so the stack fits the shallow box.
+const fit = (y) => Math.round((16 - (26 - y) * 0.72) * 10) / 10;
 const LAYERS = [
   [26, 100, "#D9942F"], [24, 100, "#E0A13D"],
   [17, 96, "#3E2314"], [15, 96, "#4B2B19"], [13, 96, "#3E2314"],
@@ -14,6 +17,9 @@ const LAYERS = [
   [-10, 82, "#ECB357"], [-13, 66, "#EFB85E"],
   [-16, 44, "radial-gradient(circle at 30% 35%, #fff3d4 0 2px, transparent 3px), radial-gradient(circle at 65% 55%, #fff3d4 0 2px, transparent 3px), radial-gradient(circle at 45% 75%, #fff3d4 0 2px, transparent 3px), #F2BD64"],
 ];
+
+// Texture URLs go in as inline custom properties: the CSS build would try to resolve them.
+const TEX = Object.fromEntries(["lid", "front", "back", "side"].map((k) => [`--tex-${k}`, `url(/images/box/${k}.webp)`]));
 
 function Panel({ className, children }) {
   return (
@@ -59,7 +65,7 @@ export default function BurgerBox() {
   }, [open, inView, reduce, ry]);
 
   return (
-    <div className="bbx">
+    <div className="bbx" style={TEX}>
       <button
         ref={stage}
         type="button"
@@ -73,18 +79,18 @@ export default function BurgerBox() {
           <span className="bbx__tilt">
             <motion.span className="bbx__spin" style={{ rotateY: ry }}>
               <span className="bbx__box">
-                <Panel className="bbx__front"><span className="bbx__label">SALCHI MAX</span></Panel>
+                <Panel className="bbx__front" />
                 <Panel className="bbx__back" />
                 <Panel className="bbx__left" />
                 <Panel className="bbx__right" />
                 <Panel className="bbx__floor" />
                 <span className="bbx__burger">
                   {LAYERS.map(([y, d, bg, kind], i) => (
-                    <i key={i} className={`bbx__disc${kind ? ` bbx__disc--${kind}` : ""}`} style={{ "--y": y, "--d": d, background: bg }} />
+                    <i key={i} className={`bbx__disc${kind ? ` bbx__disc--${kind}` : ""}`} style={{ "--y": fit(y), "--d": d, background: bg }} />
                   ))}
                 </span>
                 <span className="bbx__lid">
-                  <Panel className="bbx__lid-top"><span className="bbx__label bbx__label--lid">SALCHI<br />MAX</span></Panel>
+                  <Panel className="bbx__lid-top" />
                   <Panel className="bbx__lid-front" />
                   <Panel className="bbx__lid-left" />
                   <Panel className="bbx__lid-right" />

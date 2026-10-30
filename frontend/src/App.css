@@ -1320,13 +1320,13 @@ html {
    sobre su borde trasero; sus solapas van por dentro de las paredes. Cada panel tiene dos
    caras: la impresa por fuera (::before) y el cartón por dentro (::after), con
    backface-visibility para que no se mezclen. La luz de cada pared la mueve el componente
-   (.pbx__sh). --k escala toda la escena (1 = 320x330). Solo se animan transform y opacity. */
+   (.pbx__sh). --k escala toda la escena (1 = 320x350). Solo se animan transform y opacity. */
 .pbx { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
 .pbx__stage {
   position: relative;
   display: block;
   width: calc(320px * var(--k));
-  height: calc(330px * var(--k));
+  height: calc(350px * var(--k));
   max-width: 100%;
   padding: 0;
   border: 0;
@@ -1350,7 +1350,7 @@ html {
   height: 0;
   transform-style: preserve-3d;
 }
-.pbx__tilt { left: 50%; top: 68%; transform: rotateX(-26deg) scale3d(calc(1.15 * var(--k)), calc(1.15 * var(--k)), calc(1.15 * var(--k))); }
+.pbx__tilt { left: 50%; top: 69.5%; transform: rotateX(-26deg) scale3d(calc(1.15 * var(--k)), calc(1.15 * var(--k)), calc(1.15 * var(--k))); }
 
 .pbx__p { position: absolute; left: 0; top: 0; display: block; transform-style: preserve-3d; --out: #F2600E; --in: linear-gradient(180deg, #C2A07A, #8E6C4A); }
 .pbx__p::before,
@@ -1387,9 +1387,9 @@ html {
 .pbx__card-in {
   position: absolute;
   left: -91px;
-  top: -234px;
+  top: -254px;
   width: 182px;
-  height: 256px;
+  height: 276px;
   box-sizing: border-box;
   padding: 27px 10px 0;
   display: flex;

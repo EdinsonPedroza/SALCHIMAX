@@ -114,6 +114,7 @@ const ProductCard = memo(function ProductCard({ item, index }) {
           loading="lazy"
           decoding="async"
           draggable="false"
+          style={item.pos ? { objectPosition: item.pos } : undefined}
         />
       </div>
 

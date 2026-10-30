@@ -12,6 +12,7 @@ const galleryImages = [
     src: "/images/maxima.webp",
     alt: "Salchipapa La Máxima",
     span: "col-span-1 row-span-2",
+    pos: "50% 72%",
   },
   {
     src: "/images/hamburguesa-especial.webp",
@@ -22,14 +23,15 @@ const galleryImages = [
     src: "/images/colombiana.webp",
     alt: "Salchipapa La Colombiana",
     span: "col-span-1 row-span-1",
+    pos: "50% 85%",
   },
   {
-    src: "/images/nachos-texmex.webp",
+    src: "/images/nachos.webp",
     alt: "Nachos Tex-Mex",
     span: "col-span-1 row-span-2",
   },
   {
-    src: "/images/alitas-24.webp",
+    src: "/images/alitas-12.webp",
     alt: "Alitas BBQ",
     span: "col-span-1 row-span-1",
   },
@@ -102,6 +104,7 @@ function GalleryItem({ img, index, tilt }) {
         className="gallery-img w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         loading="lazy"
         decoding="async"
+        style={img.pos ? { objectPosition: img.pos } : undefined}
       />
 
       {/* Orange gradient overlay */}

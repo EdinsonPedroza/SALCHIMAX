@@ -13,6 +13,7 @@
 //             La ley (art. 33, Ley 1480) exige mostrarlas en la misma promo: si no las
 //             escribes aquí, la promo aplica sin restricciones el día indicado
 //   - img:    ruta de la foto en /images/...
+//   - pos:    (opcional) qué parte de la foto queda a la vista si se recorta, ej "50% 70%"
 //   - active: true = se muestra · false = se oculta (sin borrarla)
 //
 //  Para AGREGAR una promo: copia un bloque { ... } y cámbialo.
@@ -27,6 +28,7 @@ export const promos = [
     price: "$46.000",
     badge: "COMBO",
     img: "/images/clasica.webp",
+    pos: "50% 75%",
     active: true,
   },
   {
@@ -35,7 +37,7 @@ export const promos = [
     desc: "2x1 en nachos · 2 burros (El Gringo o El Burro) por solo $36.000",
     price: "2x1",
     badge: "2x1",
-    img: "/images/nachos-texmex.webp",
+    img: "/images/nachos.webp",
     active: true,
   },
   {
@@ -44,7 +46,7 @@ export const promos = [
     desc: "2x1 en TODAS las alitas. Elige tus salsas favoritas.",
     price: "2x1",
     badge: "2x1",
-    img: "/images/alitas-24.webp",
+    img: "/images/alitas-12.webp",
     active: true,
   },
   {

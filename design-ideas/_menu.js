@@ -33,23 +33,23 @@ const MENU = {
   alitas: [
     { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: L("alitas-6.webp") },
     { name: "x12 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$51.000", img: L("alitas-12.webp") },
-    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: L("alitas-24.webp") },
+    { name: "x24 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$96.000", img: L("alitas-12.webp") },
   ],
   nachos: [
     { name: "Toppins Nachos", desc: "Nachos, queso, pico de gallo, sour cream, guacamole", price: "$25.000", img: U("photo-1513456852971-30c0b8199d4d") },
     { name: "\"Colombianos\"", desc: "Nachos, queso, pico de gallo, pollo desmechado, carne desmechada y maduro", price: "$33.500", img: U("photo-1582169296194-e4d644c48063") },
-    { name: "Tex - Mex", desc: "Nachos, queso, pico de gallo, pollo BBQ, guacamole, tocineta y maíz", price: "$33.500", img: L("nachos-texmex.webp") },
+    { name: "Tex - Mex", desc: "Nachos, queso, pico de gallo, pollo BBQ, guacamole, tocineta y maíz", price: "$33.500", img: L("nachos.webp") },
   ],
   burros: [
     { name: "El Burro", desc: "Carne y pollo desmechado, guacamole, pico de gallo, lechuga, queso", price: "$20.000", img: U("photo-1626700051175-6818013e1d4f") },
-    { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: L("gringo-burrito.webp") },
+    { name: "El Gringo", desc: "Pollo BBQ, salchicha ranchera, lechuga, pico de gallo, queso, tocineta", price: "$20.000", img: L("burrito.webp") },
     { name: "El Super Burro", desc: "Carne y pollo desmechado, tocineta, pico de gallo, aguacate, lechuga, queso y salchicha ranchera", price: "$23.000", img: L("superburro.webp") },
   ],
   bebidas: [
     { name: "Gaseosa (Personal)", desc: "Bebida personal", price: "$5.000", img: U("photo-1622483767028-3f66f32aef97") },
     { name: "Jugo Hit (Personal)", desc: "Bebida personal", price: "$5.000", img: L("hit-personal.webp") },
     { name: "Agua (Personal)", desc: "Bebida personal", price: "$3.000", img: U("photo-1548839140-29a749e1cf4d") },
-    { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: L("cocacola-litro.webp") },
+    { name: "Gaseosa (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: L("gaseosa-litro.webp") },
     { name: "Jugo Hit (Litro y Medio)", desc: "Bebida litro y medio", price: "$8.000", img: L("hit-litro.webp") },
   ],
 };

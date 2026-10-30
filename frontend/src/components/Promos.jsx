@@ -70,6 +70,7 @@ function PromoCard({ promo, index, isToday }) {
           loading="lazy"
           decoding="async"
           draggable="false"
+          style={promo.pos ? { objectPosition: promo.pos } : undefined}
         />
         <span className="promo-card__sheen" />
       </div>

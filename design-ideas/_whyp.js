@@ -4,8 +4,8 @@ const WHY_PHOTO = {
   fresh: { src: IMG + "cheesy-crunch.webp", pos: "50% 36%", alt: "Hamburguesa Cheesy Crunch con lechuga crespa, cebolla y carne Angus", cap: "Cheesy Crunch" },
   epic: { src: IMG + "salchimax.webp", pos: "50% 58%", alt: "La Salchimax!: una salchipapa gigante con carnes, maduro, maíz y queso", cap: "Salchimax!" },
   price: { src: IMG + "clasica.webp", pos: "50% 64%", alt: "La Clásica: salchipapa con tocineta y queso en su caja", cap: "La Clásica · $18.000" },
-  family: { src: IMG + "nachos-texmex.webp", pos: "50% 42%", alt: "Nachos Tex-Mex para compartir, en el local de Salchimax", cap: "Nachos Tex-Mex" },
-  fast: { src: IMG + "alitas-24.webp", pos: "50% 52%", alt: "Alitas recién hechas con papas y salsas", cap: "Alitas x24" },
+  family: { src: IMG + "nachos.webp", pos: "50% 42%", alt: "Nachos Tex-Mex para compartir, en el local de Salchimax", cap: "Nachos Tex-Mex" },
+  fast: { src: IMG + "alitas-12.webp", pos: "50% 52%", alt: "Alitas recién hechas con papas y salsas", cap: "Alitas x12" },
 };
 WHY.forEach((w) => { w.photo = WHY_PHOTO[w.key]; });
 

@@ -1,7 +1,7 @@
 // Google Analytics 4 — reemplaza G-XXXXXXXXXX con el Measurement ID real.
 // No se carga nada mientras el ID sea el placeholder. Al activarlo:
 //  1. GA4 usa cookies: actualiza "Cookies y analítica" en src/pages/Privacidad.jsx.
-//  2. La Content-Security-Policy de vercel.json bloquea a Google hasta que lo permitas:
+//  2. La Content-Security-Policy (vercel.json y public/_headers) bloquea a Google hasta que lo permitas:
 //     agrega https://*.googletagmanager.com a script-src, y
 //     https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com
 //     a img-src y a connect-src.

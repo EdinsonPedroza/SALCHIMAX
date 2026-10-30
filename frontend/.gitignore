@@ -11,6 +11,9 @@
 # production
 /build
 
+# cloudflare (local state of `wrangler dev`)
+/.wrangler
+
 # misc
 .DS_Store
 .env

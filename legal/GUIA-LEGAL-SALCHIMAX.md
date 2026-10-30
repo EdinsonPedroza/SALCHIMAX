@@ -175,7 +175,7 @@ La página **no guarda datos**: todo pasa por WhatsApp. Esto simplifica mucho. S
 En `frontend/src/analytics.js` hay un código de Google Analytics apagado (`G-XXXXXXXXXX`). Si lo activan, usa cookies, y entonces **hay que**:
 1. Actualizar el apartado "Cookies y analítica" de la Política de Privacidad.
 2. Poner un aviso de cookies con opción de aceptar o rechazar.
-3. Permitir los dominios de Google en la política de seguridad de `vercel.json` (el mismo archivo `analytics.js` dice cuáles). Sin eso, el navegador bloquea Google Analytics.
+3. Permitir los dominios de Google en la política de seguridad, que está en `vercel.json` y en `frontend/public/_headers` (el mismo archivo `analytics.js` dice cuáles). Sin eso, el navegador bloquea Google Analytics.
 
 Hoy no hace falta porque Vercel Analytics no usa cookies.
 

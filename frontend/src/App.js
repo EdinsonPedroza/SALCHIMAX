@@ -5,8 +5,7 @@ import { MotionConfig } from "framer-motion";
 import { CartProvider } from "./context/CartContext";
 import Home from "./pages/Home";
 import IntroScreen from "./components/IntroScreen";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
+import VercelMetrics from "./components/VercelMetrics";
 import { useSeoRoute } from "./hooks/useSeoRoute";
 
 const Terminos = lazy(() => import("./pages/Terminos"));
@@ -48,8 +47,7 @@ function App() {
             </Routes>
           </Suspense>
         </BrowserRouter>
-        <Analytics />
-        <SpeedInsights />
+        <VercelMetrics />
       </div>
     </CartProvider>
     </MotionConfig>

@@ -71,8 +71,8 @@
         </script>
 
         <!-- Google Analytics 4 se configura en src/analytics.js. No agregues <script> en línea
-             en este archivo: la Content-Security-Policy de vercel.json los bloquea (es lo que
-             frena un ataque XSS). Los datos JSON-LD de arriba sí están permitidos. -->
+             en este archivo: la Content-Security-Policy (vercel.json y public/_headers) los bloquea
+             (es lo que frena un ataque XSS). Los datos JSON-LD de arriba sí están permitidos. -->
         <!-- Preload LCP: hero background image fetched before render.
              Two variants, matched by media query — Hero.jsx picks the same URL
              for the same breakpoint, so exactly one image is ever downloaded. -->

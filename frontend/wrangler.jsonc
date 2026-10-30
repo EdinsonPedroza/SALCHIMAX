@@ -1,0 +1,19 @@
+{
+  // Cloudflare Workers with static assets: there is no Worker code, it only serves the built site.
+  // In the dashboard (Workers & Pages > Create > Import a repository) use Root directory "frontend".
+  // Security headers and cache rules live in public/_headers.
+  "name": "salchimax",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./build",
+    // Unknown paths (/terminos, /pqr...) get index.html and React Router takes it from there
+    "not_found_handling": "single-page-application"
+  },
+
+  // Once salchimax.com shows as Active in Cloudflare, attach the domain from the dashboard
+  // (the Worker > Settings > Domains & Routes > Add > Custom domain) or uncomment this:
+  // "routes": [
+  //   { "pattern": "salchimax.com", "custom_domain": true },
+  //   { "pattern": "www.salchimax.com", "custom_domain": true }
+  // ]
+}

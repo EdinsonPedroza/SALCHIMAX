@@ -1,0 +1,25 @@
+# Security headers and cache rules for Cloudflare (Workers static assets / Pages).
+# Same policy as vercel.json, minus the Vercel analytics host: keep the two in sync while the
+# site can be served from either. Cloudflare reads this file from the build output and does
+# not serve it.
+#
+# If you turn on Cloudflare Web Analytics, its beacon also needs:
+#   script-src  https://static.cloudflareinsights.com
+#   connect-src https://cloudflareinsights.com
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://images.unsplash.com https://tile.openstreetmap.org; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;
+  X-XSS-Protection: 0
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-DNS-Prefetch-Control: on
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Cross-Origin-Opener-Policy: same-origin
+
+/images/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/static/*
+  Cache-Control: public, max-age=31536000, immutable

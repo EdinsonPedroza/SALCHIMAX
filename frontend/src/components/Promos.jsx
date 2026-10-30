@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { promos } from "../data/promos";
 import { Reveal } from "./Reveal";
+import PromoBox from "./PromoBox";
 
 const WA_LINK = "https://wa.me/573177371695";
 const EASE = [0.23, 1, 0.32, 1];
@@ -132,11 +133,12 @@ export default function Promos() {
     >
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Encabezado */}
-        <header className="mb-[clamp(34px,4.6vw,60px)]">
+        <header className="mb-[clamp(34px,4.6vw,60px)] flex items-end justify-between gap-2">
+          <div className="shrink-0">
           <Reveal
             as="span"
             variant="hop"
-            className="mb-2 block w-fit font-body text-xs font-extrabold uppercase tracking-[0.28em] text-[#FF6600]"
+            className="mb-2 block max-w-[12rem] font-body text-xs font-extrabold uppercase tracking-[0.28em] text-[#FF6600] min-[521px]:w-fit min-[521px]:max-w-none"
           >
             Cada día una excusa para comer
           </Reveal>
@@ -166,6 +168,11 @@ export default function Promos() {
               </Reveal>
             </span>
           </h2>
+          </div>
+          {/* The box fills the space to the right of the title */}
+          <div className="min-w-0 shrink [--k:0.45] min-[521px]:mr-[clamp(0px,7vw,110px)] min-[521px]:[--k:0.7] min-[1001px]:mr-[clamp(40px,10vw,170px)] min-[1001px]:[--k:0.9]">
+            <PromoBox />
+          </div>
         </header>
 
         {/* Vitrina */}

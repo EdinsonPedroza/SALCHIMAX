@@ -1316,16 +1316,17 @@ html {
 /* ── Caja de SALCHIMAX en 3D ──────────────────────────────────────
    La caja real, hecha con paneles planos colocados en el espacio (sin librerías). Las
    caras llevan las fotos de la caja de verdad, enderezadas: /images/box/*.webp.
-   Medidas: 190 de ancho, 146 de fondo y 36 de alto. La tapa cubre toda la caja y gira
+   Medidas: 190 de ancho, 146 de fondo y 48 de alto. La tapa cubre toda la caja y gira
    sobre su borde trasero; sus solapas van por dentro de las paredes. Cada panel tiene dos
    caras: la impresa por fuera (::before) y el cartón por dentro (::after), con
-   backface-visibility para que no se mezclen. Solo se animan transform y la rotación en JS. */
-.bbx { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-.bbx__stage {
+   backface-visibility para que no se mezclen. La luz de cada pared la mueve el componente
+   (.pbx__sh). --k escala toda la escena (1 = 320x330). Solo se animan transform y opacity. */
+.pbx { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.pbx__stage {
   position: relative;
   display: block;
-  width: 320px;
-  height: 330px;
+  width: calc(320px * var(--k));
+  height: calc(330px * var(--k));
   max-width: 100%;
   padding: 0;
   border: 0;
@@ -1334,13 +1335,13 @@ html {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.bbx__stage:focus-visible { outline: 2px solid #FF6600; outline-offset: 2px; }
-.bbx__scene { position: absolute; inset: 0; display: block; perspective: 900px; perspective-origin: 50% 35%; }
-.bbx__tilt,
-.bbx__spin,
-.bbx__box,
-.bbx__burger,
-.bbx__lid {
+.pbx__stage:focus-visible { outline: 2px solid #FF6600; outline-offset: 2px; }
+.pbx__scene { position: absolute; inset: 0; display: block; perspective: 900px; perspective-origin: 50% 35%; }
+.pbx__tilt,
+.pbx__spin,
+.pbx__box,
+.pbx__lid,
+.pbx__card {
   position: absolute;
   left: 0;
   top: 0;
@@ -1349,53 +1350,94 @@ html {
   height: 0;
   transform-style: preserve-3d;
 }
-.bbx__tilt { left: 50%; top: 68%; transform: rotateX(-26deg) scale3d(1.15, 1.15, 1.15); }
+.pbx__tilt { left: 50%; top: 68%; transform: rotateX(-26deg) scale3d(calc(1.15 * var(--k)), calc(1.15 * var(--k)), calc(1.15 * var(--k))); }
 
-.bbx__p { position: absolute; left: 0; top: 0; display: block; transform-style: preserve-3d; --out: #F2600E; --in: #B48F69; }
-.bbx__p::before,
-.bbx__p::after { content: ""; position: absolute; inset: 0; backface-visibility: hidden; }
-.bbx__p::before { background: var(--out); }
-.bbx__p::after { background: var(--in); transform: rotateY(180deg); }
-
-.bbx__front { width: 190px; height: 36px; --out: var(--tex-front) center / 100% 100% no-repeat, #F2600E; transform: translate3d(-95px, -18px, 73px); }
-.bbx__back { width: 190px; height: 36px; --out: var(--tex-back) center / 100% 100% no-repeat, #F2600E; transform: translate3d(-95px, -18px, -73px) rotateY(180deg); }
-.bbx__right { width: 146px; height: 36px; --out: var(--tex-side) center / 100% 100% no-repeat, #F2600E; transform: translate3d(22px, -18px, 0) rotateY(90deg); }
-.bbx__left { width: 146px; height: 36px; --out: var(--tex-side) center / 100% 100% no-repeat, #F2600E; transform: translate3d(-168px, -18px, 0) rotateY(-90deg); }
-.bbx__floor { width: 190px; height: 146px; --out: #D9500A; --in: #A98660; transform: translate3d(-95px, -55px, 0) rotateX(-90deg); }
-
-.bbx__disc {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: calc(var(--d) * 1px);
-  height: calc(var(--d) * 1px);
-  border-radius: 50%;
-  transform: translate3d(calc(var(--d) * -0.5px), calc((var(--y) - var(--d) * 0.5) * 1px), 0) rotateX(90deg);
+.pbx__p { position: absolute; left: 0; top: 0; display: block; transform-style: preserve-3d; --out: #F2600E; --in: linear-gradient(180deg, #C2A07A, #8E6C4A); }
+.pbx__p::before,
+.pbx__p::after { content: ""; position: absolute; inset: 0; backface-visibility: hidden; }
+.pbx__p::before {
+  background: var(--out);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -2px 3px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(0, 0, 0, 0.16);
 }
-.bbx__disc--cheese { border-radius: 4px; transform: translate3d(calc(var(--d) * -0.5px), calc((var(--y) - var(--d) * 0.5) * 1px), 0) rotateX(90deg) rotate(45deg); }
-.bbx__disc--leaf { border: 4px dotted #5DBB3A; box-sizing: border-box; }
-.bbx__burger { transition: transform 750ms cubic-bezier(0.34, 1.56, 0.64, 1) 220ms; }
-.bbx__stage.is-open .bbx__burger { transform: translateY(-34px); }
+.pbx__p::after { background: var(--in); transform: rotateY(180deg); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2); }
+.pbx__sh { position: absolute; inset: 0; background: #000; backface-visibility: hidden; transform: translateZ(0.6px); pointer-events: none; }
 
-.bbx__lid { transform: translate3d(0, -18.6px, -73px); transform-origin: 0 0 0; transition: transform 900ms cubic-bezier(0.34, 1.4, 0.64, 1); }
-.bbx__stage.is-open .bbx__lid { transform: translate3d(0, -18.6px, -73px) rotateX(118deg); }
-.bbx__lid-top { width: 190px; height: 146px; --out: var(--tex-lid) center / 100% 100% no-repeat, #F2600E; --in: #EADFCB; transform: translate3d(-95px, -73px, 73px) rotateX(90deg); }
-.bbx__lid-front { width: 186px; height: 22px; --in: #EADFCB; transform: translate3d(-93px, 0, 144px); }
-.bbx__lid-right { width: 142px; height: 22px; --in: #EADFCB; transform: translate3d(22px, 0, 73px) rotateY(90deg); }
-.bbx__lid-left { width: 142px; height: 22px; --in: #EADFCB; transform: translate3d(-164px, 0, 73px) rotateY(-90deg); }
+.pbx__front { width: 190px; height: 48px; --out: var(--tex-front) center / 100% 100% no-repeat, #F2600E; transform: translate3d(-95px, -24px, 73px); }
+.pbx__back { width: 190px; height: 48px; --out: var(--tex-back) center / 100% 100% no-repeat, #F2600E; transform: translate3d(-95px, -24px, -73px) rotateY(180deg); }
+.pbx__right { width: 146px; height: 48px; --out: var(--tex-side) center / 100% 100% no-repeat, #F2600E; transform: translate3d(22px, -24px, 0) rotateY(90deg); }
+.pbx__left { width: 146px; height: 48px; --out: var(--tex-side) center / 100% 100% no-repeat, #F2600E; transform: translate3d(-168px, -24px, 0) rotateY(-90deg); }
+.pbx__floor { width: 190px; height: 146px; --out: #D9500A; --in: radial-gradient(ellipse at center, #A98660 35%, #6F5136); transform: translate3d(-95px, -49px, 0) rotateX(-90deg); }
 
-.bbx__shadow {
+.pbx__lid { transform: translate3d(0, -24.6px, -73px); transform-origin: 0 0 0; transition: transform 900ms cubic-bezier(0.34, 1.4, 0.64, 1) 220ms; }
+.pbx__stage.is-open .pbx__lid { transform: translate3d(0, -24.6px, -73px) rotateX(118deg); transition-delay: 0ms; }
+.pbx__lid-top {
+  width: 190px;
+  height: 146px;
+  --out: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.1)), var(--tex-lid) center / 100% 100% no-repeat, #F2600E;
+  --in: linear-gradient(135deg, #F2E8D6, #D9CAB0);
+  transform: translate3d(-95px, -73px, 73px) rotateX(90deg);
+}
+.pbx__lid-front { width: 186px; height: 26px; --in: #E4D6BE; transform: translate3d(-93px, 0, 144px); }
+.pbx__lid-right { width: 142px; height: 26px; --in: #E4D6BE; transform: translate3d(22px, 0, 73px) rotateY(90deg); }
+.pbx__lid-left { width: 142px; height: 26px; --in: #E4D6BE; transform: translate3d(-164px, 0, 73px) rotateY(-90deg); }
+
+/* La tarjeta con el lema: sale de la caja al abrirla y siempre mira al frente */
+.pbx__card { transform: translate3d(0, 30px, 0) scale(0.25); visibility: hidden; transition: transform 300ms ease-in, visibility 0s linear 300ms; }
+.pbx__stage.is-open .pbx__card { transform: translate3d(0, -14px, 0) scale(1); visibility: visible; transition: transform 950ms cubic-bezier(0.34, 1.5, 0.64, 1) 450ms, visibility 0s linear 450ms; }
+.pbx__card-in {
+  position: absolute;
+  left: -85px;
+  top: -190px;
+  width: 170px;
+  height: 190px;
+  box-sizing: border-box;
+  padding: 12px 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 7px 7px 0 0;
+  background: #F2600E;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  color: #fff;
+  text-align: center;
+  backface-visibility: hidden;
+  transform: rotate(-3deg);
+}
+/* El marco blanco fino de la caja ("Síguenos") */
+.pbx__card-in::before { content: ""; position: absolute; inset: 6px 6px 0; border: 2px solid rgba(255, 255, 255, 0.92); border-bottom: 0; border-radius: 4px 4px 0 0; pointer-events: none; }
+.pbx__logo { width: 112px; height: 78px; background: var(--tex-logo) center / contain no-repeat; }
+.pbx__stage.is-open .pbx__card-in { animation: pbx-bob 2.6s ease-in-out 1.7s infinite alternate; }
+@keyframes pbx-bob { from { transform: rotate(-3deg) translateY(0); } to { transform: rotate(-1.5deg) translateY(-4px); } }
+.pbx__w { display: block; transform: scale(0); transition: transform 220ms ease-in; }
+.pbx__w--a { margin-top: 8px; font-size: 19px; line-height: 1; letter-spacing: 0.03em; }
+.pbx__w--b { margin-top: 3px; font-size: 12.5px; line-height: 1; letter-spacing: 0.14em; }
+.pbx__w--big {
+  margin-top: 1px;
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-shadow: 1px 1px 0 #8A3100, 2px 2px 0 #8A3100, 3px 3px 0 #8A3100, 4px 4px 6px rgba(0, 0, 0, 0.4);
+}
+.pbx__stage.is-open .pbx__w { transform: scale(1); transition: transform 650ms cubic-bezier(0.34, 1.8, 0.64, 1) calc(1000ms + var(--i) * 160ms); }
+
+.pbx__shadow {
   position: absolute;
   left: 50%;
-  bottom: 22px;
-  width: 270px;
-  height: 40px;
+  bottom: calc(22px * var(--k));
+  width: calc(290px * var(--k));
+  height: calc(44px * var(--k));
   transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55), transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0, rgba(0, 0, 0, 0.38) 38%, transparent 70%);
 }
-.bbx__hint { margin-top: 2px; font-family: "Manrope", sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
+.pbx__hint { margin-top: 2px; font-family: "Manrope", sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
 
 @media (prefers-reduced-motion: reduce) {
-  .bbx__lid,
-  .bbx__burger { transition-duration: 1ms; transition-delay: 0ms; }
+  .pbx__lid,
+  .pbx__card,
+  .pbx__w { transition-duration: 1ms; transition-delay: 0ms; }
+  .pbx__stage.is-open .pbx__card-in { animation: none; }
 }

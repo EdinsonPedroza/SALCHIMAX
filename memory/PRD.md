@@ -19,6 +19,11 @@ Crear una landing page moderna, atractiva y optimizada para pedidos para el rest
 - **Colores:** #FF6600 (orange logo brand), #0D0D0D (dark bg), white text
 - **Estilo:** Dark urban, mobile-first
 
+## Deploy y dominio
+- **Dominio:** salchimax.com (comprado en Hostinger; el DNS pasa a Cloudflare)
+- **Hosting:** Cloudflare Workers con assets estáticos (`frontend/wrangler.jsonc`, cabeceras en `frontend/public/_headers`). Vercel (`vercel.json`) queda como respaldo mientras dure la migración
+- **Guía paso a paso:** `docs/DOMINIO-Y-CLOUDFLARE.md`
+
 ## Lo Implementado
 
 ### Fecha: Marzo 2025
@@ -78,7 +83,7 @@ Crear una landing page moderna, atractiva y optimizada para pedidos para el rest
 
 ### P1 - Próximas mejoras
 - [ ] Agregar precios exactos a las Hamburguesas (la mayoría dice "Consultar")
-- [ ] Fotos reales del menú (actualmente usa stock de Unsplash)
+- [ ] Fotos reales del menú: ya están casi todas (octubre 2026). Siguen siendo las anteriores: Mixta, De La Casa, Tex-Mex (salchipapa), Especial, Cheesy Crunch y Super Burro. Siguen en Unsplash: Gaseosa y Agua personales y el fondo del Hero
 - [ ] Sección de combos/promociones especiales
 - [ ] Integración con sistema de domicilios
 

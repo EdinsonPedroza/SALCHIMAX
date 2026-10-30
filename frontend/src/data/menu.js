@@ -55,7 +55,7 @@ export const menuData = {
     { name: "Chicken Burger", desc: "Pan brioche, queso, filete de pollo apanado, mermelada de tocineta, lechuga crespa, cebolla, tomate y salsa especial", price: "$22.000", img: "/images/chicken-burger.webp" },
     { name: "Especial", desc: "Pan brioche, queso, carne 100% Angus, tocineta, lechuga crespa, tomate, cebolla caramelizada, salsa especial", price: "$23.000", img: "/images/hamburguesa-especial.webp" },
     { name: "Cheesy Crunch", desc: "Pan brioche, queso apanado, carne 100% Angus, mermelada de tocineta, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: "/images/cheesy-crunch.webp" },
-    { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: "/images/la-triple.webp" },
+    { name: "La Triple", desc: "Pan brioche, queso, carne 100% Angus, pollo y carne desmechado, lechuga crespa, cebolla, salsa especial", price: "$26.000", img: "/images/la-triple-v2.webp" },
   ],
   alitas: [
     { name: "x6 Alitas", desc: "Acompañadas de papa amarilla, sour cream y palitos de zanahoria", price: "$28.000", img: "/images/alitas-6-v2.webp", pos: "50% 65%" },

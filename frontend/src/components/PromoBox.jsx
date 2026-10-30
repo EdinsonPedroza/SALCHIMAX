@@ -30,6 +30,7 @@ export default function PromoBox() {
   const [open, setOpen] = useState(false);
   const stage = useRef(null);
   const inView = useInView(stage);
+  const near = useInView(stage, { once: true, margin: "150px 0px" });
   const reduce = useReducedMotion();
   const ry = useMotionValue(-28);
   const front = useTransform(ry, shadeOf(0));
@@ -62,6 +63,8 @@ export default function PromoBox() {
         data-testid="promo-box"
       >
         <span className="pbx__scene" aria-hidden="true">
+          {near && (
+            <>
           <span className="pbx__tilt">
             <motion.span className="pbx__spin" style={{ rotateY: ry }}>
               <span className="pbx__box">
@@ -73,9 +76,9 @@ export default function PromoBox() {
                 <span className="pbx__card">
                   <span className="pbx__card-in">
                     <span className="pbx__w pbx__logo" style={{ "--i": 0 }} />
-                    <span className="pbx__w pbx__w--a" style={{ "--i": 1 }}>MEJOR SABOR</span>
-                    <span className="pbx__w pbx__w--b" style={{ "--i": 2 }}>QUE EL NUESTRO</span>
-                    <span className="pbx__w pbx__w--big" style={{ "--i": 3 }}>NO HAY</span>
+                    <span className="pbx__w pbx__w--big" style={{ "--i": 1 }}>PAPAS</span>
+                    <span className="pbx__w pbx__chip" style={{ "--i": 2 }}>GRATIS</span>
+                    <span className="pbx__w pbx__w--b" style={{ "--i": 3 }}>EN TU HAMBURGUESA</span>
                   </span>
                 </span>
                 <span className="pbx__lid">
@@ -88,6 +91,8 @@ export default function PromoBox() {
             </motion.span>
           </span>
           <span className="pbx__shadow" />
+            </>
+          )}
         </span>
       </button>
       <p className="pbx__hint" aria-hidden="true">{open ? "Toca para cerrarla" : "Toca la caja"}</p>

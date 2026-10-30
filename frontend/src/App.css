@@ -1357,7 +1357,7 @@ html {
 .pbx__p::after { content: ""; position: absolute; inset: 0; backface-visibility: hidden; }
 .pbx__p::before {
   background: var(--out);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -2px 3px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(0, 0, 0, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
 }
 .pbx__p::after { background: var(--in); transform: rotateY(180deg); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2); }
 .pbx__sh { position: absolute; inset: 0; background: #000; backface-visibility: hidden; transform: translateZ(0.6px); pointer-events: none; }
@@ -1368,12 +1368,12 @@ html {
 .pbx__left { width: 146px; height: 48px; --out: var(--tex-side) center / 100% 100% no-repeat, #F2600E; transform: translate3d(-168px, -24px, 0) rotateY(-90deg); }
 .pbx__floor { width: 190px; height: 146px; --out: #D9500A; --in: radial-gradient(ellipse at center, #A98660 35%, #6F5136); transform: translate3d(-95px, -49px, 0) rotateX(-90deg); }
 
-.pbx__lid { transform: translate3d(0, -24.6px, -73px); transform-origin: 0 0 0; transition: transform 900ms cubic-bezier(0.34, 1.4, 0.64, 1) 220ms; }
+.pbx__lid { will-change: transform; transform: translate3d(0, -24.6px, -73px); transform-origin: 0 0 0; transition: transform 900ms cubic-bezier(0.34, 1.4, 0.64, 1) 220ms; }
 .pbx__stage.is-open .pbx__lid { transform: translate3d(0, -24.6px, -73px) rotateX(118deg); transition-delay: 0ms; }
 .pbx__lid-top {
   width: 190px;
   height: 146px;
-  --out: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.1)), var(--tex-lid) center / 100% 100% no-repeat, #F2600E;
+  --out: var(--tex-lid) center / 100% 100% no-repeat, #F2600E;
   --in: linear-gradient(135deg, #F2E8D6, #D9CAB0);
   transform: translate3d(-95px, -73px, 73px) rotateX(90deg);
 }
@@ -1382,16 +1382,16 @@ html {
 .pbx__lid-left { width: 142px; height: 26px; --in: #E4D6BE; transform: translate3d(-164px, 0, 73px) rotateY(-90deg); }
 
 /* La tarjeta con el lema: sale de la caja al abrirla y siempre mira al frente */
-.pbx__card { transform: translate3d(0, 30px, 0) scale(0.25); visibility: hidden; transition: transform 300ms ease-in, visibility 0s linear 300ms; }
-.pbx__stage.is-open .pbx__card { transform: translate3d(0, -14px, 0) scale(1); visibility: visible; transition: transform 950ms cubic-bezier(0.34, 1.5, 0.64, 1) 450ms, visibility 0s linear 450ms; }
+.pbx__card { will-change: transform; transform: translate3d(0, 24px, 0) scale(0.2); visibility: hidden; transition: transform 300ms ease-in, visibility 0s linear 300ms; }
+.pbx__stage.is-open .pbx__card { transform: translate3d(0, 22px, 0) scale(1); visibility: visible; transition: transform 950ms cubic-bezier(0.34, 1.5, 0.64, 1) 450ms, visibility 0s linear 450ms; }
 .pbx__card-in {
   position: absolute;
-  left: -85px;
-  top: -190px;
-  width: 170px;
-  height: 190px;
+  left: -91px;
+  top: -234px;
+  width: 182px;
+  height: 256px;
   box-sizing: border-box;
-  padding: 12px 10px 0;
+  padding: 27px 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1406,21 +1406,24 @@ html {
   transform: rotate(-3deg);
 }
 /* El marco blanco fino de la caja ("Síguenos") */
-.pbx__card-in::before { content: ""; position: absolute; inset: 6px 6px 0; border: 2px solid rgba(255, 255, 255, 0.92); border-bottom: 0; border-radius: 4px 4px 0 0; pointer-events: none; }
-.pbx__logo { width: 112px; height: 78px; background: var(--tex-logo) center / contain no-repeat; }
+.pbx__card-in::before { content: ""; position: absolute; inset: 6px; border: 2px solid rgba(255, 255, 255, 0.92); border-radius: 5px; pointer-events: none; }
+/* El agujerito de cuelgue, como el de la caja */
+.pbx__card-in::after { content: ""; position: absolute; top: 13px; left: 50%; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #1A0D05; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.4); }
+.pbx__logo { width: 74px; height: 52px; background: var(--tex-logo) center / contain no-repeat; }
 .pbx__stage.is-open .pbx__card-in { animation: pbx-bob 2.6s ease-in-out 1.7s infinite alternate; }
 @keyframes pbx-bob { from { transform: rotate(-3deg) translateY(0); } to { transform: rotate(-1.5deg) translateY(-4px); } }
 .pbx__w { display: block; transform: scale(0); transition: transform 220ms ease-in; }
-.pbx__w--a { margin-top: 8px; font-size: 19px; line-height: 1; letter-spacing: 0.03em; }
-.pbx__w--b { margin-top: 3px; font-size: 12.5px; line-height: 1; letter-spacing: 0.14em; }
+.pbx__w--b { margin-top: 10px; padding: 3px 8px; border-radius: 999px; background: #fff; color: #E8530C; font-size: 11.5px; line-height: 1.1; letter-spacing: 0.04em; }
+/* "GRATIS" como la etiqueta de "DE LA SEMANA": negro con letras naranja, un poco torcida */
+.pbx__chip { padding: 0 8px; background: #0D0D0D; color: #FF6600; font-family: "Bebas Neue", sans-serif; font-weight: 400; font-size: 54px; line-height: 1.04; letter-spacing: 0.06em; rotate: -2deg; }
 .pbx__w--big {
-  margin-top: 1px;
+  margin-top: 6px;
   font-family: "Bebas Neue", sans-serif;
   font-weight: 400;
-  font-size: 56px;
+  font-size: 66px;
   line-height: 1;
   letter-spacing: 0.03em;
-  text-shadow: 1px 1px 0 #8A3100, 2px 2px 0 #8A3100, 3px 3px 0 #8A3100, 4px 4px 6px rgba(0, 0, 0, 0.4);
+  text-shadow: 3px 3px 0 #0D0D0D;
 }
 .pbx__stage.is-open .pbx__w { transform: scale(1); transition: transform 650ms cubic-bezier(0.34, 1.8, 0.64, 1) calc(1000ms + var(--i) * 160ms); }
 
